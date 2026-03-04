@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'portfolio_setup.dart';
 import 'goals.dart';
-import 'investnow.dart';  // Make sure this matches your filename exactly
+import 'investnow.dart';
+import 'tutorial_page.dart';
 
 class InvestPage extends StatefulWidget {
   const InvestPage({super.key});
@@ -12,45 +12,6 @@ class InvestPage extends StatefulWidget {
 }
 
 class _InvestPageState extends State<InvestPage> {
-  late YoutubePlayerController _controller;
-  bool _isPlayerReady = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Extract video ID from the YouTube link
-    // https://www.youtube.com/watch?v=qIw-yFC-HNU
-    String videoId = 'qIw-yFC-HNU';
-
-    _controller = YoutubePlayerController(
-      initialVideoId: videoId,
-      flags: YoutubePlayerFlags(
-        autoPlay: false,
-        mute: false,
-        disableDragSeek: false,
-        loop: false,
-        isLive: false,
-        forceHD: false,
-        enableCaption: false,
-      ),
-    );
-
-    _controller.addListener(() {
-      if (_controller.value.isReady && !_isPlayerReady) {
-        setState(() {
-          _isPlayerReady = true;
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +43,7 @@ class _InvestPageState extends State<InvestPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Tutorial Section
+                // Tutorial Section Header
                 const Text(
                   'Tutorial',
                   style: TextStyle(
@@ -92,49 +53,116 @@ class _InvestPageState extends State<InvestPage> {
                 ),
                 const SizedBox(height: 12),
 
-                // YouTube Video Container
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withValues(alpha: 0.3),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
+                // Tutorial Button (Clickable to navigate to tutorial page)
+                GestureDetector(
+                  onTap: () {
+                    // Navigate to Tutorial Page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TutorialPage(),
                       ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: YoutubePlayer(
-                      controller: _controller,
-                      showVideoProgressIndicator: true,
-                      progressIndicatorColor: Colors.blue,
-                      progressColors: ProgressBarColors(
-                        playedColor: Colors.blue,
-                        handleColor: Colors.blueAccent,
+                    );
+                  },
+                  child: Container(
+                    height: 200,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.blue.shade700,
+                          Colors.purple.shade700,
+                        ],
                       ),
-                      onReady: () {
-                        // Player is ready
-                      },
-                      bottomActions: [
-                        CurrentPosition(),
-                        ProgressBar(
-                          isExpanded: true,
-                          colors: ProgressBarColors(
-                            playedColor: Colors.blue,
-                            handleColor: Colors.blue,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.withValues(alpha: 0.5),
+                          spreadRadius: 2,
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        // Background pattern
+                        Positioned.fill(
+                          child: CustomPaint(
+                            painter: GamePatternPainter(),
                           ),
                         ),
-                        RemainingDuration(),
-                        FullScreenButton(),
+
+                        // Main content
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Play button icon
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white.withValues(alpha: 0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 15,
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(
+                                  Icons.play_arrow,
+                                  color: Colors.blue,
+                                  size: 50,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              const Text(
+                                'START TUTORIAL',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 2,
+                                ),
+                              ),
+                              // REMOVED: The "Beginner Level" text container
+                            ],
+                          ),
+                        ),
+
+                        // Corner decorations
+                        Positioned(
+                          top: 10,
+                          left: 10,
+                          child: _buildGameCorner(Icons.star, Colors.yellow),
+                        ),
+                        Positioned(
+                          top: 10,
+                          right: 10,
+                          child: _buildGameCorner(Icons.star, Colors.yellow),
+                        ),
+                        Positioned(
+                          bottom: 10,
+                          left: 10,
+                          child: _buildGameCorner(Icons.star, Colors.yellow),
+                        ),
+                        Positioned(
+                          bottom: 10,
+                          right: 10,
+                          child: _buildGameCorner(Icons.star, Colors.yellow),
+                        ),
                       ],
                     ),
                   ),
                 ),
+
+                const SizedBox(height: 12),
 
                 // Skip for Now Button
                 Row(
@@ -214,7 +242,24 @@ class _InvestPageState extends State<InvestPage> {
     );
   }
 
-  // Custom widget for action buttons with icons and text at SAME HEIGHT
+  // Helper widget for game corner decorations
+  Widget _buildGameCorner(IconData icon, Color color) {
+    return Container(
+      width: 24,
+      height: 24,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.3),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        icon,
+        color: color,
+        size: 16,
+      ),
+    );
+  }
+
+  // Custom widget for action buttons
   Widget _buildActionButton({
     required IconData icon,
     required String label,
@@ -240,7 +285,6 @@ class _InvestPageState extends State<InvestPage> {
         ),
         child: Stack(
           children: [
-            // Icon at exact same position for all buttons (25px from top)
             Positioned(
               top: 25,
               left: 0,
@@ -261,8 +305,6 @@ class _InvestPageState extends State<InvestPage> {
                 ),
               ),
             ),
-
-            // Text at exact same position for all buttons (85px from top)
             Positioned(
               top: 85,
               left: 0,
@@ -298,18 +340,42 @@ class _InvestPageState extends State<InvestPage> {
       ),
     );
   }
+}
 
-// This method is kept but not used - you can remove it if you want
-// void _showActionMessage(BuildContext context, String action) {
-//   ScaffoldMessenger.of(context).showSnackBar(
-//     SnackBar(
-//       content: Text('$action tapped'),
-//       duration: const Duration(seconds: 1),
-//       behavior: SnackBarBehavior.floating,
-//       shape: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(10),
-//       ),
-//     ),
-//   );
-// }
+// Custom painter for game-like background pattern
+class GamePatternPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.1)
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+
+    // Draw diagonal lines
+    for (int i = -size.height.toInt(); i < size.width; i += 20) {
+      canvas.drawLine(
+        Offset(i.toDouble(), 0),
+        Offset(i.toDouble() + size.height, size.height),
+        paint,
+      );
+    }
+
+    // Draw small dots
+    final dotPaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.2)
+      ..style = PaintingStyle.fill;
+
+    for (int i = 0; i < 10; i++) {
+      for (int j = 0; j < 5; j++) {
+        canvas.drawCircle(
+          Offset(i * 40.0 + 10, j * 40.0 + 10),
+          2,
+          dotPaint,
+        );
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
