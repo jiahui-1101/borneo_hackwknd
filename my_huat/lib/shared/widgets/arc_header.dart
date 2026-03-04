@@ -15,11 +15,7 @@ class ArcHeader extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.fromLTRB(20, topPadding + 16, 20, 36),
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF6A5AE0), Color(0xFF9B7BFF)],
-          ),
+          color: Color(0xFF0D3A6D),
         ),
         child: Row(
           children: [
