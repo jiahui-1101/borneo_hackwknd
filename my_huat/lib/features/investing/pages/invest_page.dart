@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 import 'portfolio_setup.dart';
 import 'goals.dart';
 import 'investnow.dart';
-import 'tutorial_page.dart';
 
 class InvestPage extends StatefulWidget {
   const InvestPage({super.key});
@@ -12,6 +12,32 @@ class InvestPage extends StatefulWidget {
 }
 
 class _InvestPageState extends State<InvestPage> {
+  late VideoPlayerController _controller;
+  late Future<void> _initializeVideoPlayerFuture;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize video controller with local asset
+    _controller = VideoPlayerController.asset('assets/video/basic_investing.mp4');
+
+    // Initialize the controller and store the Future for later use
+    _initializeVideoPlayerFuture = _controller.initialize();
+
+    // Optional: Set looping
+    _controller.setLooping(false);
+
+    // Optional: Set volume
+    _controller.setVolume(1.0);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +69,7 @@ class _InvestPageState extends State<InvestPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Tutorial Section Header
+                // Tutorial Section
                 const Text(
                   'Tutorial',
                   style: TextStyle(
@@ -53,116 +79,139 @@ class _InvestPageState extends State<InvestPage> {
                 ),
                 const SizedBox(height: 12),
 
-                // Tutorial Button (Clickable to navigate to tutorial page)
-                GestureDetector(
-                  onTap: () {
-                    // Navigate to Tutorial Page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TutorialPage(),
+                // Local Video Container
+                Container(
+                  height: 200,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withValues(alpha: 0.3),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
                       ),
-                    );
-                  },
-                  child: Container(
-                    height: 200,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.blue.shade700,
-                          Colors.purple.shade700,
-                        ],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.blue.withValues(alpha: 0.5),
-                          spreadRadius: 2,
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Stack(
-                      children: [
-                        // Background pattern
-                        Positioned.fill(
-                          child: CustomPaint(
-                            painter: GamePatternPainter(),
-                          ),
-                        ),
-
-                        // Main content
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: FutureBuilder(
+                      future: _initializeVideoPlayerFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          // Video is initialized, show video with controls
+                          return Stack(
+                            alignment: Alignment.bottomCenter,
                             children: [
-                              // Play button icon
+                              // Video player
+                              AspectRatio(
+                                aspectRatio: _controller.value.aspectRatio,
+                                child: VideoPlayer(_controller),
+                              ),
+
+                              // Video controls overlay
                               Container(
-                                width: 80,
-                                height: 80,
+                                height: 40,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white.withValues(alpha: 0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 15,
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black.withValues(alpha: 0.5),
+                                    ],
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // Play/Pause button
+                                    IconButton(
+                                      icon: Icon(
+                                        _controller.value.isPlaying
+                                            ? Icons.pause
+                                            : Icons.play_arrow,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _controller.value.isPlaying
+                                              ? _controller.pause()
+                                              : _controller.play();
+                                        });
+                                      },
+                                    ),
+
+                                    // Video position indicator
+                                    Text(
+                                      '${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
                                     ),
                                   ],
                                 ),
-                                child: const Icon(
-                                  Icons.play_arrow,
-                                  color: Colors.blue,
-                                  size: 50,
-                                ),
                               ),
-                              const SizedBox(height: 16),
-                              const Text(
-                                'START TUTORIAL',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 2,
-                                ),
-                              ),
-                              // REMOVED: The "Beginner Level" text container
                             ],
-                          ),
-                        ),
-
-                        // Corner decorations
-                        Positioned(
-                          top: 10,
-                          left: 10,
-                          child: _buildGameCorner(Icons.star, Colors.yellow),
-                        ),
-                        Positioned(
-                          top: 10,
-                          right: 10,
-                          child: _buildGameCorner(Icons.star, Colors.yellow),
-                        ),
-                        Positioned(
-                          bottom: 10,
-                          left: 10,
-                          child: _buildGameCorner(Icons.star, Colors.yellow),
-                        ),
-                        Positioned(
-                          bottom: 10,
-                          right: 10,
-                          child: _buildGameCorner(Icons.star, Colors.yellow),
-                        ),
-                      ],
+                          );
+                        } else {
+                          // Video is still loading
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                      },
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                // Video Control Buttons (alternative to overlay)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            _controller.value.isPlaying
+                                ? _controller.pause()
+                                : _controller.play();
+                          });
+                        },
+                        icon: Icon(
+                          _controller.value.isPlaying
+                              ? Icons.pause
+                              : Icons.play_arrow,
+                        ),
+                        label: Text(
+                          _controller.value.isPlaying ? 'Pause' : 'Play',
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          _controller.seekTo(Duration.zero);
+                        },
+                        icon: const Icon(Icons.replay),
+                        label: const Text('Replay'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
                 // Skip for Now Button
                 Row(
@@ -183,7 +232,7 @@ class _InvestPageState extends State<InvestPage> {
 
                 const SizedBox(height: 30),
 
-                // Action Buttons Section
+                // Action Buttons Section (rest remains the same)
                 const Text(
                   'Quick Actions',
                   style: TextStyle(
@@ -242,21 +291,12 @@ class _InvestPageState extends State<InvestPage> {
     );
   }
 
-  // Helper widget for game corner decorations
-  Widget _buildGameCorner(IconData icon, Color color) {
-    return Container(
-      width: 24,
-      height: 24,
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.3),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        icon,
-        color: color,
-        size: 16,
-      ),
-    );
+  // Helper method to format duration
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
   // Custom widget for action buttons
@@ -340,42 +380,4 @@ class _InvestPageState extends State<InvestPage> {
       ),
     );
   }
-}
-
-// Custom painter for game-like background pattern
-class GamePatternPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.1)
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke;
-
-    // Draw diagonal lines
-    for (int i = -size.height.toInt(); i < size.width; i += 20) {
-      canvas.drawLine(
-        Offset(i.toDouble(), 0),
-        Offset(i.toDouble() + size.height, size.height),
-        paint,
-      );
-    }
-
-    // Draw small dots
-    final dotPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.2)
-      ..style = PaintingStyle.fill;
-
-    for (int i = 0; i < 10; i++) {
-      for (int j = 0; j < 5; j++) {
-        canvas.drawCircle(
-          Offset(i * 40.0 + 10, j * 40.0 + 10),
-          2,
-          dotPaint,
-        );
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
