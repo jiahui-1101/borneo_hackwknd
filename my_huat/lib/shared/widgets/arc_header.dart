@@ -1,5 +1,6 @@
 // lib/shared/widgets/arc_header.dart
 import 'package:flutter/material.dart';
+import '../../features/homepage/notifications/notifications_page.dart';
 
 class ArcHeader extends StatelessWidget {
   final String title;
@@ -14,9 +15,7 @@ class ArcHeader extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.fromLTRB(20, topPadding + 16, 20, 36),
-        decoration: const BoxDecoration(
-          color: Color(0xFF0D3A6D),
-        ),
+        decoration: const BoxDecoration(color: Color(0xFF0D3A6D)),
         child: Row(
           children: [
             Text(
@@ -30,7 +29,12 @@ class ArcHeader extends StatelessWidget {
             ),
             const Spacer(),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const NotificationsPage()),
+                );
+              },
               icon: const Icon(Icons.notifications_none),
               color: Colors.white,
             ),
