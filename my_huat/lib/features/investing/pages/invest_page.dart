@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'portfolio_setup.dart';
+import 'goals.dart';
+import 'investnow.dart';  // Make sure this matches your filename exactly
 
 class InvestPage extends StatefulWidget {
   const InvestPage({super.key});
@@ -115,7 +118,7 @@ class _InvestPageState extends State<InvestPage> {
                         handleColor: Colors.blueAccent,
                       ),
                       onReady: () {
-                        print('Player is ready');
+                        // Player is ready
                       },
                       bottomActions: [
                         CurrentPosition(),
@@ -162,7 +165,7 @@ class _InvestPageState extends State<InvestPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Three Identical Buttons with Icons and Text at Same Height
+                // Three Buttons with Navigation to separate pages
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -171,7 +174,10 @@ class _InvestPageState extends State<InvestPage> {
                       label: 'Set Up\nPortfolio',
                       color: Colors.purple,
                       onTap: () {
-                        _showActionMessage(context, 'Set Up Portfolio');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const PortfolioSetupPage()),
+                        );
                       },
                     ),
                     _buildActionButton(
@@ -179,7 +185,10 @@ class _InvestPageState extends State<InvestPage> {
                       label: 'My Goals',
                       color: Colors.orange,
                       onTap: () {
-                        _showActionMessage(context, 'My Goals');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const MyGoalsPage()),
+                        );
                       },
                     ),
                     _buildActionButton(
@@ -187,7 +196,10 @@ class _InvestPageState extends State<InvestPage> {
                       label: 'Invest\nNow',
                       color: Colors.green,
                       onTap: () {
-                        _showActionMessage(context, 'Invest Now');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const InvestNowPage()),
+                        );
                       },
                     ),
                   ],
@@ -287,16 +299,17 @@ class _InvestPageState extends State<InvestPage> {
     );
   }
 
-  void _showActionMessage(BuildContext context, String action) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$action tapped'),
-        duration: const Duration(seconds: 1),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    );
-  }
+// This method is kept but not used - you can remove it if you want
+// void _showActionMessage(BuildContext context, String action) {
+//   ScaffoldMessenger.of(context).showSnackBar(
+//     SnackBar(
+//       content: Text('$action tapped'),
+//       duration: const Duration(seconds: 1),
+//       behavior: SnackBarBehavior.floating,
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.circular(10),
+//       ),
+//     ),
+//   );
+// }
 }
