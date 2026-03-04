@@ -9,7 +9,7 @@ class TotalAssetsCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF0E4C5C),
+        color: const Color(0xFFE0EDFE),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
