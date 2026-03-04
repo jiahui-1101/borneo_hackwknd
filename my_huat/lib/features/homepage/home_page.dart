@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 
 import '../../shared/widgets/arc_header.dart';
 
-// Import pages from each feature
+// Import pages
 import '../spending/pages/savings_page.dart';
 import '../investing/pages/invest_page.dart';
 import '../insurance/pages/insurance_page.dart';
 import '../setting/pages/settings_page.dart';
+
+// Homepage content
+import 'homepage_dashboard.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = const [
+    HomeDashboard(),
     SavingsPage(),
     InvestPage(),
     InsurancePage(),
@@ -32,8 +36,8 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           const ArcHeader(title: 'MHuat'),
+
           Expanded(
-            // Optional: Keep state while switching tabs
             child: IndexedStack(
               index: _currentIndex,
               children: _pages,
@@ -48,16 +52,31 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: const Color(0xFF6A5AE0),
         unselectedItemColor: Colors.grey,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.savings), label: 'Savings'),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.savings),
+            label: 'Savings',
+          ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.trending_up),
             label: 'Invest',
           ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.security),
             label: 'Insurance',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Setting'),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Setting',
+          ),
         ],
       ),
     );
