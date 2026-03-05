@@ -20,21 +20,21 @@ class _NewsCarouselState extends State<NewsCarousel> {
       "content":
           "Learn how to grow your savings through simple investing strategies designed for students.",
       "date": "10 Apr 2025",
-      "image": "assets/news/news1.png"
+      "image": "assets/image/news/news1.png"
     },
     {
       "title": "Emergency Fund Matters",
       "content":
           "Always keep 3 months of expenses saved to handle unexpected events.",
       "date": "12 Apr 2025",
-      "image": "assets/news/news2.png"
+      "image": "assets/image/news/news2.png"
     },
     {
       "title": "Insurance Basics",
       "content":
           "Understand the importance of insurance and how it protects your financial future.",
       "date": "15 Apr 2025",
-      "image": "assets/news/news3.png"
+      "image": "assets/image/news/news3.png"
     },
   ];
 
@@ -76,11 +76,21 @@ class _NewsCarouselState extends State<NewsCarousel> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 20, top: 20),
-          child: Text(
-            "News & Updates",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        Padding(
+          padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "News & Updates",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF0D3A6D), // Color 100
+                ),
+              ),
+              // Optional: subtle "View all" could be added, but not in original.
+            ],
           ),
         ),
         const SizedBox(height: 12),
@@ -107,7 +117,14 @@ class _NewsCarouselState extends State<NewsCarousel> {
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF7EBEFB).withOpacity(0.3), // Color 40 with opacity
+                        blurRadius: 12,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
                     image: DecorationImage(
                       image: AssetImage(newsItem['image']),
                       fit: BoxFit.cover,
@@ -116,11 +133,11 @@ class _NewsCarouselState extends State<NewsCarousel> {
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(20),
                       gradient: LinearGradient(
                         colors: [
-                          Colors.black.withOpacity(0.6),
-                          Colors.transparent
+                          const Color(0xFF0D3A6D).withOpacity(0.8), // Color 100 with opacity
+                          Colors.transparent,
                         ],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
@@ -133,6 +150,13 @@ class _NewsCarouselState extends State<NewsCarousel> {
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black26,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -140,6 +164,25 @@ class _NewsCarouselState extends State<NewsCarousel> {
               );
             },
           ),
+        ),
+        const SizedBox(height: 12),
+        // Page indicator dots
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(newsData.length, (index) {
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              width: _currentPage == index ? 24 : 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: _currentPage == index
+                    ? const Color(0xFF1080E7) // Color 60
+                    : const Color(0xFFBBDBFC), // Color 30
+                borderRadius: BorderRadius.circular(4),
+              ),
+            );
+          }),
         ),
       ],
     );
