@@ -52,7 +52,7 @@ class _InsurancePageState extends State<InsurancePage> {
                 ),
                 const SizedBox(height: 12),
 
-                // YouTube Video Container (using WebView like Tutorial Page)
+                // YouTube Video Container
                 GestureDetector(
                   onTap: () {
                     _showVideoPlayer(context);
@@ -140,12 +140,14 @@ class _InsurancePageState extends State<InsurancePage> {
 
                 const SizedBox(height: 8),
 
-                // Skip for Now Button (navigates to Tutorial Page)
+                // Skip for Now Button
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        _showSkipMessage(context);
+                      },
                       icon: const Icon(Icons.skip_next),
                       label: const Text('Skip for Now'),
                       style: TextButton.styleFrom(
@@ -176,9 +178,7 @@ class _InsurancePageState extends State<InsurancePage> {
                       label: 'Set Up\nPortfolio',
                       color: Colors.blue,
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Navigate to Set Up Portfolio')),
-                        );
+                        _showComingSoon(context, 'Set Up Portfolio');
                       },
                     ),
                     _buildActionButton(
@@ -199,9 +199,7 @@ class _InsurancePageState extends State<InsurancePage> {
                       label: 'Purchase\nInsurance',
                       color: Colors.orange,
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Navigate to Purchase Insurance')),
-                        );
+                        _showComingSoon(context, 'Purchase Insurance');
                       },
                     ),
                   ],
@@ -216,7 +214,7 @@ class _InsurancePageState extends State<InsurancePage> {
     );
   }
 
-  // Method to show video player (same as Tutorial Page)
+  // Method to show video player
   void _showVideoPlayer(BuildContext context) {
     final controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -353,7 +351,7 @@ class _InsurancePageState extends State<InsurancePage> {
     );
   }
 
-  // Custom widget for action buttons
+  // Custom widget for action buttons (matches InvestPage style)
   Widget _buildActionButton({
     required IconData icon,
     required String label,
@@ -417,6 +415,34 @@ class _InsurancePageState extends State<InsurancePage> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  // Helper method to show skip message (like InvestPage)
+  void _showSkipMessage(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Skipped tutorial for now'),
+        duration: const Duration(seconds: 1),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+  }
+
+  // Helper method to show coming soon message for unimplemented features
+  void _showComingSoon(BuildContext context, String feature) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$feature coming soon!'),
+        duration: const Duration(seconds: 1),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );
