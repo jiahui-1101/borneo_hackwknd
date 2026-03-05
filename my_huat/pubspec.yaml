@@ -62,9 +62,8 @@ flutter:
       - assets/news/
       - assets/homepagecat.png
       - assets/entrypagecat.png
-
       - assets/image/news/
-      - assets/video/basic_investing.mp4
+      - assets/video/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
