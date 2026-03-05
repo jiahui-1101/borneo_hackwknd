@@ -1,8 +1,11 @@
 // features/investing/goals/goals_page.dart
 import 'package:flutter/material.dart';
-import 'investment_basic.dart'; // Import the Investment Basic page
-import 'ownership.dart'; // Import the Ownership Investments page
-import 'lending.dart'; // Import the Lending Investments page
+import 'package:my_huat/core/services/points_service.dart';
+import 'package:my_huat/core/services/sound_service.dart';// Add this import
+import 'package:my_huat/shared/widgets/arc_header.dart';
+import 'investment_basic.dart';
+import 'ownership.dart';
+import 'lending.dart';
 
 class MyGoalsPage extends StatefulWidget {
   const MyGoalsPage({super.key});
@@ -12,322 +15,321 @@ class MyGoalsPage extends StatefulWidget {
 }
 
 class _MyGoalsPageState extends State<MyGoalsPage> {
-  int _points = 0;
+  final PointsService _pointsService = PointsService();
+  final SoundService _soundService = SoundService(); // Add sound service
+
+  @override
+  void dispose() {
+    _soundService.dispose(); // Dispose sound service
+    super.dispose();
+  }
+
+  // Helper method to handle points earned with sound
+  Future<void> _handlePointsEarned(int pointsEarned) async {
+    if (pointsEarned > 0) {
+      setState(() {
+        _pointsService.addPoints(pointsEarned);
+      });
+
+      // Play sound effect
+      await _soundService.playPointsEarnedSound();
+
+      // Show snackbar with animation
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.stars, color: Colors.yellow),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    '🎉 You earned $pointsEarned points!',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: const Color(0xFF0D3A6D),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          'My Goals',
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
+      backgroundColor: const Color(0xFFF6F7FB),
+      body: Column(
+        children: [
+          const ArcHeader(title: "MHuat"),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 5, 16, 8),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black87),
+                  onPressed: () => Navigator.pop(context),
+                  iconSize: 20,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(
+                    minWidth: 36,
+                    minHeight: 36,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Text(
+                  "My Goals",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0D3A6D),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black87,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Rewards Section Card
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.orange,
-                      Colors.deepOrange,
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Rewards Section Card
+                  _buildRewardsCard(),
+
+                  const SizedBox(height: 30),
+
+                  // Investment Learning Section Title
+                  Row(
+                    children: [
+                      const Text(
+                        'Investment Learning',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF0D3A6D),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0D3A6D).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.auto_stories,
+                          color: const Color(0xFF0D3A6D),
+                          size: 20,
+                        ),
+                      ),
                     ],
                   ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.orange.withValues(alpha: 0.3),
-                      spreadRadius: 2,
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    const Text(
-                      "🎁 Rewards Available",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.monetization_on,
-                        size: 60,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    Text(
-                      "$_points Points",
-                      style: const TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text(
-                        "1 point = RM0.10 cashback",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
+
+                  const SizedBox(height: 20),
+
+                  // Investment Basics Card
+                  _buildInvestNowStyleCard(
+                    title: "Investment Basics",
+                    iconData: Icons.trending_up,
+                    iconBgColor: const Color(0xFFFFF1D6),
+                    onTap: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const InvestmentBasicPage(),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                      );
 
-              const SizedBox(height: 30),
+                      if (result != null && result is int) {
+                        await _handlePointsEarned(result);
+                      }
+                    },
+                  ),
 
-              // Investment Learning Section Title with Emoji
-              Row(
-                children: [
-                  const Text(
-                    '📚 Investment Learning',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
+                  const SizedBox(height: 12),
+
+                  // Ownership Investments Card
+                  _buildInvestNowStyleCard(
+                    title: "Ownership Investments",
+                    iconData: Icons.business_center,
+                    iconBgColor: const Color(0xFFDFF3FF),
+                    onTap: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const OwnershipInvestmentsPage(),
+                        ),
+                      );
+
+                      if (result != null && result is int) {
+                        await _handlePointsEarned(result);
+                      }
+                    },
                   ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.blue.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      Icons.auto_stories,
-                      color: Colors.blue,
-                      size: 20,
-                    ),
+
+                  const SizedBox(height: 12),
+
+                  // Lending & Low-risk Investments Card
+                  _buildInvestNowStyleCard(
+                    title: "Lending & Low-risk",
+                    iconData: Icons.savings,
+                    iconBgColor: const Color(0xFFFFE0E0),
+                    onTap: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LendingInvestmentsPage(),
+                        ),
+                      );
+
+                      if (result != null && result is int) {
+                        await _handlePointsEarned(result);
+                      }
+                    },
                   ),
+
+                  const SizedBox(height: 40),
                 ],
               ),
-
-              const SizedBox(height: 20),
-
-              // Colorful Investment Learning Cards
-              _buildColorfulSectionCard(
-                context,
-                title: "Investment Basics",
-                emoji: "📈",
-                gradientColors: const [Colors.blue, Colors.lightBlue],
-                icon: Icons.trending_up,
-                onTap: () async {
-                  // Navigate to InvestmentBasicPage and wait for points back
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const InvestmentBasicPage(),
-                    ),
-                  );
-
-                  // Update points if any were earned
-                  if (result != null && result is int && result > 0) {
-                    // Use a local variable to capture context safely
-                    final int pointsEarned = result;
-                    if (mounted) {
-                      setState(() {
-                        _points += pointsEarned;
-                      });
-
-                      // Show snackbar to notify user
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('🎉 You earned $pointsEarned points!'),
-                          backgroundColor: Colors.green,
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                },
-              ),
-
-              const SizedBox(height: 12),
-
-              _buildColorfulSectionCard(
-                context,
-                title: "Ownership Investments",
-                emoji: "🏢",
-                gradientColors: const [Colors.purple, Colors.deepPurple],
-                icon: Icons.business_center,
-                onTap: () async {
-                  // Navigate to OwnershipInvestmentsPage and wait for points back
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const OwnershipInvestmentsPage(),
-                    ),
-                  );
-
-                  // Update points if any were earned
-                  if (result != null && result is int && result > 0) {
-                    final int pointsEarned = result;
-                    if (mounted) {
-                      setState(() {
-                        _points += pointsEarned;
-                      });
-
-                      // Show snackbar to notify user
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('🎉 You earned $pointsEarned points!'),
-                          backgroundColor: Colors.green,
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                },
-              ),
-
-              const SizedBox(height: 12),
-
-              _buildColorfulSectionCard(
-                context,
-                title: "Lending & Low-risk Investments",
-                emoji: "💰",
-                gradientColors: const [Colors.green, Colors.teal],
-                icon: Icons.savings,
-                onTap: () async {
-                  // Navigate to LendingInvestmentsPage and wait for points back
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LendingInvestmentsPage(),
-                    ),
-                  );
-
-                  // Update points if any were earned
-                  if (result != null && result is int && result > 0) {
-                    final int pointsEarned = result;
-                    if (mounted) {
-                      setState(() {
-                        _points += pointsEarned;
-                      });
-
-                      // Show snackbar to notify user
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('🎉 You earned $pointsEarned points!'),
-                          backgroundColor: Colors.green,
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                },
-              ),
-
-              const SizedBox(height: 40),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  /// Colorful Card Builder with Gradients
-  Widget _buildColorfulSectionCard(
-      BuildContext context, {
-        required String title,
-        required String emoji,
-        required List<Color> gradientColors,
-        required IconData icon,
-        required VoidCallback onTap,
-      }) {
+  // Separate widget for rewards card
+  Widget _buildRewardsCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.card_giftcard,
+                color: const Color(0xFF0D3A6D),
+                size: 28,
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                "Rewards Available",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF0D3A6D),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              color: const Color(0xFF0D3A6D).withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.monetization_on,
+              size: 60,
+              color: const Color(0xFF0D3A6D),
+            ),
+          ),
+          const SizedBox(height: 15),
+          Text(
+            "${_pointsService.points} Points",
+            style: const TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFF0D3A6D),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0D3A6D).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Text(
+              "1 point = RM0.10 cashback",
+              style: TextStyle(
+                color: Color(0xFF0D3A6D),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Card builder matching Invest Now page styling
+  Widget _buildInvestNowStyleCard({
+    required String title,
+    required IconData iconData,
+    required Color iconBgColor,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: gradientColors,
-          ),
-          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: gradientColors.first.withValues(alpha: 0.3),
-              spreadRadius: 1,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 14,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Colorful Emoji Container
+            // Icon Container
             Container(
-              width: 70,
-              height: 70,
+              width: 52,
+              height: 52,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(16),
+                color: iconBgColor,
+                borderRadius: BorderRadius.circular(14),
               ),
-              child: Center(
-                child: Text(
-                  emoji,
-                  style: const TextStyle(fontSize: 36),
-                ),
+              child: Icon(
+                iconData,
+                size: 28,
+                color: const Color(0xFF0D3A6D),
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 12),
 
             // Content
             Expanded(
@@ -337,180 +339,54 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF0D3A6D),
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              icon,
-                              size: 14,
-                              color: Colors.white,
-                            ),
-                            const SizedBox(width: 4),
-                            const Text(
-                              "Start Learning",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
+                  // "Start Learning" button
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0D3A6D).withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(
+                        color: const Color(0xFF0D3A6D).withOpacity(0.18),
                       ),
-                      const Spacer(),
-                      const Icon(
-                        Icons.arrow_forward,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.play_arrow,
+                          size: 16,
+                          color: const Color(0xFF0D3A6D),
+                        ),
+                        const SizedBox(width: 6),
+                        const Text(
+                          "Start Learning",
+                          style: TextStyle(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF0D3A6D),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
-/// Placeholder Page for other investment topics (keeping for future use)
-class PlaceholderPage extends StatelessWidget {
-  final String title;
-
-  const PlaceholderPage({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    // Get color based on title
-    Color getGradientColor() {
-      if (title.contains("Basics")) return Colors.blue;
-      if (title.contains("Ownership")) return Colors.purple;
-      if (title.contains("Lending")) return Colors.green;
-      return Colors.blue;
-    }
-
-    String getEmoji() {
-      if (title.contains("Basics")) return "📈";
-      if (title.contains("Ownership")) return "🏢";
-      if (title.contains("Lending")) return "💰";
-      return "📚";
-    }
-
-    Color primaryColor = getGradientColor();
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black87,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 150,
-              height: 150,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    primaryColor,
-                    primaryColor.withValues(alpha: 0.7),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                    color: primaryColor.withValues(alpha: 0.3),
-                    spreadRadius: 5,
-                    blurRadius: 15,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  getEmoji(),
-                  style: const TextStyle(fontSize: 60),
-                ),
-              ),
-            ),
-            const SizedBox(height: 30),
-            Text(
-              "Coming Soon! 🚀",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: primaryColor,
-              ),
-            ),
-            const SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Text(
-                "We're working hard to bring you amazing content about $title",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                  height: 1.5,
-                ),
-              ),
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 15,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-              child: const Text(
-                'Go Back',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            // Arrow icon
+            const Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Colors.grey,
             ),
           ],
         ),
