@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_huat/shared/widgets/arc_header.dart';
 
 class RiskAssessmentPage extends StatefulWidget {
   const RiskAssessmentPage({super.key});
@@ -10,6 +11,9 @@ class RiskAssessmentPage extends StatefulWidget {
 class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
   int _currentQuestionIndex = 0;
   final Map<int, dynamic> _answers = {};
+
+  // Define blue color to match BNPL page
+  final Color navyBlue = const Color(0xFF0D3A6D);
 
   final List<Question> _questions = [
     Question(
@@ -91,7 +95,7 @@ class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
               Navigator.pop(context); // Close dialog
               Navigator.pop(context); // Go back to portfolio setup
             },
-            child: const Text('OK'),
+            child: Text('OK', style: TextStyle(color: navyBlue)),
           ),
         ],
       ),
@@ -105,23 +109,11 @@ class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          'Risk Assessment',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: Colors.purple,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
       body: Column(
         children: [
+          // Arc Header with title
+          const ArcHeader(title: "Risk Assessment"),
+
           // Progress Bar
           Container(
             width: double.infinity,
@@ -131,7 +123,7 @@ class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
               alignment: Alignment.centerLeft,
               widthFactor: progress,
               child: Container(
-                color: Colors.purple,
+                color: navyBlue,
               ),
             ),
           ),
@@ -146,7 +138,7 @@ class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.purple.shade700,
+                    color: navyBlue,
                   ),
                 ),
                 Text(
@@ -172,9 +164,9 @@ class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.purple.shade50,
+                      color: navyBlue.withOpacity(0.05),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.purple.shade200),
+                      border: Border.all(color: navyBlue.withOpacity(0.2)),
                     ),
                     child: Text(
                       question.text,
@@ -204,8 +196,8 @@ class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
                             child: OutlinedButton(
                               onPressed: _previousQuestion,
                               style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.purple,
-                                side: BorderSide(color: Colors.purple.shade300),
+                                foregroundColor: navyBlue,
+                                side: BorderSide(color: navyBlue.withOpacity(0.3)),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -219,7 +211,7 @@ class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
                           child: ElevatedButton(
                             onPressed: _nextQuestion,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.purple,
+                              backgroundColor: navyBlue,
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -385,10 +377,10 @@ class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.purple.shade50 : Colors.white,
+          color: isSelected ? navyBlue.withOpacity(0.05) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? Colors.purple : Colors.grey.shade300,
+            color: isSelected ? navyBlue : Colors.grey.shade300,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -396,7 +388,7 @@ class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
           children: [
             Icon(
               isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-              color: isSelected ? Colors.purple : Colors.grey.shade400,
+              color: isSelected ? navyBlue : Colors.grey.shade400,
               size: 20,
             ),
             const SizedBox(width: 12),
@@ -406,7 +398,7 @@ class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                  color: isSelected ? Colors.purple : Colors.black87,
+                  color: isSelected ? navyBlue : Colors.black87,
                 ),
               ),
             ),
