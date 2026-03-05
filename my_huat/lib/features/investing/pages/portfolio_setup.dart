@@ -6,43 +6,39 @@ class PortfolioSetupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('Set Up Portfolio'),
-        backgroundColor: Colors.purple,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.grey[50],
         elevation: 0,
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.purple,
-              Colors.purple.withValues(alpha: 0.1),
-            ],
-          ),
+        title: Row(
+          children: [
+            const Text(
+              'Set Up Portfolio',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(
+              Icons.account_balance_wallet,
+              color: Colors.purple,
+              size: 28,
+            ),
+          ],
         ),
-        child: const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.account_balance_wallet,
-                size: 80,
-                color: Colors.white,
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Portfolio Setup Page',
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: const Center(
+        child: Text(
+          'Set Up Portfolio Content',
+          style: TextStyle(fontSize: 18),
         ),
       ),
     );
