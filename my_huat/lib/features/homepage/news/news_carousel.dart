@@ -78,24 +78,18 @@ class _NewsCarouselState extends State<NewsCarousel> {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "News & Updates",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF0D3A6D), // Color 100
-                ),
-              ),
-              // Optional: subtle "View all" could be added, but not in original.
-            ],
+          child: Text(
+            "News & Updates",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF0D3A6D), // Color 100
+            ),
           ),
         ),
         const SizedBox(height: 12),
         SizedBox(
-          height: 200,
+          height: 260,
           child: PageView.builder(
             controller: _pageController,
             itemCount: newsData.length,
@@ -116,49 +110,64 @@ class _NewsCarouselState extends State<NewsCarousel> {
                 },
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
+                  clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF7EBEFB).withOpacity(0.3), // Color 40 with opacity
+                        color: const Color(0xFF7EBEFB).withOpacity(0.3), // Color 40 透明度
                         blurRadius: 12,
                         offset: const Offset(0, 6),
                       ),
                     ],
-                    image: DecorationImage(
-                      image: AssetImage(newsItem['image']),
-                      fit: BoxFit.cover,
-                    ),
                   ),
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: LinearGradient(
-                        colors: [
-                          const Color(0xFF0D3A6D).withOpacity(0.8), // Color 100 with opacity
-                          Colors.transparent,
-                        ],
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        newsItem['image'],
+                        height: 190,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 190,
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: Icon(Icons.broken_image, color: Colors.grey),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      newsItem['title'],
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black26,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 4),
+                            Text(
+                              newsItem['title'],
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF0D3A6D), // Color 100
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              newsItem['date'],
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               );
@@ -166,7 +175,6 @@ class _NewsCarouselState extends State<NewsCarousel> {
           ),
         ),
         const SizedBox(height: 12),
-        // Page indicator dots
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(newsData.length, (index) {
