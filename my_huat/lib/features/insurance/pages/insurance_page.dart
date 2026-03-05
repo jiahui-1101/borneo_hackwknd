@@ -15,17 +15,9 @@ class _InsurancePageState extends State<InsurancePage> {
   @override
   void initState() {
     super.initState();
-
-    // Initialize video controller with your downloaded video
     _controller = VideoPlayerController.asset('assets/video/basic_insurance.mp4');
-
-    // Initialize the controller and store the Future for later use
     _initializeVideoPlayerFuture = _controller.initialize();
-
-    // Optional: Set looping
     _controller.setLooping(false);
-
-    // Optional: Set volume
     _controller.setVolume(1.0);
   }
 
@@ -38,7 +30,7 @@ class _InsurancePageState extends State<InsurancePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.transparent, // Match sample
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -46,7 +38,7 @@ class _InsurancePageState extends State<InsurancePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header with Shield Icon
+                // Header with Shield Icon (kept original icon)
                 Row(
                   children: [
                     const Text(
@@ -76,7 +68,7 @@ class _InsurancePageState extends State<InsurancePage> {
                 ),
                 const SizedBox(height: 12),
 
-                // Video Container
+                // Local Video Container (unchanged)
                 Container(
                   height: 200,
                   width: double.infinity,
@@ -97,17 +89,13 @@ class _InsurancePageState extends State<InsurancePage> {
                       future: _initializeVideoPlayerFuture,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
-                          // Video is initialized, show video with controls
                           return Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
-                              // Video player
                               AspectRatio(
                                 aspectRatio: _controller.value.aspectRatio,
                                 child: VideoPlayer(_controller),
                               ),
-
-                              // Video controls overlay
                               Container(
                                 height: 40,
                                 decoration: BoxDecoration(
@@ -123,7 +111,6 @@ class _InsurancePageState extends State<InsurancePage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    // Play/Pause button
                                     IconButton(
                                       icon: Icon(
                                         _controller.value.isPlaying
@@ -139,8 +126,6 @@ class _InsurancePageState extends State<InsurancePage> {
                                         });
                                       },
                                     ),
-
-                                    // Video position indicator
                                     Text(
                                       '${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}',
                                       style: const TextStyle(
@@ -154,7 +139,6 @@ class _InsurancePageState extends State<InsurancePage> {
                             ],
                           );
                         } else {
-                          // Video is still loading
                           return Container(
                             color: Colors.grey[300],
                             child: const Center(
@@ -167,9 +151,9 @@ class _InsurancePageState extends State<InsurancePage> {
                   ),
                 ),
 
-                // Video Control Buttons
+                // Video Control Buttons – vertical padding set to 0 (match sample)
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -210,7 +194,7 @@ class _InsurancePageState extends State<InsurancePage> {
                   ),
                 ),
 
-                // Skip for Now Button
+                // Skip for Now Button – moved up exactly like sample
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -227,9 +211,10 @@ class _InsurancePageState extends State<InsurancePage> {
                   ],
                 ),
 
-                const SizedBox(height: 30),
+                // Reduced spacing before Quick Actions (5 instead of 30)
+                const SizedBox(height: 5),
 
-                // Action Buttons Section
+                // Quick Actions Section
                 const Text(
                   'Quick Actions',
                   style: TextStyle(
@@ -237,9 +222,10 @@ class _InsurancePageState extends State<InsurancePage> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 20),
+                // Reduced spacing (12 instead of 20)
+                const SizedBox(height: 12),
 
-                // Three Buttons (without navigation for now)
+                // Three Buttons – onTap logic unchanged (still show coming soon)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -270,7 +256,8 @@ class _InsurancePageState extends State<InsurancePage> {
                   ],
                 ),
 
-                const SizedBox(height: 20),
+                // Reduced bottom spacing (10 instead of 20)
+                const SizedBox(height: 10),
               ],
             ),
           ),
@@ -279,7 +266,7 @@ class _InsurancePageState extends State<InsurancePage> {
     );
   }
 
-  // Helper method to format duration
+  // Helper method to format duration (unchanged)
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
@@ -287,7 +274,7 @@ class _InsurancePageState extends State<InsurancePage> {
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
-  // Custom widget for action buttons
+  // Custom widget for action buttons – updated text style to match sample
   Widget _buildActionButton({
     required IconData icon,
     required String label,
@@ -342,7 +329,7 @@ class _InsurancePageState extends State<InsurancePage> {
                   label,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 13, // increased from 12
                     fontWeight: FontWeight.w600,
                     color: Colors.grey[800],
                     height: 1.3,
