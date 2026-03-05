@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'PurchaseNowPage.dart';
 
 class InsurancePage extends StatefulWidget {
   const InsurancePage({super.key});
@@ -15,7 +16,9 @@ class _InsurancePageState extends State<InsurancePage> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset('assets/video/basic_insurance.mp4');
+    _controller = VideoPlayerController.asset(
+      'assets/video/basic_insurance.mp4',
+    );
     _initializeVideoPlayerFuture = _controller.initialize();
     _controller.setLooping(false);
     _controller.setVolume(1.0);
@@ -49,11 +52,7 @@ class _InsurancePageState extends State<InsurancePage> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Icon(
-                      Icons.shield,
-                      color: Colors.blue,
-                      size: 28,
-                    ),
+                    Icon(Icons.shield, color: Colors.blue, size: 28),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -61,10 +60,7 @@ class _InsurancePageState extends State<InsurancePage> {
                 // Tutorial Section
                 const Text(
                   'Tutorial',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 12),
 
@@ -204,9 +200,7 @@ class _InsurancePageState extends State<InsurancePage> {
                       },
                       icon: const Icon(Icons.skip_next),
                       label: const Text('Skip for Now'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.blue,
-                      ),
+                      style: TextButton.styleFrom(foregroundColor: Colors.blue),
                     ),
                   ],
                 ),
@@ -217,10 +211,7 @@ class _InsurancePageState extends State<InsurancePage> {
                 // Quick Actions Section
                 const Text(
                   'Quick Actions',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 // Reduced spacing (12 instead of 20)
                 const SizedBox(height: 12),
@@ -250,7 +241,12 @@ class _InsurancePageState extends State<InsurancePage> {
                       label: 'Purchase\nNow',
                       color: Colors.green,
                       onTap: () {
-                        _showComingSoon(context, 'Purchase Now');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const PurchaseNowPage(),
+                          ),
+                        );
                       },
                     ),
                   ],
@@ -312,11 +308,7 @@ class _InsurancePageState extends State<InsurancePage> {
                     color: color.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
-                    icon,
-                    color: color,
-                    size: 28,
-                  ),
+                  child: Icon(icon, color: color, size: 28),
                 ),
               ),
             ),
@@ -349,9 +341,7 @@ class _InsurancePageState extends State<InsurancePage> {
         content: const Text('Skipped tutorial for now'),
         duration: const Duration(seconds: 1),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
@@ -362,9 +352,7 @@ class _InsurancePageState extends State<InsurancePage> {
         content: Text('$pageName coming soon!'),
         duration: const Duration(seconds: 1),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
