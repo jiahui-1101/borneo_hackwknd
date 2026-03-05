@@ -23,8 +23,8 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
   String suitabilityScore = "";
   String recommendationType = "neutral";
 
-  // Light purple color using purple.shade800
-  final Color lightPurple = Colors.purple.shade800;
+  // Dark navy blue color from the top
+  final Color navyBlue = const Color(0xFF0D3A6D);
 
   // Typical BNPL late fees (can be adjusted)
   final double lateFeePerOccurrence = 15.0; // RM15 per late payment
@@ -231,7 +231,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
         barRods: [
           BarChartRodData(
             toY: purchaseAmount,
-            color: Colors.blue,
+            color: navyBlue.withOpacity(0.7), // Navy blue for purchase
             width: 22,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(4),
@@ -245,7 +245,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
         barRods: [
           BarChartRodData(
             toY: interestAmount,
-            color: Colors.orange,
+            color: Colors.orange, // Keeping orange for interest
             width: 22,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(4),
@@ -259,7 +259,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
         barRods: [
           BarChartRodData(
             toY: lateFees,
-            color: Colors.red,
+            color: Colors.red, // Keeping red for late fees
             width: 22,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(4),
@@ -280,38 +280,32 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
           // Arc Header with MHuat text
           const ArcHeader(title: "MHuat"),
 
-          // Title Section with Back Arrow
+          // Title Section with Back Arrow - Removed shading
           Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             color: Colors.white,
             child: Row(
               children: [
-                // Back arrow
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black87),
-                    onPressed: () => Navigator.pop(context),
-                    iconSize: 20,
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(
-                      minWidth: 36,
-                      minHeight: 36,
-                    ),
+                // Back arrow - NO SHADING, just plain icon
+                IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black87),
+                  onPressed: () => Navigator.pop(context),
+                  iconSize: 20,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(
+                    minWidth: 36,
+                    minHeight: 36,
                   ),
                 ),
                 const SizedBox(width: 12),
                 // Title
-                const Text(
+                Text(
                   "BNPL Calculator",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: navyBlue, // Changed to navy blue
                   ),
                 ),
               ],
@@ -347,10 +341,10 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                                 border: const OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.shopping_cart, color: Colors.grey.shade600),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: lightPurple, width: 2),
+                                  borderSide: BorderSide(color: navyBlue, width: 2), // Changed to navy blue
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: lightPurple.withOpacity(0.5), width: 1),
+                                  borderSide: BorderSide(color: navyBlue.withOpacity(0.5), width: 1), // Changed to navy blue
                                 ),
                               ),
                             ),
@@ -364,10 +358,10 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                                 border: const OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.percent, color: Colors.grey.shade600),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: lightPurple, width: 2),
+                                  borderSide: BorderSide(color: navyBlue, width: 2), // Changed to navy blue
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: lightPurple.withOpacity(0.5), width: 1),
+                                  borderSide: BorderSide(color: navyBlue.withOpacity(0.5), width: 1), // Changed to navy blue
                                 ),
                               ),
                             ),
@@ -381,22 +375,22 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                                 border: const OutlineInputBorder(),
                                 prefixIcon: Icon(Icons.warning, color: Colors.grey.shade600),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: lightPurple, width: 2),
+                                  borderSide: BorderSide(color: navyBlue, width: 2), // Changed to navy blue
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: lightPurple.withOpacity(0.5), width: 1),
+                                  borderSide: BorderSide(color: navyBlue.withOpacity(0.5), width: 1), // Changed to navy blue
                                 ),
                               ),
                             ),
                             const SizedBox(height: 24),
-                            // Larger Calculate Button - Light Purple
+                            // Larger Calculate Button - Navy Blue
                             SizedBox(
                               width: double.infinity,
                               height: 60,
                               child: ElevatedButton(
                                 onPressed: _calculateTotalCost,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: lightPurple,
+                                  backgroundColor: navyBlue, // Changed to navy blue
                                   foregroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(16),
@@ -422,7 +416,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
 
                     // Results Section
                     if (purchaseAmount > 0) ...[
-                      // Suitability Score Card - White background with grey text
+                      // Suitability Score Card - White background with navy blue text
                       Card(
                         elevation: 2,
                         shape: RoundedRectangleBorder(
@@ -436,7 +430,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                               Icon(
                                 Icons.analytics,
                                 size: 40,
-                                color: Colors.grey.shade700,
+                                color: navyBlue, // Changed to navy blue
                               ),
                               const SizedBox(width: 16),
                               Expanded(
@@ -456,7 +450,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                                       style: TextStyle(
                                         fontSize: 22,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade900,
+                                        color: navyBlue, // Changed to navy blue
                                       ),
                                     ),
                                   ],
@@ -485,19 +479,19 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade900,
+                                  color: navyBlue, // Changed to navy blue
                                 ),
                               ),
                               const SizedBox(height: 16),
                               _buildResultRow("Purchase Amount:",
-                                  "RM${purchaseAmount.toStringAsFixed(2)}", Colors.blue),
+                                  "RM${purchaseAmount.toStringAsFixed(2)}", navyBlue.withOpacity(0.7)), // Changed to navy blue
                               _buildResultRow("Interest (${bnplRate}%):",
                                   "RM${(purchaseAmount * bnplRate / 100).toStringAsFixed(2)}", Colors.orange),
                               _buildResultRow("Late Fees:",
                                   "RM${(lateRepayments * lateFeePerOccurrence).toStringAsFixed(2)}", Colors.red),
                               Divider(height: 24, color: Colors.grey.shade300),
                               _buildResultRow("TOTAL COST:",
-                                  "RM${totalCost.toStringAsFixed(2)}", Colors.green, isBold: true),
+                                  "RM${totalCost.toStringAsFixed(2)}", navyBlue, isBold: true), // Changed to navy blue
                             ],
                           ),
                         ),
@@ -521,7 +515,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade900,
+                                  color: navyBlue, // Changed to navy blue
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -535,7 +529,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                                     barTouchData: BarTouchData(
                                       enabled: true,
                                       touchTooltipData: BarTouchTooltipData(
-                                        tooltipBgColor: Colors.grey.shade800,
+                                        tooltipBgColor: navyBlue, // Changed to navy blue
                                         getTooltipItem: (group, groupIndex, rod, rodIndex) {
                                           String label;
                                           switch (group.x) {
@@ -567,13 +561,13 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                                             switch (value.toInt()) {
                                               case 0:
                                                 return Text('Purchase',
-                                                    style: TextStyle(color: Colors.grey.shade700, fontSize: 12, fontWeight: FontWeight.w500));
+                                                    style: TextStyle(color: navyBlue, fontSize: 12, fontWeight: FontWeight.w500)); // Changed to navy blue
                                               case 1:
                                                 return Text('Interest',
-                                                    style: TextStyle(color: Colors.grey.shade700, fontSize: 12, fontWeight: FontWeight.w500));
+                                                    style: TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.w500));
                                               case 2:
                                                 return Text('Late Fees',
-                                                    style: TextStyle(color: Colors.grey.shade700, fontSize: 12, fontWeight: FontWeight.w500));
+                                                    style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.w500));
                                               default:
                                                 return const Text('');
                                             }
@@ -587,7 +581,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                                           getTitlesWidget: (value, meta) {
                                             return Text(
                                               'RM${value.toInt()}',
-                                              style: TextStyle(color: Colors.grey.shade600, fontSize: 10),
+                                              style: TextStyle(color: navyBlue, fontSize: 10), // Changed to navy blue
                                             );
                                           },
                                         ),
@@ -610,7 +604,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    _buildLegendItem('Purchase', Colors.blue),
+                                    _buildLegendItem('Purchase', navyBlue.withOpacity(0.7)), // Changed to navy blue
                                     _buildLegendItem('Interest', Colors.orange),
                                     _buildLegendItem('Late Fees', Colors.red),
                                   ],
@@ -623,7 +617,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
 
                       const SizedBox(height: 16),
 
-                      // AI Suggestion Section - White background with grey text
+                      // AI Suggestion Section - White background with navy blue accents
                       Card(
                         elevation: 2,
                         shape: RoundedRectangleBorder(
@@ -639,7 +633,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                                 children: [
                                   Icon(
                                       Icons.auto_awesome,
-                                      color: Colors.grey.shade700,
+                                      color: navyBlue, // Changed to navy blue
                                       size: 28
                                   ),
                                   const SizedBox(width: 10),
@@ -649,7 +643,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.grey.shade900,
+                                        color: navyBlue, // Changed to navy blue
                                       ),
                                     ),
                                   ),
@@ -662,7 +656,7 @@ class _BnplCalculatorPageState extends State<BnplCalculatorPage> {
                                   color: Colors.grey.shade50,
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
-                                    color: Colors.grey.shade300,
+                                    color: navyBlue.withOpacity(0.3), // Changed to navy blue
                                     width: 1,
                                   ),
                                 ),
