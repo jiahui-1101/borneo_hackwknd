@@ -34,7 +34,7 @@ class _InvestPageState extends State<InvestPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.transparent,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -155,9 +155,9 @@ class _InvestPageState extends State<InvestPage> {
                   ),
                 ),
 
-                // Video Control Buttons
+                // Video Control Buttons - MOVED UP (removed extra spacing)
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -215,9 +215,10 @@ class _InvestPageState extends State<InvestPage> {
                   ],
                 ),
 
-                const SizedBox(height: 30),
+                // REDUCED SPACING HERE - from 30 to 15
+                const SizedBox(height: 5),
 
-                // Action Buttons Section
+                // Quick Actions Section - MOVED UP
                 const Text(
                   'Quick Actions',
                   style: TextStyle(
@@ -225,7 +226,8 @@ class _InvestPageState extends State<InvestPage> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 20),
+                // REDUCED SPACING HERE - from 20 to 12
+                const SizedBox(height: 12),
 
                 // Three Buttons with Navigation
                 Row(
@@ -258,7 +260,8 @@ class _InvestPageState extends State<InvestPage> {
                   ],
                 ),
 
-                const SizedBox(height: 20),
+                // REDUCED BOTTOM SPACING - from 20 to 10
+                const SizedBox(height: 10),
               ],
             ),
           ),
@@ -337,7 +340,7 @@ class _InvestPageState extends State<InvestPage> {
                   label,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: Colors.grey[800],
                     height: 1.3,
