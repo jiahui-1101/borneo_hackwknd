@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../../../shared/widgets/arc_header.dart';
-import '../../spending/pages/savings_page.dart';
-import '../../homepage/home_page.dart';
-import '../../insurance/pages/insurance_page.dart';
-import '../../setting/pages/settings_page.dart';
 
 class InvestNowPage extends StatefulWidget {
   const InvestNowPage({super.key});
@@ -14,51 +9,45 @@ class InvestNowPage extends StatefulWidget {
 }
 
 class _InvestNowPageState extends State<InvestNowPage> {
-  int _currentIndex = 2; // Invest tab
-
-  final List<Widget> _pages = const [
-    HomePage(),
-    SavingsPage(),
-    _InvestPortfolioView(),
-    InsurancePage(),
-    SettingsPage(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          const ArcHeader(title: 'Portfolio'),
-          Expanded(
-            child: IndexedStack(index: _currentIndex, children: _pages),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFF6A5AE0),
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.savings), label: 'Savings'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.trending_up),
-            label: 'Invest',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.security),
-            label: 'Insurance',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Setting'),
-        ],
+      body: Container(
+        color: const Color(0xFFF6F7FB), // 统一背景色
+        child: Column(
+          children: [
+            const ArcHeader(title: 'MHuat'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 5, 16, 8), // 底部间距8，控制标题与列表的距离
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Invest Now',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0B3A76),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: _InvestPortfolioView(),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
+// 投资内容组件（背景透明，继承父级）
 class _InvestPortfolioView extends StatefulWidget {
   const _InvestPortfolioView();
 
@@ -70,12 +59,11 @@ class _InvestPortfolioViewState extends State<_InvestPortfolioView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFFF6F7FB),
-      child: Column(
-        // ← removed const (fixes error)
+      color: Colors.transparent, // 透明，继承父级背景
+      child: const Column(
         children: [
-          const SizedBox(height: 20),
-          const Expanded(child: _InvestList()),
+          // 移除了 SizedBox(height: 20)
+          Expanded(child: _InvestList()),
         ],
       ),
     );
@@ -344,7 +332,6 @@ class _FundCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
           ],
-
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -384,7 +371,6 @@ class _FundCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-
                     ...info.bullets.map(
                       (t) => Padding(
                         padding: const EdgeInsets.only(bottom: 4),
@@ -418,10 +404,7 @@ class _FundCard extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 12),
-
-          // Bottom strip (YTD / 1Y / Risk)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
