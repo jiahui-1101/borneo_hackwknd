@@ -21,7 +21,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // 2. 🌟 关键修改：让 App 启动后先进入 EntryPage
-      home: const EntryPage(), 
+      // home: const EntryPage(),
+      home: const HomePage(),
     );
   }
 }

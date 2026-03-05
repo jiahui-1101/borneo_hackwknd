@@ -1,7 +1,8 @@
+// features/investing/pages/invest_page.dart
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'goals page/goals.dart';
 import 'portfolio_setup.dart';
-import 'goals.dart';
 import 'investnow.dart';
 
 class InvestPage extends StatefulWidget {
@@ -18,17 +19,9 @@ class _InvestPageState extends State<InvestPage> {
   @override
   void initState() {
     super.initState();
-
-    // Initialize video controller with local asset
     _controller = VideoPlayerController.asset('assets/video/basic_investing.mp4');
-
-    // Initialize the controller and store the Future for later use
     _initializeVideoPlayerFuture = _controller.initialize();
-
-    // Optional: Set looping
     _controller.setLooping(false);
-
-    // Optional: Set volume
     _controller.setVolume(1.0);
   }
 
@@ -100,17 +93,13 @@ class _InvestPageState extends State<InvestPage> {
                       future: _initializeVideoPlayerFuture,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
-                          // Video is initialized, show video with controls
                           return Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
-                              // Video player
                               AspectRatio(
                                 aspectRatio: _controller.value.aspectRatio,
                                 child: VideoPlayer(_controller),
                               ),
-
-                              // Video controls overlay
                               Container(
                                 height: 40,
                                 decoration: BoxDecoration(
@@ -126,7 +115,6 @@ class _InvestPageState extends State<InvestPage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    // Play/Pause button
                                     IconButton(
                                       icon: Icon(
                                         _controller.value.isPlaying
@@ -142,8 +130,6 @@ class _InvestPageState extends State<InvestPage> {
                                         });
                                       },
                                     ),
-
-                                    // Video position indicator
                                     Text(
                                       '${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}',
                                       style: const TextStyle(
@@ -157,7 +143,6 @@ class _InvestPageState extends State<InvestPage> {
                             ],
                           );
                         } else {
-                          // Video is still loading
                           return Container(
                             color: Colors.grey[300],
                             child: const Center(
@@ -170,7 +155,7 @@ class _InvestPageState extends State<InvestPage> {
                   ),
                 ),
 
-                // Video Control Buttons (alternative to overlay)
+                // Video Control Buttons
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Row(
@@ -232,7 +217,7 @@ class _InvestPageState extends State<InvestPage> {
 
                 const SizedBox(height: 30),
 
-                // Action Buttons Section (rest remains the same)
+                // Action Buttons Section
                 const Text(
                   'Quick Actions',
                   style: TextStyle(
@@ -242,7 +227,7 @@ class _InvestPageState extends State<InvestPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Three Buttons with Navigation to separate pages
+                // Three Buttons with Navigation
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -251,10 +236,7 @@ class _InvestPageState extends State<InvestPage> {
                       label: 'Set Up\nPortfolio',
                       color: Colors.purple,
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const PortfolioSetupPage()),
-                        );
+                        _navigateToPage(context, const PortfolioSetupPage());
                       },
                     ),
                     _buildActionButton(
@@ -262,10 +244,7 @@ class _InvestPageState extends State<InvestPage> {
                       label: 'My Goals',
                       color: Colors.orange,
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const MyGoalsPage()),
-                        );
+                        _navigateToPage(context, const MyGoalsPage());
                       },
                     ),
                     _buildActionButton(
@@ -273,10 +252,7 @@ class _InvestPageState extends State<InvestPage> {
                       label: 'Invest\nNow',
                       color: Colors.green,
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const InvestNowPage()),
-                        );
+                        _navigateToPage(context, const InvestNowPage());
                       },
                     ),
                   ],
@@ -288,6 +264,13 @@ class _InvestPageState extends State<InvestPage> {
           ),
         ),
       ),
+    );
+  }
+
+  void _navigateToPage(BuildContext context, Widget page) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => page),
     );
   }
 
