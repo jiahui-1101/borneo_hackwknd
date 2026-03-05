@@ -1,10 +1,7 @@
 // features/investing/goals/ownership_investments.dart
-import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-
-// Global variable to track points (in a real app, this would be in a state management solution)
-int userPoints = 0;
 
 class OwnershipInvestmentsPage extends StatefulWidget {
   const OwnershipInvestmentsPage({super.key});
@@ -66,6 +63,17 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
     super.dispose();
   }
 
+  // Optimized video initialization with quality settings
+  Future<void> _initVideo(VideoPlayerController controller) async {
+    try {
+      await controller.initialize();
+      controller.setLooping(false);
+      controller.setVolume(0.7);
+    } catch (error) {
+      debugPrint('Error loading video: $error');
+    }
+  }
+
   // Lazy initialize stocks video
   Future<void> _initStocksVideo() async {
     if (_stocksController != null) return;
@@ -76,18 +84,12 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
     _stocksController = VideoPlayerController.asset('assets/video/Stocks.mp4');
 
-    try {
-      await _stocksController!.initialize();
-      _stocksController!.setLooping(false);
-      _stocksController!.setVolume(1.0);
-    } catch (error) {
-      debugPrint('Error loading stocks video: $error');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingVideo = false;
-        });
-      }
+    await _initVideo(_stocksController!);
+
+    if (mounted) {
+      setState(() {
+        _isLoadingVideo = false;
+      });
     }
   }
 
@@ -101,18 +103,12 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
     _reitController = VideoPlayerController.asset('assets/video/REIT.mp4');
 
-    try {
-      await _reitController!.initialize();
-      _reitController!.setLooping(false);
-      _reitController!.setVolume(1.0);
-    } catch (error) {
-      debugPrint('Error loading REIT video: $error');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingVideo = false;
-        });
-      }
+    await _initVideo(_reitController!);
+
+    if (mounted) {
+      setState(() {
+        _isLoadingVideo = false;
+      });
     }
   }
 
@@ -126,18 +122,12 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
     _etfController = VideoPlayerController.asset('assets/video/ETF.mp4');
 
-    try {
-      await _etfController!.initialize();
-      _etfController!.setLooping(false);
-      _etfController!.setVolume(1.0);
-    } catch (error) {
-      debugPrint('Error loading ETF video: $error');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingVideo = false;
-        });
-      }
+    await _initVideo(_etfController!);
+
+    if (mounted) {
+      setState(() {
+        _isLoadingVideo = false;
+      });
     }
   }
 
@@ -151,23 +141,19 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
     _unitTrustController = VideoPlayerController.asset('assets/video/Unit_Trust.mp4');
 
-    try {
-      await _unitTrustController!.initialize();
-      _unitTrustController!.setLooping(false);
-      _unitTrustController!.setVolume(1.0);
-    } catch (error) {
-      debugPrint('Error loading Unit Trust video: $error');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingVideo = false;
-        });
-      }
+    await _initVideo(_unitTrustController!);
+
+    if (mounted) {
+      setState(() {
+        _isLoadingVideo = false;
+      });
     }
   }
 
   // Handle topic selection
   void _onTopicChanged(String? newValue) {
+    _videoCheckTimer?.cancel();
+
     setState(() {
       _selectedTopic = newValue;
       _showCompleteButton = false;
@@ -176,14 +162,9 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
       _isVideoInitialized = false;
       _resetQuiz();
 
-      // Cancel any existing timer
-      _videoCheckTimer?.cancel();
-
-      // Pause any active video
       _activeController?.pause();
     });
 
-    // Initialize the selected video asynchronously
     if (newValue == 'Stocks') {
       _initStocksVideo().then((_) {
         if (mounted && _stocksController != null) {
@@ -228,7 +209,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
   // Start checking video position
   void _startVideoCheck() {
     _videoCheckTimer?.cancel();
-    _videoCheckTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+    _videoCheckTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_activeController != null &&
           _activeController!.value.isPlaying &&
           _activeController!.value.position >= const Duration(seconds: 5) &&
@@ -239,7 +220,6 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
         timer.cancel();
       }
 
-      // Stop timer if video is no longer playing or page is disposed
       if (!mounted || _activeController == null || !_activeController!.value.isPlaying) {
         timer.cancel();
       }
@@ -276,7 +256,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
   // Get total questions for selected topic
   int _getTotalQuestionsForTopic() {
-    return 3; // Each topic has 3 questions
+    return 3;
   }
 
   // Show earn points dialog
@@ -299,9 +279,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
   // Go back to goals page with points update
   void _goBackToGoals() {
-    // Update global points before returning
-    userPoints += _score * 10;
-    Navigator.pop(context, _score * 10);
+    Navigator.pop(context, _score * 10); // Return points to goals page
   }
 
   // Handle answer selection
@@ -522,7 +500,10 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
         foregroundColor: Colors.black87,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context, 0),
+          onPressed: () {
+            _videoCheckTimer?.cancel();
+            Navigator.pop(context, 0);
+          },
         ),
       ),
       body: Stack(
@@ -579,10 +560,9 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
                   // Video player section
                   if (_selectedTopic != null) ...[
-                    // Show loading or video
                     if (_isLoadingVideo)
                       Container(
-                        height: 220,
+                        height: 200,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Colors.grey[200],
@@ -601,7 +581,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                       )
                     else if (_isVideoInitialized && _activeController != null)
                       Container(
-                        height: 220,
+                        height: 200,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
@@ -619,13 +599,10 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                           child: Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
-                              // Video player
                               AspectRatio(
                                 aspectRatio: _activeController!.value.aspectRatio,
                                 child: VideoPlayer(_activeController!),
                               ),
-
-                              // Video controls overlay
                               Container(
                                 height: 40,
                                 decoration: BoxDecoration(
@@ -677,7 +654,6 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
                     const SizedBox(height: 12),
 
-                    // ⏱️ Please wait for 5 seconds section
                     if (_isVideoInitialized && !_showCompleteButton)
                       Container(
                         margin: const EdgeInsets.only(bottom: 16),
@@ -705,7 +681,6 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                         ),
                       ),
 
-                    // Video control buttons
                     if (_isVideoInitialized)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -752,7 +727,6 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
                     const SizedBox(height: 20),
 
-                    // Show Complete button after 5 seconds
                     if (_showCompleteButton)
                       Center(
                         child: ElevatedButton(
@@ -796,7 +770,6 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                     ),
                     child: Column(
                       children: [
-                        // Header with back button and progress
                         Row(
                           children: [
                             IconButton(
@@ -838,7 +811,6 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
                         const SizedBox(height: 20),
 
-                        // Quiz completed view
                         if (_quizCompleted) ...[
                           Container(
                             padding: const EdgeInsets.all(16),
@@ -905,7 +877,6 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                             ),
                           ),
                         ] else ...[
-                          // Question card
                           Container(
                             width: double.infinity,
                             padding: const EdgeInsets.all(20),
@@ -916,7 +887,6 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Topic icon and AI generated indicator
                                 Row(
                                   children: [
                                     Container(
@@ -973,7 +943,6 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                 ),
                                 const SizedBox(height: 20),
 
-                                // Question text
                                 Text(
                                   _getCurrentQuestion()['question'],
                                   style: const TextStyle(
@@ -986,7 +955,6 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                 const Divider(),
                                 const SizedBox(height: 15),
 
-                                // Answer options
                                 ...(_getCurrentQuestion()['options'] as List<String>).asMap().entries.map((entry) {
                                   int index = entry.key;
                                   String option = entry.value;
@@ -1076,7 +1044,6 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
                                 const SizedBox(height: 20),
 
-                                // Check Answer or Next button
                                 if (!_showAnswerResult)
                                   SizedBox(
                                     width: double.infinity,
@@ -1136,7 +1103,6 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
             ),
           ),
 
-          // Earn Points Dialog Overlay
           if (_showEarnPointsDialog)
             Container(
               color: Colors.black.withValues(alpha: 0.5),

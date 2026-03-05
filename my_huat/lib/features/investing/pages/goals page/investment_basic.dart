@@ -17,14 +17,15 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
   String? _selectedTopic;
   final List<String> _topics = ['Liquidity in Investment', 'Risk in Investment'];
 
-  // Video players - lazy initialization
-  VideoPlayerController? _liquidityController;
-  VideoPlayerController? _riskController;
+  // Video players
+  late VideoPlayerController _liquidityController;
+  late VideoPlayerController _riskController;
+  late Future<void> _liquidityInitializeFuture;
+  late Future<void> _riskInitializeFuture;
 
   // Track which video is currently playing
   VideoPlayerController? _activeController;
   bool _isVideoInitialized = false;
-  bool _isLoadingVideo = false;
 
   // Track user progress
   bool _showCompleteButton = false;
@@ -42,64 +43,33 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
   @override
   void initState() {
     super.initState();
-    // Don't initialize videos here - do it lazily when needed
+
+    // Initialize liquidity video controller
+    _liquidityController = VideoPlayerController.asset('assets/video/liquidity.mp4');
+    _liquidityInitializeFuture = _liquidityController.initialize().then((_) {
+      _liquidityController.setLooping(false);
+      _liquidityController.setVolume(1.0);
+      if (mounted) setState(() {});
+    }).catchError((error) {
+      debugPrint('Error loading liquidity video: $error');
+    });
+
+    // Initialize risk video controller
+    _riskController = VideoPlayerController.asset('assets/video/investment_risk.mp4');
+    _riskInitializeFuture = _riskController.initialize().then((_) {
+      _riskController.setLooping(false);
+      _riskController.setVolume(1.0);
+      if (mounted) setState(() {});
+    }).catchError((error) {
+      debugPrint('Error loading risk video: $error');
+    });
   }
 
   @override
   void dispose() {
-    _liquidityController?.dispose();
-    _riskController?.dispose();
+    _liquidityController.dispose();
+    _riskController.dispose();
     super.dispose();
-  }
-
-  // Lazy initialize liquidity video
-  Future<void> _initLiquidityVideo() async {
-    if (_liquidityController != null) return;
-
-    setState(() {
-      _isLoadingVideo = true;
-    });
-
-    _liquidityController = VideoPlayerController.asset('assets/video/liquidity.mp4');
-
-    try {
-      await _liquidityController!.initialize();
-      _liquidityController!.setLooping(false);
-      _liquidityController!.setVolume(1.0);
-    } catch (error) {
-      debugPrint('Error loading liquidity video: $error');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingVideo = false;
-        });
-      }
-    }
-  }
-
-  // Lazy initialize risk video
-  Future<void> _initRiskVideo() async {
-    if (_riskController != null) return;
-
-    setState(() {
-      _isLoadingVideo = true;
-    });
-
-    _riskController = VideoPlayerController.asset('assets/video/investment_risk.mp4');
-
-    try {
-      await _riskController!.initialize();
-      _riskController!.setLooping(false);
-      _riskController!.setVolume(1.0);
-    } catch (error) {
-      debugPrint('Error loading risk video: $error');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingVideo = false;
-        });
-      }
-    }
   }
 
   // Handle topic selection
@@ -114,30 +84,30 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
 
       // Pause any active video
       _activeController?.pause();
-    });
 
-    // Initialize the selected video asynchronously
-    if (newValue == 'Liquidity in Investment') {
-      _initLiquidityVideo().then((_) {
-        if (mounted && _liquidityController != null) {
-          setState(() {
-            _activeController = _liquidityController;
-            _isVideoInitialized = true;
-          });
-        }
-      });
-    } else if (newValue == 'Risk in Investment') {
-      _initRiskVideo().then((_) {
-        if (mounted && _riskController != null) {
-          setState(() {
-            _activeController = _riskController;
-            _isVideoInitialized = true;
-          });
-        }
-      });
-    } else {
-      _activeController = null;
-    }
+      // Set active controller based on selection
+      if (newValue == 'Liquidity in Investment') {
+        _activeController = _liquidityController;
+        _liquidityInitializeFuture.then((_) {
+          if (mounted) {
+            setState(() {
+              _isVideoInitialized = true;
+            });
+          }
+        });
+      } else if (newValue == 'Risk in Investment') {
+        _activeController = _riskController;
+        _riskInitializeFuture.then((_) {
+          if (mounted) {
+            setState(() {
+              _isVideoInitialized = true;
+            });
+          }
+        });
+      } else {
+        _activeController = null;
+      }
+    });
   }
 
   // Reset quiz
@@ -150,11 +120,10 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
     _quizCompleted = false;
   }
 
-  // Handle video completion with debouncing
+  // Handle video completion
   void _onVideoCompleted() {
     if (_activeController != null &&
-        _activeController!.value.position >= const Duration(seconds: 5) &&
-        !_showCompleteButton) {
+        _activeController!.value.position >= const Duration(seconds: 5)) {
       setState(() {
         _showCompleteButton = true;
       });
@@ -182,7 +151,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
   void _goBackToGoals() {
     // Update global points before returning
     userPoints += _score * 10;
-    Navigator.pop(context, _score * 10);
+    Navigator.pop(context, _score * 10); // Pass points back to goals page
   }
 
   // Handle answer selection
@@ -216,6 +185,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
         _showAnswerResult = false;
       });
     } else {
+      // Quiz completed
       setState(() {
         _quizCompleted = true;
       });
@@ -234,7 +204,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
             'How risky the investment is',
             'How old the investment is'
           ],
-          'correctAnswer': 0,
+          'correctAnswer': 0, // A
         },
         {
           'question': 'Which is the most liquid investment?',
@@ -244,7 +214,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
             'Land',
             'Artwork'
           ],
-          'correctAnswer': 1,
+          'correctAnswer': 1, // B
         },
         {
           'question': 'Low liquidity investment means:',
@@ -254,10 +224,11 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
             'No value at all',
             'Always high return'
           ],
-          'correctAnswer': 1,
+          'correctAnswer': 1, // B
         },
       ];
     } else {
+      // Risk questions
       return [
         {
           'question': 'What does investment risk mean?',
@@ -267,7 +238,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
             'Only high return with no loss',
             'Saving money in bank only'
           ],
-          'correctAnswer': 1,
+          'correctAnswer': 1, // B
         },
         {
           'question': 'Which investment usually has higher risk?',
@@ -277,7 +248,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
             'Stock market investment',
             'Savings account'
           ],
-          'correctAnswer': 2,
+          'correctAnswer': 2, // C
         },
         {
           'question': 'Diversification is used to:',
@@ -287,7 +258,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
             'Remove all investments',
             'Guarantee high profit'
           ],
-          'correctAnswer': 1,
+          'correctAnswer': 1, // B
         },
       ];
     }
@@ -320,7 +291,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
         foregroundColor: Colors.black87,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context, 0),
+          onPressed: () => Navigator.pop(context, 0), // Return with 0 points when going back without completing
         ),
       ),
       body: Stack(
@@ -338,7 +309,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                         child: Container(
                           margin: const EdgeInsets.only(bottom: 20),
                           child: DropdownButtonFormField<String>(
-                            initialValue: _selectedTopic,
+                            value: _selectedTopic,
                             hint: const Text('Select a topic'),
                             isExpanded: true,
                             items: _topics.map((topic) {
@@ -378,7 +349,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                   // Video player section
                   if (_selectedTopic != null) ...[
                     // Show loading or video
-                    if (_isLoadingVideo)
+                    if (!_isVideoInitialized)
                       Container(
                         height: 220,
                         width: double.infinity,
@@ -397,7 +368,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                           ),
                         ),
                       )
-                    else if (_isVideoInitialized && _activeController != null)
+                    else
                       Container(
                         height: 220,
                         width: double.infinity,
@@ -418,10 +389,11 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                             alignment: Alignment.bottomCenter,
                             children: [
                               // Video player
-                              AspectRatio(
-                                aspectRatio: _activeController!.value.aspectRatio,
-                                child: VideoPlayer(_activeController!),
-                              ),
+                              if (_activeController != null && _activeController!.value.isInitialized)
+                                AspectRatio(
+                                  aspectRatio: _activeController!.value.aspectRatio,
+                                  child: VideoPlayer(_activeController!),
+                                ),
 
                               // Video controls overlay
                               Container(
@@ -441,34 +413,29 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                   children: [
                                     IconButton(
                                       icon: Icon(
-                                        _activeController!.value.isPlaying
+                                        _activeController != null && _activeController!.value.isPlaying
                                             ? Icons.pause
                                             : Icons.play_arrow,
                                         color: Colors.white,
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          _activeController!.value.isPlaying
-                                              ? _activeController!.pause()
-                                              : _activeController!.play();
-                                        });
-
-                                        // Check video position after play
-                                        Future.delayed(const Duration(milliseconds: 100), () {
-                                          if (_activeController != null &&
-                                              _activeController!.value.position >= const Duration(seconds: 5)) {
-                                            _onVideoCompleted();
+                                          if (_activeController!.value.isPlaying) {
+                                            _activeController!.pause();
+                                          } else {
+                                            _activeController!.play();
                                           }
                                         });
                                       },
                                     ),
-                                    Text(
-                                      '${_formatDuration(_activeController!.value.position)} / ${_formatDuration(_activeController!.value.duration)}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
+                                    if (_activeController != null)
+                                      Text(
+                                        '${_formatDuration(_activeController!.value.position)} / ${_formatDuration(_activeController!.value.duration)}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                        ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -508,54 +475,61 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                       ),
 
                     // Video control buttons
-                    if (_isVideoInitialized)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                if (_activeController!.value.isPlaying) {
-                                  _activeController!.pause();
-                                } else {
-                                  _activeController!.play();
-                                }
-                              });
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: _isVideoInitialized
+                              ? () {
+                            setState(() {
+                              if (_activeController!.value.isPlaying) {
+                                _activeController!.pause();
+                              } else {
+                                _activeController!.play();
+                              }
+                            });
 
-                              // Check video position after play
-                              Future.delayed(const Duration(milliseconds: 100), () {
-                                if (_activeController != null &&
-                                    _activeController!.value.position >= const Duration(seconds: 5)) {
-                                  _onVideoCompleted();
-                                }
-                              });
-                            },
-                            icon: Icon(
-                              _activeController!.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                            ),
-                            label: Text(_activeController!.value.isPlaying ? 'Pause' : 'Play'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              foregroundColor: Colors.white,
-                            ),
+                            _activeController!.addListener(() {
+                              if (_activeController!.value.position >= const Duration(seconds: 5)) {
+                                _onVideoCompleted();
+                              }
+                            });
+                          }
+                              : null,
+                          icon: Icon(
+                            _activeController != null && _activeController!.value.isPlaying
+                                ? Icons.pause
+                                : Icons.play_arrow,
                           ),
-                          const SizedBox(width: 10),
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              _activeController!.seekTo(Duration.zero);
-                              setState(() {
-                                _showCompleteButton = false;
-                              });
-                            },
-                            icon: const Icon(Icons.replay),
-                            label: const Text('Replay'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey,
-                              foregroundColor: Colors.white,
-                            ),
+                          label: Text(
+                            _activeController != null && _activeController!.value.isPlaying
+                                ? 'Pause'
+                                : 'Play',
                           ),
-                        ],
-                      ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        ElevatedButton.icon(
+                          onPressed: _isVideoInitialized
+                              ? () {
+                            _activeController!.seekTo(Duration.zero);
+                            setState(() {
+                              _showCompleteButton = false;
+                            });
+                          }
+                              : null,
+                          icon: const Icon(Icons.replay),
+                          label: const Text('Replay'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey,
+                            foregroundColor: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
 
                     const SizedBox(height: 20),
 
@@ -879,7 +853,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                       ),
                                     ),
                                   );
-                                }).toList(),
+                                }),
 
                                 const SizedBox(height: 20),
 
@@ -1026,7 +1000,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                 setState(() {
                                   _showEarnPointsDialog = false;
                                 });
-                                _goBackToGoals();
+                                _goBackToGoals(); // No points earned
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.grey[300],

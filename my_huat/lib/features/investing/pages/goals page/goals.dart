@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'investment_basic.dart'; // Import the Investment Basic page
 import 'ownership.dart'; // Import the Ownership Investments page
+import 'lending.dart'; // Import the Lending Investments page
 
 class MyGoalsPage extends StatefulWidget {
   const MyGoalsPage({super.key});
@@ -234,17 +235,40 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
 
               _buildColorfulSectionCard(
                 context,
-                title: "Lending & Low-risk",
+                title: "Lending & Low-risk Investments",
                 emoji: "💰",
                 gradientColors: const [Colors.green, Colors.teal],
                 icon: Icons.savings,
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  // Navigate to LendingInvestmentsPage and wait for points back
+                  final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const PlaceholderPage(title: "Lending & Low-risk Investment"),
+                      builder: (context) => const LendingInvestmentsPage(),
                     ),
                   );
+
+                  // Update points if any were earned
+                  if (result != null && result is int && result > 0) {
+                    final int pointsEarned = result;
+                    if (mounted) {
+                      setState(() {
+                        _points += pointsEarned;
+                      });
+
+                      // Show snackbar to notify user
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('🎉 You earned $pointsEarned points!'),
+                          backgroundColor: Colors.green,
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      );
+                    }
+                  }
                 },
               ),
 
@@ -368,7 +392,7 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
   }
 }
 
-/// Placeholder Page for other investment topics
+/// Placeholder Page for other investment topics (keeping for future use)
 class PlaceholderPage extends StatelessWidget {
   final String title;
 
