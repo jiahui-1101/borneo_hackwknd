@@ -1,4 +1,3 @@
-// lib/features/investing/pages/invest_page.dart
 import 'package:flutter/material.dart';
 
 class InvestPage extends StatelessWidget {
