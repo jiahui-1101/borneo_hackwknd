@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 class InsurancePage extends StatelessWidget {
-  const InsurancePage({Key? key}) : super(key: key);
+  const InsurancePage({super.key});
 
   @override
   Widget build(BuildContext context) {

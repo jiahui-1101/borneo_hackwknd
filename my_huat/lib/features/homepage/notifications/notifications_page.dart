@@ -93,7 +93,7 @@ class _ServicesTab extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(vertical: 12),
       itemCount: items.length + 1,
-      separatorBuilder: (_, __) => Divider(height: 1, color: Colors.grey[200]),
+      separatorBuilder: (_, _) => Divider(height: 1, color: Colors.grey[200]),
       itemBuilder: (context, index) {
         if (index == 0) {
           return ListTile(

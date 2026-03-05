@@ -5,6 +5,7 @@ import 'package:my_huat/features/homepage/widgets/total_assets.dart';
 import 'record_spending_page.dart';
 import 'bnpl_calculator_page.dart';
 import 'retirement_page.dart';
+import 'spending_history_page.dart'; // 🌟 Added import for the history page
 
 class SavingsPage extends StatelessWidget {
   const SavingsPage({super.key});
@@ -90,12 +91,78 @@ class SavingsPage extends StatelessWidget {
                 ),
               ],
             ),
+
+            const SizedBox(height: 32), // Added spacing
+
+            // 🌟 NEW: Recent Spending Section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Recent Spending",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SpendingHistoryPage()),
+                    );
+                  },
+                  child: const Text("See All", style: TextStyle(color: Color(0xFF0D3A6D))),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Mock data items to show the layout
+            _buildRecentItem("Chicken Rice", "Food", "12.00", Icons.restaurant, Colors.orange.shade100),
+            _buildRecentItem("Grab Bus", "Transport", "5.00", Icons.directions_bus, Colors.blue.shade100),
           ],
         ),
       ),
     );
   }
 
+  // 🌟 NEW: Helper widget to build the recent spending cards
+  Widget _buildRecentItem(String title, String category, String amount, IconData icon, Color iconBgColor) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundColor: iconBgColor,
+            child: Icon(icon, color: const Color(0xFF0D3A6D), size: 20),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                Text(category, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+              ],
+            ),
+          ),
+          Text("- RM $amount", style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red, fontSize: 15)),
+        ],
+      ),
+    );
+  }
+
+  // Your original Quick Action button builder
   Widget _buildActionButton(
     BuildContext context, {
     required IconData icon,
