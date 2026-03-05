@@ -15,9 +15,17 @@ class _InsurancePageState extends State<InsurancePage> {
   @override
   void initState() {
     super.initState();
+
+    // Initialize video controller with your downloaded video
     _controller = VideoPlayerController.asset('assets/video/basic_insurance.mp4');
+
+    // Initialize the controller and store the Future for later use
     _initializeVideoPlayerFuture = _controller.initialize();
+
+    // Optional: Set looping
     _controller.setLooping(false);
+
+    // Optional: Set volume
     _controller.setVolume(1.0);
   }
 
@@ -38,7 +46,7 @@ class _InsurancePageState extends State<InsurancePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header
+                // Header with Shield Icon
                 Row(
                   children: [
                     const Text(
@@ -89,13 +97,17 @@ class _InsurancePageState extends State<InsurancePage> {
                       future: _initializeVideoPlayerFuture,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
+                          // Video is initialized, show video with controls
                           return Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
+                              // Video player
                               AspectRatio(
                                 aspectRatio: _controller.value.aspectRatio,
                                 child: VideoPlayer(_controller),
                               ),
+
+                              // Video controls overlay
                               Container(
                                 height: 40,
                                 decoration: BoxDecoration(
@@ -111,6 +123,7 @@ class _InsurancePageState extends State<InsurancePage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    // Play/Pause button
                                     IconButton(
                                       icon: Icon(
                                         _controller.value.isPlaying
@@ -126,6 +139,8 @@ class _InsurancePageState extends State<InsurancePage> {
                                         });
                                       },
                                     ),
+
+                                    // Video position indicator
                                     Text(
                                       '${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}',
                                       style: const TextStyle(
@@ -139,6 +154,7 @@ class _InsurancePageState extends State<InsurancePage> {
                             ],
                           );
                         } else {
+                          // Video is still loading
                           return Container(
                             color: Colors.grey[300],
                             child: const Center(
@@ -223,7 +239,7 @@ class _InsurancePageState extends State<InsurancePage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Three Buttons - Navigation REMOVED, now just shows messages
+                // Three Buttons (without navigation for now)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -232,7 +248,6 @@ class _InsurancePageState extends State<InsurancePage> {
                       label: 'Set Up\nPortfolio',
                       color: Colors.purple,
                       onTap: () {
-                        // Just show a message, no navigation
                         _showComingSoon(context, 'Portfolio Setup');
                       },
                     ),
@@ -241,7 +256,6 @@ class _InsurancePageState extends State<InsurancePage> {
                       label: 'My Goals',
                       color: Colors.orange,
                       onTap: () {
-                        // Just show a message, no navigation
                         _showComingSoon(context, 'My Goals');
                       },
                     ),
@@ -250,8 +264,7 @@ class _InsurancePageState extends State<InsurancePage> {
                       label: 'Insurance\nNow',
                       color: Colors.green,
                       onTap: () {
-                        // Just show a message, no navigation
-                        _showComingSoon(context, 'Purchase Now');
+                        _showComingSoon(context, 'Insurance Now');
                       },
                     ),
                   ],
@@ -266,6 +279,7 @@ class _InsurancePageState extends State<InsurancePage> {
     );
   }
 
+  // Helper method to format duration
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
@@ -273,6 +287,7 @@ class _InsurancePageState extends State<InsurancePage> {
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
+  // Custom widget for action buttons
   Widget _buildActionButton({
     required IconData icon,
     required String label,
@@ -354,7 +369,6 @@ class _InsurancePageState extends State<InsurancePage> {
     );
   }
 
-  // New method to show coming soon message
   void _showComingSoon(BuildContext context, String pageName) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
