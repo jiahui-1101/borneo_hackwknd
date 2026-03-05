@@ -352,7 +352,7 @@ class _LendingInvestmentsPageState extends State<LendingInvestmentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFEF7FF),
       body: Column(
         children: [
           // Arc Header with MHuat text
@@ -362,7 +362,7 @@ class _LendingInvestmentsPageState extends State<LendingInvestmentsPage> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            color: Colors.white,
+            color: const Color(0xFFFEF7FF),
             child: Row(
               children: [
                 // Back arrow
