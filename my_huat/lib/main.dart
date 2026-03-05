@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 // 1. 导入你的入口页面。注意：如果你还没改文件名，这里可能是 onboarding.dart
-import 'features/onboarding/entry_page.dart'; 
+import 'features/onboarding/entry_page.dart';
 import 'features/homepage/home_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
-} // 🌟 补上了你漏掉的这个括号
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

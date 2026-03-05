@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "176930919479",
+    "project_id": "mhuat-d34e6",
+    "storage_bucket": "mhuat-d34e6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176930919479:android:69bced6754b219ec03dbb2",
+        "android_client_info": {
+          "package_name": "com.example.my_huat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAE2MifgBPsSjcdx2R2sOp5rS3yOk54pg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
