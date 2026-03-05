@@ -371,7 +371,7 @@ class _FundCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     ...info.bullets.map(
-                      (t) => Padding(
+                          (t) => Padding(
                         padding: const EdgeInsets.only(bottom: 4),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
