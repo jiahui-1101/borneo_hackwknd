@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:video_player/video_player.dart';
 import 'portfolio_setup.dart';
 import 'goals.dart';
-import 'investnow.dart';  // Make sure this matches your filename exactly
+import 'investnow.dart';
 
 class InvestPage extends StatefulWidget {
   const InvestPage({super.key});
@@ -12,37 +12,24 @@ class InvestPage extends StatefulWidget {
 }
 
 class _InvestPageState extends State<InvestPage> {
-  late YoutubePlayerController _controller;
-  bool _isPlayerReady = false;
+  late VideoPlayerController _controller;
+  late Future<void> _initializeVideoPlayerFuture;
 
   @override
   void initState() {
     super.initState();
 
-    // Extract video ID from the YouTube link
-    // https://www.youtube.com/watch?v=qIw-yFC-HNU
-    String videoId = 'qIw-yFC-HNU';
+    // Initialize video controller with local asset
+    _controller = VideoPlayerController.asset('assets/video/basic_investing.mp4');
 
-    _controller = YoutubePlayerController(
-      initialVideoId: videoId,
-      flags: YoutubePlayerFlags(
-        autoPlay: false,
-        mute: false,
-        disableDragSeek: false,
-        loop: false,
-        isLive: false,
-        forceHD: false,
-        enableCaption: false,
-      ),
-    );
+    // Initialize the controller and store the Future for later use
+    _initializeVideoPlayerFuture = _controller.initialize();
 
-    _controller.addListener(() {
-      if (_controller.value.isReady && !_isPlayerReady) {
-        setState(() {
-          _isPlayerReady = true;
-        });
-      }
-    });
+    // Optional: Set looping
+    _controller.setLooping(false);
+
+    // Optional: Set volume
+    _controller.setVolume(1.0);
   }
 
   @override
@@ -92,7 +79,7 @@ class _InvestPageState extends State<InvestPage> {
                 ),
                 const SizedBox(height: 12),
 
-                // YouTube Video Container
+                // Local Video Container
                 Container(
                   height: 200,
                   width: double.infinity,
@@ -109,30 +96,120 @@ class _InvestPageState extends State<InvestPage> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: YoutubePlayer(
-                      controller: _controller,
-                      showVideoProgressIndicator: true,
-                      progressIndicatorColor: Colors.blue,
-                      progressColors: ProgressBarColors(
-                        playedColor: Colors.blue,
-                        handleColor: Colors.blueAccent,
-                      ),
-                      onReady: () {
-                        // Player is ready
+                    child: FutureBuilder(
+                      future: _initializeVideoPlayerFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          // Video is initialized, show video with controls
+                          return Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              // Video player
+                              AspectRatio(
+                                aspectRatio: _controller.value.aspectRatio,
+                                child: VideoPlayer(_controller),
+                              ),
+
+                              // Video controls overlay
+                              Container(
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black.withValues(alpha: 0.5),
+                                    ],
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // Play/Pause button
+                                    IconButton(
+                                      icon: Icon(
+                                        _controller.value.isPlaying
+                                            ? Icons.pause
+                                            : Icons.play_arrow,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _controller.value.isPlaying
+                                              ? _controller.pause()
+                                              : _controller.play();
+                                        });
+                                      },
+                                    ),
+
+                                    // Video position indicator
+                                    Text(
+                                      '${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        } else {
+                          // Video is still loading
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
                       },
-                      bottomActions: [
-                        CurrentPosition(),
-                        ProgressBar(
-                          isExpanded: true,
-                          colors: ProgressBarColors(
-                            playedColor: Colors.blue,
-                            handleColor: Colors.blue,
-                          ),
-                        ),
-                        RemainingDuration(),
-                        FullScreenButton(),
-                      ],
                     ),
+                  ),
+                ),
+
+                // Video Control Buttons (alternative to overlay)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            _controller.value.isPlaying
+                                ? _controller.pause()
+                                : _controller.play();
+                          });
+                        },
+                        icon: Icon(
+                          _controller.value.isPlaying
+                              ? Icons.pause
+                              : Icons.play_arrow,
+                        ),
+                        label: Text(
+                          _controller.value.isPlaying ? 'Pause' : 'Play',
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          _controller.seekTo(Duration.zero);
+                        },
+                        icon: const Icon(Icons.replay),
+                        label: const Text('Replay'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -155,7 +232,7 @@ class _InvestPageState extends State<InvestPage> {
 
                 const SizedBox(height: 30),
 
-                // Action Buttons Section
+                // Action Buttons Section (rest remains the same)
                 const Text(
                   'Quick Actions',
                   style: TextStyle(
@@ -214,7 +291,15 @@ class _InvestPageState extends State<InvestPage> {
     );
   }
 
-  // Custom widget for action buttons with icons and text at SAME HEIGHT
+  // Helper method to format duration
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  // Custom widget for action buttons
   Widget _buildActionButton({
     required IconData icon,
     required String label,
@@ -240,7 +325,6 @@ class _InvestPageState extends State<InvestPage> {
         ),
         child: Stack(
           children: [
-            // Icon at exact same position for all buttons (25px from top)
             Positioned(
               top: 25,
               left: 0,
@@ -261,8 +345,6 @@ class _InvestPageState extends State<InvestPage> {
                 ),
               ),
             ),
-
-            // Text at exact same position for all buttons (85px from top)
             Positioned(
               top: 85,
               left: 0,
@@ -298,18 +380,4 @@ class _InvestPageState extends State<InvestPage> {
       ),
     );
   }
-
-// This method is kept but not used - you can remove it if you want
-// void _showActionMessage(BuildContext context, String action) {
-//   ScaffoldMessenger.of(context).showSnackBar(
-//     SnackBar(
-//       content: Text('$action tapped'),
-//       duration: const Duration(seconds: 1),
-//       behavior: SnackBarBehavior.floating,
-//       shape: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(10),
-//       ),
-//     ),
-//   );
-// }
 }
