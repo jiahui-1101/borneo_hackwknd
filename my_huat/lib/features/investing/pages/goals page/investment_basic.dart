@@ -278,7 +278,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFEF7FF), // Changed to match Goals page background
       body: Column(
         children: [
           // Arc Header with MHuat text
@@ -288,7 +288,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            color: Colors.white,
+            color: const Color(0xFFFEF7FF), // Changed to match background
             child: Row(
               children: [
                 // Back arrow
@@ -502,54 +502,58 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              ElevatedButton.icon(
-                                onPressed: _isVideoInitialized
-                                    ? () {
-                                  setState(() {
-                                    if (_activeController!.value.isPlaying) {
-                                      _activeController!.pause();
-                                    } else {
-                                      _activeController!.play();
-                                    }
-                                  });
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  onPressed: _isVideoInitialized
+                                      ? () {
+                                    setState(() {
+                                      if (_activeController!.value.isPlaying) {
+                                        _activeController!.pause();
+                                      } else {
+                                        _activeController!.play();
+                                      }
+                                    });
 
-                                  _activeController!.addListener(() {
-                                    if (_activeController!.value.position >= const Duration(seconds: 5)) {
-                                      _onVideoCompleted();
-                                    }
-                                  });
-                                }
-                                    : null,
-                                icon: Icon(
-                                  _activeController != null && _activeController!.value.isPlaying
-                                      ? Icons.pause
-                                      : Icons.play_arrow,
-                                ),
-                                label: Text(
-                                  _activeController != null && _activeController!.value.isPlaying
-                                      ? 'Pause'
-                                      : 'Play',
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF0D3A6D), // Navy blue
-                                  foregroundColor: Colors.white,
+                                    _activeController!.addListener(() {
+                                      if (_activeController!.value.position >= const Duration(seconds: 5)) {
+                                        _onVideoCompleted();
+                                      }
+                                    });
+                                  }
+                                      : null,
+                                  icon: Icon(
+                                    _activeController != null && _activeController!.value.isPlaying
+                                        ? Icons.pause
+                                        : Icons.play_arrow,
+                                  ),
+                                  label: Text(
+                                    _activeController != null && _activeController!.value.isPlaying
+                                        ? 'Pause'
+                                        : 'Play',
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF0D3A6D), // Navy blue
+                                    foregroundColor: Colors.white,
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 10),
-                              ElevatedButton.icon(
-                                onPressed: _isVideoInitialized
-                                    ? () {
-                                  _activeController!.seekTo(Duration.zero);
-                                  setState(() {
-                                    _showCompleteButton = false;
-                                  });
-                                }
-                                    : null,
-                                icon: const Icon(Icons.replay),
-                                label: const Text('Replay'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.grey,
-                                  foregroundColor: Colors.white,
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  onPressed: _isVideoInitialized
+                                      ? () {
+                                    _activeController!.seekTo(Duration.zero);
+                                    setState(() {
+                                      _showCompleteButton = false;
+                                    });
+                                  }
+                                      : null,
+                                  icon: const Icon(Icons.replay),
+                                  label: const Text('Replay'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.grey,
+                                    foregroundColor: Colors.white,
+                                  ),
                                 ),
                               ),
                             ],
