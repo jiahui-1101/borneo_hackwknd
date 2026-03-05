@@ -13,7 +13,6 @@ class _InvestNowPageState extends State<InvestNowPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color(0xFFF6F7FB), // 统一背景色
         child: Column(
           children: [
             const ArcHeader(title: 'MHuat'),
