@@ -251,7 +251,7 @@ class _InsurancePageState extends State<InsurancePage> {
                       color: Colors.green,
                       onTap: () {
                         // Just show a message, no navigation
-                        _showComingSoon(context, 'Insurance Now');
+                        _showComingSoon(context, 'Purchase Now');
                       },
                     ),
                   ],
