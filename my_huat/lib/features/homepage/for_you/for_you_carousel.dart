@@ -105,36 +105,6 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: LinearGradient(
-                      colors: [
-                        const Color(0xFF0D3A6D).withOpacity(0.7), // Color 100 with opacity
-                        Colors.transparent,
-                      ],
-                      begin: Alignment.bottomLeft,
-                      end: Alignment.topRight,
-                    ),
-                  ),
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    item["title"]!,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black26,
-                          blurRadius: 4,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
               );
             },
           ),
