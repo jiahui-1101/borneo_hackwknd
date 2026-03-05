@@ -1,36 +1,62 @@
 // lib/shared/widgets/arc_header.dart
 import 'package:flutter/material.dart';
+import '../../features/homepage/notifications/notifications_page.dart';
 
 class ArcHeader extends StatelessWidget {
   final String title;
-  const ArcHeader({Key? key, required this.title}) : super(key: key);
+  const ArcHeader({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
 
     return ClipPath(
-      clipper: ArcClipper(),
+      clipper: ArcClipper(), 
       child: Container(
         width: double.infinity,
+        
         padding: EdgeInsets.fromLTRB(20, topPadding + 16, 20, 36),
-        decoration: const BoxDecoration(
-          color: Color(0xFF0D3A6D),
-        ),
+        decoration: const BoxDecoration(color: Color(0xFF0D3A6D)),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               title,
               style: const TextStyle(
-                fontSize: 28,
+                fontFamily: 'CaveatFont',
+                fontSize: 30,
                 fontWeight: FontWeight.w800,
                 color: Colors.white,
                 letterSpacing: 0.4,
+                height: 1.0,
               ),
             ),
+
+            const SizedBox(width: 0),
+
+            
+            Transform.translate(
+              offset: const Offset(5, 2), 
+              child: Transform.scale(
+                scale: 4.0, 
+                alignment: Alignment.centerLeft, 
+                child: Image.asset(
+                  'assets/homepagecat.png',
+                  height: 34, 
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+
             const Spacer(),
+            
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const NotificationsPage()),
+                );
+              },
               icon: const Icon(Icons.notifications_none),
               color: Colors.white,
             ),
@@ -40,6 +66,7 @@ class ArcHeader extends StatelessWidget {
     );
   }
 }
+
 
 class ArcClipper extends CustomClipper<Path> {
   @override
