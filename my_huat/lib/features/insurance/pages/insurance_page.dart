@@ -261,10 +261,10 @@ class _InsurancePageState extends State<InsurancePage> {
                     ),
                     _buildActionButton(
                       icon: Icons.health_and_safety,
-                      label: 'Insurance\nNow',
+                      label: 'Purchase\nNow',
                       color: Colors.green,
                       onTap: () {
-                        _showComingSoon(context, 'Insurance Now');
+                        _showComingSoon(context, 'Purchase Now');
                       },
                     ),
                   ],
