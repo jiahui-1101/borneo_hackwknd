@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'tutorial_page.dart';
 import 'my_goals_page.dart';
 
 class InsurancePage extends StatefulWidget {
