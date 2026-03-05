@@ -8,12 +8,12 @@ class EntryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D3A6D), // 招牌深蓝色
+      backgroundColor: const Color(0xFF0D3A6D), 
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // 🌟 1. MHuat 标题 (Caveat 手写体)
+            
             const Text(
               'MHuat',
               style: TextStyle(
@@ -25,17 +25,17 @@ class EntryPage extends StatelessWidget {
             
             const SizedBox(height: 10),
 
-            // 🌟 2. 居中的金币猫
+            
             Image.asset('assets/entrypagecat.png', height: 180),
 
             const SizedBox(height: 15),
 
-            // 🌟 3. 短短的口号 (Slogan)
+          
             const Text(
               'invest easily, grow your huat',
               style: TextStyle(
                 fontFamily: 'CaveatFont',
-                fontSize: 16,
+                fontSize: 25,
                 fontWeight: FontWeight.w300,
                 color: Colors.white70,
                 letterSpacing: 0.8,
