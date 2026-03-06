@@ -1,4 +1,3 @@
-// features/investing/goals/goals_page.dart
 import 'package:flutter/material.dart';
 import 'package:my_huat/core/services/points_service.dart';
 import 'package:my_huat/core/services/sound_service.dart';
@@ -17,6 +16,25 @@ class MyGoalsPage extends StatefulWidget {
 class _MyGoalsPageState extends State<MyGoalsPage> {
   final PointsService _pointsService = PointsService();
   final SoundService _soundService = SoundService();
+  bool _isSoundWorking = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSoundSetup();
+  }
+
+  // Check if sound is properly set up
+  Future<void> _checkSoundSetup() async {
+    final exists = await _soundService.checkSoundFileExists();
+    setState(() {
+      _isSoundWorking = exists;
+    });
+
+    if (!exists) {
+      print('⚠️ WARNING: Sound file not found! Make sure assets/sound/sound5.mp3 exists');
+    }
+  }
 
   @override
   void dispose() {
@@ -27,12 +45,32 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
   // Helper method to handle points earned with sound
   Future<void> _handlePointsEarned(int pointsEarned) async {
     if (pointsEarned > 0) {
+      // Update points
       setState(() {
         _pointsService.addPoints(pointsEarned);
       });
 
-      await _soundService.playPointsEarnedSound();
+      // Play sound with better error handling
+      try {
+        print('🎵 Attempting to play sound for $pointsEarned points...');
+        await _soundService.playPointsEarnedSound();
+        print('✅ Sound play attempted successfully');
+      } catch (e) {
+        print('❌ Error playing sound: $e');
 
+        // Show error message to user (optional, remove in production)
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Sound unavailable: $e'),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 1),
+            ),
+          );
+        }
+      }
+
+      // Show points earned message
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -66,6 +104,26 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
       body: Column(
         children: [
           const ArcHeader(title: "MHuat"),
+
+          // Debug banner - REMOVE IN PRODUCTION
+          if (!_isSoundWorking)
+            Container(
+              color: Colors.orange,
+              padding: const EdgeInsets.all(8),
+              child: const Row(
+                children: [
+                  Icon(Icons.warning, color: Colors.white),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Sound not configured. Check assets/sound/sound5.mp3',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 5, 16, 8),
             child: Row(
@@ -89,9 +147,15 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
                     color: Color(0xFF0D3A6D),
                   ),
                 ),
+
+                const Spacer(),
+
+                // Test sound button - REMOVE IN PRODUCTION
+
               ],
             ),
           ),
+
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
@@ -132,7 +196,7 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
 
                   const SizedBox(height: 20),
 
-                  // Investment Basics Card - Semi Bold
+                  // Investment Basics Card
                   _buildInvestNowStyleCard(
                     title: "Investment Basics",
                     iconData: Icons.trending_up,
@@ -153,7 +217,7 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
 
                   const SizedBox(height: 12),
 
-                  // Ownership Investments Card - Semi Bold
+                  // Ownership Investments Card
                   _buildInvestNowStyleCard(
                     title: "Ownership Investments",
                     iconData: Icons.business_center,
@@ -174,7 +238,7 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
 
                   const SizedBox(height: 12),
 
-                  // Lending & Low-risk Investments Card - Semi Bold (Full Title)
+                  // Lending & Low-risk Investments Card
                   _buildInvestNowStyleCard(
                     title: "Lending & Low-risk Investments",
                     iconData: Icons.savings,
@@ -203,7 +267,7 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
     );
   }
 
-  // Separate widget for rewards card
+  // Rewards card widget
   Widget _buildRewardsCard() {
     return Container(
       width: double.infinity,
@@ -287,7 +351,7 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
     );
   }
 
-  // Card builder matching Invest Now page styling
+  // Card builder
   Widget _buildInvestNowStyleCard({
     required String title,
     required IconData iconData,
@@ -335,10 +399,10 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title, // Semi-bold
+                    title,
                     style: const TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.w600, // Semi-bold
+                      fontWeight: FontWeight.w600,
                       color: Color(0xFF0D3A6D),
                     ),
                   ),
