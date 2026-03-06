@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../shared/widgets/arc_header.dart'; // adjust import path as needed
 
 class NotificationsPage extends StatelessWidget {
   const NotificationsPage({super.key});
@@ -8,30 +9,61 @@ class NotificationsPage extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: const Text(
-            "Notifications",
-            style: TextStyle(fontWeight: FontWeight.w800),
-          ),
-          bottom: const TabBar(
-            labelStyle: TextStyle(fontWeight: FontWeight.w800),
-            indicatorWeight: 3,
-            tabs: [
-              Tab(text: "Services"),
-              Tab(text: "Alerts"),
-              Tab(text: "To-Dos"),
-            ],
-          ),
-        ),
-        body: const TabBarView(
+        backgroundColor: Colors.white,
+        body: Column(
           children: [
-            _ServicesTab(),
-            _AlertsTab(),
-            _TodosTab(),
+            // 1. Standard ArcHeader with "MHuat" (cat + notification icon)
+            const ArcHeader(title: "MHuat"),
+
+            // 2. Back button + "Notification" title row
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.black87, size: 24),
+                    onPressed: () => Navigator.pop(context),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    "Notification",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF0D3A6D), // navy blue
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // 3. Tab bar and content
+            const Expanded(
+              child: Column(
+                children: [
+                  TabBar(
+                    labelStyle: TextStyle(fontWeight: FontWeight.w800),
+                    indicatorWeight: 3,
+                    tabs: [
+                      Tab(text: "Services"),
+                      Tab(text: "Alerts"),
+                      Tab(text: "To-Dos"),
+                    ],
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        _ServicesTab(),
+                        _AlertsTab(),
+                        _TodosTab(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -93,7 +125,7 @@ class _ServicesTab extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(vertical: 12),
       itemCount: items.length + 1,
-      separatorBuilder: (_, _) => Divider(height: 1, color: Colors.grey[200]),
+      separatorBuilder: (_, __) => Divider(height: 1, color: Colors.grey[200]),
       itemBuilder: (context, index) {
         if (index == 0) {
           return ListTile(
@@ -105,7 +137,6 @@ class _ServicesTab extends StatelessWidget {
             onTap: () {},
           );
         }
-
         final item = items[index - 1];
         return _ServiceRow(
           title: item["title"] as String,
@@ -205,14 +236,14 @@ class _AlertsTab extends StatelessWidget {
         "title": "Account Opening Reminder",
         "content":
             "Application Received: Thank you for applying for an account with us. "
-                "The process will be completed within 1–2 business days.",
+            "The process will be completed within 1–2 business days.",
         "time": "Mar 3 19:29",
       },
       {
         "title": "Account Opening Reminder",
         "content":
             "Action Required: To proceed with your account application, we need more "
-                "information about you. Please submit the required details.",
+            "information about you. Please submit the required details.",
         "time": "16:46",
       },
     ];

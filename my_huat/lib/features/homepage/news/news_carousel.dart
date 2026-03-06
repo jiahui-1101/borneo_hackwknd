@@ -20,21 +20,89 @@ class _NewsCarouselState extends State<NewsCarousel> {
       "content":
           "Learn how to grow your savings through simple investing strategies designed for students.",
       "date": "10 Apr 2025",
-      "image": "assets/image/news/news1.png"
+      "image": "assets/image/news/news1.png",
+      "details": [
+        {"type": "header", "data": "Why invest early?"},
+        {
+          "type": "paragraph",
+          "data":
+              "Starting your investment journey while you're young gives you the advantage of compounding. Even small amounts can grow significantly over time.",
+        },
+        {
+          "type": "bullet_list",
+          "data": [
+            "Compounding works best over long periods.",
+            "You can afford to take more risk when you're young.",
+            "Learn valuable financial skills.",
+          ],
+        },
+        {"type": "header", "data": "Getting started"},
+        {
+          "type": "paragraph",
+          "data":
+              "Open a brokerage account, start with low-cost index funds or ETFs, and invest consistently.",
+        },
+      ],
     },
     {
       "title": "Emergency Fund Matters",
       "content":
           "Always keep 3 months of expenses saved to handle unexpected events.",
       "date": "12 Apr 2025",
-      "image": "assets/image/news/news2.png"
+      "image": "assets/image/news/news2.png",
+      "details": [
+        {"type": "header", "data": "Why you need an emergency fund"},
+        {
+          "type": "paragraph",
+          "data":
+              "Life is unpredictable. An emergency fund helps you cover unexpected expenses without going into debt.",
+        },
+        {
+          "type": "numbered_list",
+          "data": [
+            "Aim for 3–6 months of living expenses.",
+            "Keep it in a separate, easily accessible savings account.",
+            "Replenish it if you ever need to use it.",
+          ],
+        },
+        {"type": "header", "data": "Where to keep it"},
+        {
+          "type": "paragraph",
+          "data":
+              "High-yield savings accounts or money market funds are good options for easy access while earning some interest.",
+        },
+      ],
     },
     {
       "title": "Insurance Basics",
       "content":
           "Understand the importance of insurance and how it protects your financial future.",
       "date": "15 Apr 2025",
-      "image": "assets/image/news/news3.png"
+      "image": "assets/image/news/news3.png",
+      "details": [
+        {"type": "header", "data": "What is insurance?"},
+        {
+          "type": "paragraph",
+          "data":
+              "Insurance is a contract that transfers risk from you to an insurance company. You pay a premium, and in return, the company promises to pay for covered losses.",
+        },
+        {"type": "header", "data": "Types of insurance you should consider"},
+        {
+          "type": "bullet_list",
+          "data": [
+            "Health insurance – covers medical expenses",
+            "Life insurance – provides for your dependents if you pass away",
+            "Disability insurance – replaces income if you can't work",
+            "Property insurance – protects your home and belongings",
+          ],
+        },
+        {"type": "header", "data": "How much do you need?"},
+        {
+          "type": "paragraph",
+          "data":
+              "It depends on your situation, but a good rule is to have enough coverage to replace your income for several years or cover major potential losses.",
+        },
+      ],
     },
   ];
 
@@ -116,7 +184,9 @@ class _NewsCarouselState extends State<NewsCarousel> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF7EBEFB).withOpacity(0.3), // Color 40 透明度
+                        color: const Color(
+                          0xFF7EBEFB,
+                        ).withOpacity(0.3), // Color 40 透明度
                         blurRadius: 12,
                         offset: const Offset(0, 6),
                       ),
@@ -135,7 +205,10 @@ class _NewsCarouselState extends State<NewsCarousel> {
                             height: 190,
                             color: Colors.grey[300],
                             child: const Center(
-                              child: Icon(Icons.broken_image, color: Colors.grey),
+                              child: Icon(
+                                Icons.broken_image,
+                                color: Colors.grey,
+                              ),
                             ),
                           );
                         },
