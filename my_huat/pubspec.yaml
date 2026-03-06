@@ -39,6 +39,11 @@ dependencies:
   image_picker: ^1.0.7
   intl: ^0.19.0
   google_generative_ai: ^0.4.7
+  firebase_core: ^3.15.0
+  firebase_ai: ^2.3.0
+  flutter_tts: ^3.8.5
+  speech_to_text: ^7.3.0
+  firebase_vertexai: ^1.8.3
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +56,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   fl_chart: ^0.66.2
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -64,12 +70,14 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/homepagecat.png
+    - assets/homepagecat3.png
+    - assets/homepagecat4.png
     - assets/entrypagecat.png
     - assets/video/
     - assets/sound/
     - assets/image/news/
     - assets/video/basic_insurance.mp4
+    
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

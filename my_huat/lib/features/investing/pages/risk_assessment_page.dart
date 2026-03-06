@@ -13,7 +13,7 @@ class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
   final Map<int, dynamic> _answers = {};
 
   // Define blue color to match BNPL page
-  final Color navyBlue = const Color(0xFF0D3A6D);
+  final Color navyBlue = const Color(0xFF0B3A76); // Updated to match InvestNowPage
 
   final List<Question> _questions = [
     Question(
@@ -111,8 +111,30 @@ class _RiskAssessmentPageState extends State<RiskAssessmentPage> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Arc Header with title
-          const ArcHeader(title: "Risk Assessment"),
+          // Arc Header with title (matching MHuat pattern)
+          const ArcHeader(title: "MHuat"),
+
+          // Back button and Risk Assessment title
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 5, 16, 8),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  'Risk Assessment',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0B3A76),
+                  ),
+                ),
+              ],
+            ),
+          ),
 
           // Progress Bar
           Container(
