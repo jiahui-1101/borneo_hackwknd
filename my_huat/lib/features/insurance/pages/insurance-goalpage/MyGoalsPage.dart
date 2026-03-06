@@ -65,7 +65,6 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7FB),
       body: Column(
         children: [
           const ArcHeader(title: "MHuat"),

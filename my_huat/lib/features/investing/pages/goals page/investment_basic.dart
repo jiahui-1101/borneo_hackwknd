@@ -1,7 +1,7 @@
 // features/investing/goals/investment_basic.dart
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:my_huat/shared/widgets/arc_header.dart'; // Add this import
+import 'package:my_huat/shared/widgets/arc_header.dart';
 
 // Global variable to track points (in a real app, this would be in a state management solution)
 int userPoints = 0;
@@ -275,26 +275,36 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
     return _getCurrentQuestion()['correctAnswer'];
   }
 
+  // Get topic emoji
+  String _getTopicEmoji() {
+    if (_selectedTopic?.contains('Liquidity') ?? false) {
+      return '💧';
+    } else {
+      return '📊';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFEF7FF), // Changed to match Goals page background
+      backgroundColor: const Color(0xFFFEF7FF),
       body: Column(
         children: [
           // Arc Header with MHuat text
           const ArcHeader(title: "MHuat"),
 
-          // Title Section with Back Arrow
+          // Title Section with Back Arrow - Updated to allow multiline
           Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            color: const Color(0xFFFEF7FF), // Changed to match background
+            color: const Color(0xFFFEF7FF),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Back arrow
                 IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.black87),
-                  onPressed: () => Navigator.pop(context, 0), // Return with 0 points when going back without completing
+                  onPressed: () => Navigator.pop(context, 0),
                   iconSize: 20,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(
@@ -303,13 +313,18 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                // Title
-                const Text(
-                  "Investment Basics",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0D3A6D), // Navy blue
+                // Title - Now can wrap to multiple lines
+                Expanded(
+                  child: const Text(
+                    "Investment Basics",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0D3A6D), // Navy blue
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
                   ),
                 ),
               ],
@@ -326,7 +341,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (!_showQuestionPage && !_showEarnPointsDialog) ...[
-                        // Dropdown
+                        // Dropdown - FIXED OVERFLOW ISSUE
                         Row(
                           children: [
                             Expanded(
@@ -334,20 +349,30 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                 margin: const EdgeInsets.only(bottom: 20),
                                 child: DropdownButtonFormField<String>(
                                   value: _selectedTopic,
-                                  hint: const Text('Select a topic'),
+                                  hint: const Text(
+                                    'Select a topic',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                   isExpanded: true,
+                                  menuMaxHeight: 300, // Limit dropdown height
                                   items: _topics.map((topic) {
                                     return DropdownMenuItem(
                                       value: topic,
-                                      child: Text(
-                                        topic,
-                                        overflow: TextOverflow.ellipsis,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(right: 8.0),
+                                        child: Text(
+                                          topic,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                          softWrap: true,
+                                          style: const TextStyle(fontSize: 14),
+                                        ),
                                       ),
                                     );
                                   }).toList(),
                                   onChanged: _onTopicChanged,
                                   decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                       borderSide: BorderSide(color: Colors.grey.shade300),
@@ -362,7 +387,8 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                     ),
                                     filled: true,
                                     fillColor: Colors.white,
-                                    prefixIcon: Icon(Icons.play_circle_fill, color: const Color(0xFF0D3A6D)), // Navy blue
+                                    prefixIcon: const Icon(Icons.play_circle_fill, color: Color(0xFF0D3A6D)), // Navy blue
+                                    prefixIconConstraints: const BoxConstraints(minWidth: 40),
                                   ),
                                 ),
                               ),
@@ -470,7 +496,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
 
                           const SizedBox(height: 12),
 
-                          // ⏱️ Please wait for 5 seconds section
+                          // Please wait for 5 seconds section
                           if (_isVideoInitialized && !_showCompleteButton)
                             Container(
                               margin: const EdgeInsets.only(bottom: 16),
@@ -525,15 +551,21 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                     _activeController != null && _activeController!.value.isPlaying
                                         ? Icons.pause
                                         : Icons.play_arrow,
+                                    size: 18,
                                   ),
                                   label: Text(
                                     _activeController != null && _activeController!.value.isPlaying
                                         ? 'Pause'
                                         : 'Play',
+                                    style: const TextStyle(fontSize: 13),
                                   ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF0D3A6D), // Navy blue
                                     foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -548,11 +580,18 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                     });
                                   }
                                       : null,
-                                  icon: const Icon(Icons.replay),
-                                  label: const Text('Replay'),
+                                  icon: const Icon(Icons.replay, size: 18),
+                                  label: const Text(
+                                    'Replay',
+                                    style: TextStyle(fontSize: 13),
+                                  ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.grey,
                                     foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -569,7 +608,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.green,
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+                                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                   ),
@@ -577,11 +616,11 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                 child: const Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(Icons.check_circle),
-                                    SizedBox(width: 10),
+                                    Icon(Icons.check_circle, size: 18),
+                                    SizedBox(width: 8),
                                     Text(
                                       'Complete',
-                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                     ),
                                   ],
                                 ),
@@ -619,20 +658,27 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                         _showCompleteButton = true;
                                       });
                                     },
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(
+                                      minWidth: 36,
+                                      minHeight: 36,
+                                    ),
                                   ),
-                                  const SizedBox(width: 8),
+                                  const SizedBox(width: 4),
                                   Expanded(
                                     child: Text(
-                                      _selectedTopic ?? 'Investment',
+                                      _selectedTopic ?? 'Investment Basics',
                                       style: const TextStyle(
                                         color: Colors.white,
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
                                     ),
                                   ),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                     decoration: BoxDecoration(
                                       color: Colors.white.withValues(alpha: 0.2),
                                       borderRadius: BorderRadius.circular(20),
@@ -642,6 +688,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
+                                        fontSize: 14,
                                       ),
                                     ),
                                   ),
@@ -720,7 +767,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                 // Question card
                                 Container(
                                   width: double.infinity,
-                                  padding: const EdgeInsets.all(20),
+                                  padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(20),
@@ -732,17 +779,17 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                       Row(
                                         children: [
                                           Container(
-                                            padding: const EdgeInsets.all(8),
+                                            padding: const EdgeInsets.all(6),
                                             decoration: BoxDecoration(
                                               color: const Color(0xFF0D3A6D).withValues(alpha: 0.1), // Navy blue
                                               borderRadius: BorderRadius.circular(12),
                                             ),
                                             child: Text(
-                                              _selectedTopic?.contains('Liquidity') ?? false ? '💧' : '📊',
-                                              style: const TextStyle(fontSize: 20),
+                                              _getTopicEmoji(),
+                                              style: const TextStyle(fontSize: 18),
                                             ),
                                           ),
-                                          const SizedBox(width: 10),
+                                          const SizedBox(width: 8),
                                           Expanded(
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -750,14 +797,14 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                                 Text(
                                                   'Question ${_currentQuestionIndex + 1}',
                                                   style: const TextStyle(
-                                                    fontSize: 16,
+                                                    fontSize: 15,
                                                     fontWeight: FontWeight.w600,
                                                     color: Color(0xFF0D3A6D), // Navy blue
                                                   ),
                                                 ),
                                                 const SizedBox(height: 2),
                                                 Container(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                                   decoration: BoxDecoration(
                                                     color: Colors.blue.withValues(alpha: 0.1),
                                                     borderRadius: BorderRadius.circular(12),
@@ -765,12 +812,12 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                                   child: const Row(
                                                     mainAxisSize: MainAxisSize.min,
                                                     children: [
-                                                      Icon(Icons.auto_awesome, size: 12, color: Colors.blue),
-                                                      SizedBox(width: 4),
+                                                      Icon(Icons.auto_awesome, size: 10, color: Colors.blue),
+                                                      SizedBox(width: 2),
                                                       Text(
-                                                        'AI Generated',
+                                                        'AI',
                                                         style: TextStyle(
-                                                          fontSize: 10,
+                                                          fontSize: 9,
                                                           color: Colors.blue,
                                                           fontWeight: FontWeight.w500,
                                                         ),
@@ -783,20 +830,20 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 20),
+                                      const SizedBox(height: 16),
 
                                       // Question text
                                       Text(
                                         _getCurrentQuestion()['question'],
                                         style: const TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                           color: Colors.black87,
                                         ),
                                       ),
-                                      const SizedBox(height: 20),
+                                      const SizedBox(height: 16),
                                       const Divider(),
-                                      const SizedBox(height: 15),
+                                      const SizedBox(height: 12),
 
                                       // Answer options
                                       ...(_getCurrentQuestion()['options'] as List<String>).asMap().entries.map((entry) {
@@ -826,7 +873,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                         );
 
                                         return Padding(
-                                          padding: const EdgeInsets.only(bottom: 10),
+                                          padding: const EdgeInsets.only(bottom: 8),
                                           child: SizedBox(
                                             width: double.infinity,
                                             child: ElevatedButton(
@@ -835,17 +882,17 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                                 backgroundColor: backgroundColor ?? Colors.grey[50],
                                                 foregroundColor: Colors.black87,
                                                 elevation: 0,
-                                                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                                                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                                                 shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12),
+                                                  borderRadius: BorderRadius.circular(10),
                                                   side: borderSide,
                                                 ),
                                               ),
                                               child: Row(
                                                 children: [
                                                   Container(
-                                                    width: 28,
-                                                    height: 28,
+                                                    width: 24,
+                                                    height: 24,
                                                     decoration: BoxDecoration(
                                                       color: isCorrect
                                                           ? Colors.green
@@ -864,21 +911,22 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                                               ? Colors.white
                                                               : Colors.black54,
                                                           fontWeight: FontWeight.bold,
+                                                          fontSize: 12,
                                                         ),
                                                       ),
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 12),
+                                                  const SizedBox(width: 10),
                                                   Expanded(
                                                     child: Text(
                                                       option,
-                                                      style: const TextStyle(fontSize: 15),
+                                                      style: const TextStyle(fontSize: 14),
                                                     ),
                                                   ),
                                                   if (isCorrect)
-                                                    const Icon(Icons.check_circle, color: Colors.green),
+                                                    const Icon(Icons.check_circle, color: Colors.green, size: 18),
                                                   if (isWrong)
-                                                    const Icon(Icons.cancel, color: Colors.red),
+                                                    const Icon(Icons.cancel, color: Colors.red, size: 18),
                                                 ],
                                               ),
                                             ),
@@ -886,7 +934,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                         );
                                       }),
 
-                                      const SizedBox(height: 20),
+                                      const SizedBox(height: 16),
 
                                       // Check Answer or Next button
                                       if (!_showAnswerResult)
@@ -897,7 +945,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: const Color(0xFF0D3A6D), // Navy blue
                                               foregroundColor: Colors.white,
-                                              padding: const EdgeInsets.symmetric(vertical: 16),
+                                              padding: const EdgeInsets.symmetric(vertical: 14),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(30),
                                               ),
@@ -905,7 +953,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                             child: const Text(
                                               'Check Answer',
                                               style: TextStyle(
-                                                fontSize: 16,
+                                                fontSize: 15,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -920,7 +968,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: const Color(0xFF0D3A6D), // Navy blue
                                               foregroundColor: Colors.white,
-                                              padding: const EdgeInsets.symmetric(vertical: 16),
+                                              padding: const EdgeInsets.symmetric(vertical: 14),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(30),
                                               ),
@@ -930,7 +978,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                                   ? 'Next Question'
                                                   : 'See Results',
                                               style: const TextStyle(
-                                                fontSize: 16,
+                                                fontSize: 15,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -955,7 +1003,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                     child: Center(
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 30),
-                        padding: const EdgeInsets.all(24),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(24),
@@ -971,7 +1019,7 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 color: const Color(0xFF0D3A6D).withValues(alpha: 0.1), // Navy blue
                                 shape: BoxShape.circle,
@@ -979,30 +1027,30 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                               child: const Icon(
                                 Icons.emoji_events,
                                 color: Color(0xFF0D3A6D), // Navy blue
-                                size: 50,
+                                size: 40,
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 16),
                             const Text(
                               'Earn Points!',
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 22,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black87,
                               ),
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 8),
                             Text(
-                              'Would you like to answer questions about ${_selectedTopic ?? "this topic"} to earn points?',
+                              'Answer questions about ${_selectedTopic ?? "this topic"} to earn points?',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 color: Colors.grey[600],
                               ),
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
                                 color: const Color(0xFF0D3A6D).withValues(alpha: 0.1), // Navy blue
                                 borderRadius: BorderRadius.circular(20),
@@ -1010,19 +1058,20 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                               child: const Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.stars, color: Color(0xFF0D3A6D), size: 16), // Navy blue
+                                  Icon(Icons.stars, color: Color(0xFF0D3A6D), size: 14), // Navy blue
                                   SizedBox(width: 4),
                                   Text(
                                     'Earn up to 30 points',
                                     style: TextStyle(
                                       color: Color(0xFF0D3A6D), // Navy blue
                                       fontWeight: FontWeight.bold,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 20),
                             Row(
                               children: [
                                 Expanded(
@@ -1036,12 +1085,12 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.grey[300],
                                       foregroundColor: Colors.black87,
-                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                      padding: const EdgeInsets.symmetric(vertical: 12),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                     ),
-                                    child: const Text('No'),
+                                    child: const Text('No', style: TextStyle(fontSize: 14)),
                                   ),
                                 ),
                                 const SizedBox(width: 12),
@@ -1051,12 +1100,12 @@ class _InvestmentBasicPageState extends State<InvestmentBasicPage> {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: const Color(0xFF0D3A6D), // Navy blue
                                       foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                      padding: const EdgeInsets.symmetric(vertical: 12),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                     ),
-                                    child: const Text('Yes'),
+                                    child: const Text('Yes', style: TextStyle(fontSize: 14)),
                                   ),
                                 ),
                               ],
