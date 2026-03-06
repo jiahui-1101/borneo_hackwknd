@@ -11,12 +11,16 @@ class InsurancePage extends StatefulWidget {
   State<InsurancePage> createState() => _InsurancePageState();
 }
 
-class _InsurancePageState extends State<InsurancePage> {
+class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveClientMixin {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
+  bool _isInitialized = false;
 
   // Navy blue color
   final Color navyBlue = const Color(0xFF0D3A6D);
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -24,9 +28,19 @@ class _InsurancePageState extends State<InsurancePage> {
     _controller = VideoPlayerController.asset(
       'assets/video/basic_insurance.mp4',
     );
-    _initializeVideoPlayerFuture = _controller.initialize();
-    _controller.setLooping(false);
-    _controller.setVolume(1.0);
+
+    _initializeVideoPlayerFuture = _controller.initialize().then((_) {
+      setState(() {
+        _isInitialized = true;
+      });
+      _controller.setLooping(false);
+      _controller.setVolume(1.0);
+    }).catchError((error) {
+      print('Error initializing video: $error');
+      setState(() {
+        _isInitialized = false;
+      });
+    });
   }
 
   @override
@@ -53,6 +67,8 @@ class _InsurancePageState extends State<InsurancePage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFFFEF7FF), // Match insurance theme
       body: SafeArea(
@@ -91,146 +107,12 @@ class _InsurancePageState extends State<InsurancePage> {
               const SizedBox(height: 12),
 
               // Local Video Container
-              Container(
-                height: 200,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: FutureBuilder(
-                    future: _initializeVideoPlayerFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        return Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            AspectRatio(
-                              aspectRatio: _controller.value.aspectRatio,
-                              child: VideoPlayer(_controller),
-                            ),
-                            Container(
-                              height: 40,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.black.withOpacity(0.5),
-                                  ],
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    icon: Icon(
-                                      _controller.value.isPlaying
-                                          ? Icons.pause
-                                          : Icons.play_arrow,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _controller.value.isPlaying
-                                            ? _controller.pause()
-                                            : _controller.play();
-                                      });
-                                    },
-                                  ),
-                                  Text(
-                                    '${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        );
-                      } else {
-                        return Container(
-                          color: Colors.grey[300],
-                          child: const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
-              ),
+              _buildVideoPlayer(),
 
               const SizedBox(height: 16),
 
               // Video Control Row - with navy blue play button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        setState(() {
-                          _controller.value.isPlaying
-                              ? _controller.pause()
-                              : _controller.play();
-                        });
-                      },
-                      icon: Icon(
-                        _controller.value.isPlaying
-                            ? Icons.pause
-                            : Icons.play_arrow,
-                        size: 18,
-                      ),
-                      label: Text(
-                        _controller.value.isPlaying ? 'Pause' : 'Play',
-                        style: const TextStyle(fontSize: 13),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: navyBlue,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        _controller.seekTo(Duration.zero);
-                        setState(() {});
-                      },
-                      icon: const Icon(Icons.replay, size: 18),
-                      label: const Text(
-                        'Replay',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _buildVideoControls(),
 
               const SizedBox(height: 8),
 
@@ -276,11 +158,11 @@ class _InsurancePageState extends State<InsurancePage> {
                     Expanded(
                       child: _buildActionButton(
                         icon: Icons.account_balance_wallet,
-                        label: 'Set Up\nPortfolio',
+                        label: 'AI Compare Coverage',
                         circleColor: Colors.purple.shade100,
                         iconColor: Colors.purple.shade800,
                         onTap: () {
-                          _showComingSoon(context, 'Portfolio Setup');
+                          _showComingSoon(context, 'AI Compare Coverage');
                         },
                       ),
                     ),
@@ -320,12 +202,185 @@ class _InsurancePageState extends State<InsurancePage> {
     );
   }
 
+  // Extract video player to separate widget
+  Widget _buildVideoPlayer() {
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: FutureBuilder(
+          future: _initializeVideoPlayerFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done && _isInitialized) {
+              // Use ValueListenableBuilder to listen to controller changes
+              return ValueListenableBuilder(
+                valueListenable: _controller,
+                builder: (context, VideoPlayerValue value, child) {
+                  return Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      AspectRatio(
+                        aspectRatio: value.aspectRatio,
+                        child: VideoPlayer(_controller),
+                      ),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.5),
+                            ],
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                value.isPlaying ? Icons.pause : Icons.play_arrow,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                value.isPlaying
+                                    ? _controller.pause()
+                                    : _controller.play();
+                                // No setState needed here
+                              },
+                            ),
+                            Text(
+                              '${_formatDuration(value.position)} / ${_formatDuration(value.duration, isTotal: true)}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Container(
+                color: Colors.grey[300],
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, color: Colors.red, size: 40),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Error loading video',
+                        style: TextStyle(color: Colors.grey[700]),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              return Container(
+                color: Colors.grey[300],
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  // Extract video controls to separate widget
+  Widget _buildVideoControls() {
+    return ValueListenableBuilder(
+      valueListenable: _controller,
+      builder: (context, VideoPlayerValue value, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  value.isPlaying
+                      ? _controller.pause()
+                      : _controller.play();
+                  // No setState needed here
+                },
+                icon: Icon(
+                  value.isPlaying ? Icons.pause : Icons.play_arrow,
+                  size: 18,
+                ),
+                label: Text(
+                  value.isPlaying ? 'Pause' : 'Play',
+                  style: const TextStyle(fontSize: 13),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: navyBlue,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  _controller.seekTo(Duration.zero);
+                  // No setState needed here
+                },
+                icon: const Icon(Icons.replay, size: 18),
+                label: const Text(
+                  'Replay',
+                  style: TextStyle(fontSize: 13),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   // Helper method to format duration
-  String _formatDuration(Duration duration) {
+  // Helper method to format duration - ALWAYS shows HH:MM:SS format
+  // Helper method to format duration - ALWAYS shows HH:MM:SS format with proper padding
+  // Helper method to format duration - ALWAYS shows HH:MM:SS for both
+  String _formatDuration(Duration duration, {bool isTotal = false}) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+
+    String hours = twoDigits(duration.inHours);
+    String minutes = twoDigits(duration.inMinutes.remainder(60));
+    String seconds = twoDigits(duration.inSeconds.remainder(60));
+
+    // Always return HH:MM:SS format for both position and total
+    return "$hours:$minutes:$seconds";
   }
 
   // Action button builder - matching savings page style
