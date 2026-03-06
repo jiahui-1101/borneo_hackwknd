@@ -12,41 +12,36 @@ class _InvestNowPageState extends State<InvestNowPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Column(
-          children: [
-            const ArcHeader(title: 'MHuat'),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 5, 16, 8), // 底部间距8，控制标题与列表的距离
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
+      body: Column(
+        children: [
+          const ArcHeader(title: 'MHuat'),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 5, 16, 8),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  'Invest Now',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0B3A76),
                   ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Invest Now',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF0B3A76),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Expanded(
-              child: _InvestPortfolioView(),
-            ),
-          ],
-        ),
+          ),
+          Expanded(child: _InvestPortfolioView()),
+        ],
       ),
     );
   }
 }
 
-// 投资内容组件（背景透明，继承父级）
 class _InvestPortfolioView extends StatefulWidget {
   const _InvestPortfolioView();
 
@@ -58,13 +53,8 @@ class _InvestPortfolioViewState extends State<_InvestPortfolioView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.transparent, // 透明，继承父级背景
-      child: const Column(
-        children: [
-          // 移除了 SizedBox(height: 20)
-          Expanded(child: _InvestList()),
-        ],
-      ),
+      color: Colors.transparent,
+      child: const Column(children: [Expanded(child: _InvestList())]),
     );
   }
 }
@@ -76,7 +66,7 @@ class _InvestList extends StatelessWidget {
   Widget build(BuildContext context) {
     final funds = <_FundInfo>[
       _FundInfo(
-        title: 'Versa Gold',
+        title: 'MHuat Gold',
         subtitle: '(AHAM Shariah Gold Tracker Fund)',
         bullets: const [
           'Direct exposure to Gold',
@@ -102,7 +92,7 @@ class _InvestList extends StatelessWidget {
         icon: Icons.inventory_2,
       ),
       _FundInfo(
-        title: 'Versa Malaysia Bond',
+        title: 'MHuat Malaysia Bond',
         subtitle: '(AHAM Bond Fund)',
         bullets: const [
           'Bonds as portfolio stabilizer',
@@ -123,7 +113,7 @@ class _InvestList extends StatelessWidget {
         icon: Icons.account_balance,
       ),
       _FundInfo(
-        title: 'Versa China Equity Tracker',
+        title: 'MHuat China Equity Tracker',
         subtitle: '(AHAM New China Tracker Fund)',
         bullets: const [
           'Exposure to China market',
@@ -144,7 +134,7 @@ class _InvestList extends StatelessWidget {
         icon: Icons.flag,
       ),
       _FundInfo(
-        title: 'Versa Growth',
+        title: 'MHuat Growth',
         subtitle: '(AHAM Versa Portfolio - Growth)',
         bullets: const [
           'High allocation to equities',
@@ -159,7 +149,7 @@ class _InvestList extends StatelessWidget {
         icon: Icons.park,
       ),
       _FundInfo(
-        title: 'Versa Global-i',
+        title: 'MHuat Global-i',
         subtitle: '(AHAM Aiiman Global Multi Thematic Fund (MYR-Hedged class))',
         bullets: const [
           'High allocation to Technology equities',
@@ -174,7 +164,7 @@ class _InvestList extends StatelessWidget {
         icon: Icons.public,
       ),
       _FundInfo(
-        title: 'Versa Dividend+',
+        title: 'MHuat Dividend+',
         subtitle: '(AHAM Select Dividend Fund)',
         bullets: const [
           'Regular income distribution',
@@ -189,7 +179,7 @@ class _InvestList extends StatelessWidget {
         icon: Icons.savings,
       ),
       _FundInfo(
-        title: 'Versa India Equity',
+        title: 'MHuat India Equity',
         subtitle: '(AHAM World Series - India Equity Fund (MYR-Hedged class))',
         bullets: const [
           'Exposure to Indian equities',
@@ -210,7 +200,7 @@ class _InvestList extends StatelessWidget {
         icon: Icons.temple_hindu,
       ),
       _FundInfo(
-        title: 'Versa Moderate',
+        title: 'MHuat Moderate',
         subtitle: '(AHAM Versa Portfolio - Moderate)',
         bullets: const [
           'High allocation to fixed income',
@@ -225,7 +215,7 @@ class _InvestList extends StatelessWidget {
         icon: Icons.spa,
       ),
       _FundInfo(
-        title: 'Versa REITs',
+        title: 'MHuat REITs',
         subtitle: '(AHAM Select Asia Pacific (ex Japan) REITs Fund)',
         bullets: const [
           'Exposure to Singapore, APAC REITs',
@@ -240,7 +230,7 @@ class _InvestList extends StatelessWidget {
         icon: Icons.home_work,
       ),
       _FundInfo(
-        title: 'Versa US-Tech',
+        title: 'MHuat US-Tech',
         subtitle: '(AHAM World Series - US Technology Fund (MYR class))',
         bullets: const [
           'Invest in leading US tech giants and emerging pioneers',
@@ -261,7 +251,7 @@ class _InvestList extends StatelessWidget {
         icon: Icons.memory,
       ),
       _FundInfo(
-        title: 'Versa Japan',
+        title: 'MHuat Japan',
         subtitle: '(AHAM World Series - Japan Growth Fund (MYR class))',
         bullets: const [
           'Exposure to Japanese equities',
@@ -276,7 +266,7 @@ class _InvestList extends StatelessWidget {
         icon: Icons.landscape,
       ),
       _FundInfo(
-        title: 'Versa SGD',
+        title: 'MHuat SGD',
         subtitle: '(AHAM Select SGD Income Fund (MYR class))',
         bullets: const [
           'Exposure to SGD-denominated assets',
@@ -301,12 +291,20 @@ class _InvestList extends StatelessWidget {
   }
 }
 
-class _FundCard extends StatelessWidget {
+class _FundCard extends StatefulWidget {
   final _FundInfo info;
   const _FundCard({required this.info});
 
   @override
+  State<_FundCard> createState() => _FundCardState();
+}
+
+class _FundCardState extends State<_FundCard> {
+  bool _isFavorite = false;
+
+  @override
   Widget build(BuildContext context) {
+    final info = widget.info;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -323,6 +321,7 @@ class _FundCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Badges row (if any)
           if (info.badges.isNotEmpty) ...[
             Wrap(
               spacing: 8,
@@ -331,9 +330,11 @@ class _FundCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
           ],
+          // Main row: icon, text, and favorite icon
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Colored icon
               Container(
                 width: 52,
                 height: 52,
@@ -348,6 +349,7 @@ class _FundCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
+              // Title, subtitle, bullets (expanded)
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,7 +373,7 @@ class _FundCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     ...info.bullets.map(
-                          (t) => Padding(
+                      (t) => Padding(
                         padding: const EdgeInsets.only(bottom: 4),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -401,9 +403,25 @@ class _FundCard extends StatelessWidget {
                   ],
                 ),
               ),
+              // Favorite icon, aligned to the right, at same height as title
+              IconButton(
+                constraints: const BoxConstraints(),
+                padding: EdgeInsets.zero,
+                iconSize: 24,
+                icon: Icon(
+                  _isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: Colors.red,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isFavorite = !_isFavorite;
+                  });
+                },
+              ),
             ],
           ),
           const SizedBox(height: 12),
+          // Blue performance panel
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
@@ -411,28 +429,26 @@ class _FundCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly, // even spacing
               children: [
-                Expanded(
-                  child: _Metric(
-                    value: _formatPct(info.ytd),
-                    label: 'YTD Returns',
-                    valueColor: info.ytd < 0
-                        ? const Color(0xFFD32F2F)
-                        : const Color(0xFF0B3A76),
-                  ),
+                // YTD Returns – centered
+                _MetricCentered(
+                  value: _formatPct(info.ytd),
+                  label: 'YTD Returns',
+                  valueColor: info.ytd < 0
+                      ? const Color(0xFFD32F2F)
+                      : const Color(0xFF0B3A76),
                 ),
-                Expanded(
-                  child: _Metric(
-                    value: _formatPct(info.oneYear),
-                    label: '1Y Return',
-                    valueColor: info.oneYear < 0
-                        ? const Color(0xFFD32F2F)
-                        : const Color(0xFF0B3A76),
-                  ),
+                // 1Y Return – centered
+                _MetricCentered(
+                  value: _formatPct(info.oneYear),
+                  label: '1Y Return',
+                  valueColor: info.oneYear < 0
+                      ? const Color(0xFFD32F2F)
+                      : const Color(0xFF0B3A76),
                 ),
-                Expanded(
-                  child: _RiskMetric(risk: info.risk),
-                ),
+                // Risk Level – centered
+                _RiskMetricCentered(risk: info.risk),
               ],
             ),
           ),
@@ -503,10 +519,7 @@ class _RiskMetric extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 2),
-        const Text(
-          'Level',
-          style: TextStyle(fontSize: 12, color: Colors.grey),
-        ),
+        const Text('Level', style: TextStyle(fontSize: 12, color: Colors.grey)),
       ],
     );
   }
@@ -540,6 +553,70 @@ class _BadgePill extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+class _MetricCentered extends StatelessWidget {
+  final String value;
+  final String label;
+  final Color valueColor;
+
+  const _MetricCentered({
+    required this.value,
+    required this.label,
+    required this.valueColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w900,
+            color: valueColor,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+      ],
+    );
+  }
+}
+
+class _RiskMetricCentered extends StatelessWidget {
+  final _Risk risk;
+  const _RiskMetricCentered({required this.risk});
+
+  @override
+  Widget build(BuildContext context) {
+    final (text, color) = switch (risk) {
+      _Risk.low => ('Low', const Color(0xFF2E7D32)),
+      _Risk.moderate => ('Moderate', const Color(0xFFF9A825)),
+      _Risk.high => ('High', const Color(0xFFD32F2F)),
+    };
+
+    return Column(
+      children: [
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w900,
+            color: color,
+          ),
+        ),
+        const SizedBox(height: 2),
+        const Text(
+          'Level',
+          style: TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+      ],
     );
   }
 }

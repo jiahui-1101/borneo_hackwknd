@@ -12,35 +12,33 @@ class _PurchaseNowPageState extends State<PurchaseNowPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Column(
-          children: [
-            const ArcHeader(title: 'MHuat'),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 5, 16, 8),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
+      body: Column(
+        children: [
+          const ArcHeader(title: 'MHuat'),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 5, 16, 8),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  'Purchase Now',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0B3A76),
                   ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Purchase Now',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF0B3A76),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Expanded(
-              child: _PurchasePortfolioView(),
-            ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: _PurchasePortfolioView(),
+          ),
+        ],
       ),
     );
   }
@@ -204,12 +202,21 @@ class _PurchaseList extends StatelessWidget {
   }
 }
 
-class _InsuranceCard extends StatelessWidget {
+// 卡片变为 StatefulWidget 以支持收藏状态
+class _InsuranceCard extends StatefulWidget {
   final _InsuranceInfo info;
   const _InsuranceCard({required this.info});
 
   @override
+  State<_InsuranceCard> createState() => _InsuranceCardState();
+}
+
+class _InsuranceCardState extends State<_InsuranceCard> {
+  bool _isFavorite = false;
+
+  @override
   Widget build(BuildContext context) {
+    final info = widget.info;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -226,6 +233,7 @@ class _InsuranceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 徽章行（如果有）
           if (info.badges.isNotEmpty) ...[
             Wrap(
               spacing: 8,
@@ -234,9 +242,11 @@ class _InsuranceCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
           ],
+          // 主行：图标、文字和收藏图标
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 彩色图标
               Container(
                 width: 52,
                 height: 52,
@@ -251,6 +261,7 @@ class _InsuranceCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
+              // 标题、副标题、项目符号（展开）
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -304,9 +315,25 @@ class _InsuranceCard extends StatelessWidget {
                   ],
                 ),
               ),
+              // 收藏图标，与标题对齐
+              IconButton(
+                constraints: const BoxConstraints(),
+                padding: EdgeInsets.zero,
+                iconSize: 24,
+                icon: Icon(
+                  _isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: Colors.red,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isFavorite = !_isFavorite;
+                  });
+                },
+              ),
             ],
           ),
           const SizedBox(height: 12),
+          // 蓝色面板（保费、保额、保障期限）- 居中显示
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
@@ -314,27 +341,22 @@ class _InsuranceCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // Premium (保费)
-                Expanded(
-                  child: _InsuranceMetric(
-                    value: _formatCurrency(info.premium, perYear: true),
-                    label: 'Premium',
-                    valueColor: const Color(0xFF0B3A76),
-                  ),
+                // 保费
+                _InsuranceMetricCentered(
+                  value: _formatCurrency(info.premium, perYear: true),
+                  label: 'Premium',
+                  valueColor: const Color(0xFF0B3A76),
                 ),
-                // Coverage (保额)
-                Expanded(
-                  child: _InsuranceMetric(
-                    value: _formatCurrency(info.coverage),
-                    label: 'Coverage',
-                    valueColor: const Color(0xFF0B3A76),
-                  ),
+                // 保额
+                _InsuranceMetricCentered(
+                  value: _formatCurrency(info.coverage),
+                  label: 'Coverage',
+                  valueColor: const Color(0xFF0B3A76),
                 ),
-                // Term (保障期限) - 替代原有的 Risk Level
-                Expanded(
-                  child: _TermMetric(term: info.term),
-                ),
+                // 保障期限
+                _TermMetricCentered(term: info.term),
               ],
             ),
           ),
@@ -354,13 +376,13 @@ class _InsuranceCard extends StatelessWidget {
   }
 }
 
-// 用于显示保费/保额的指标组件
-class _InsuranceMetric extends StatelessWidget {
+// 居中显示的保费/保额指标
+class _InsuranceMetricCentered extends StatelessWidget {
   final String value;
   final String label;
   final Color valueColor;
 
-  const _InsuranceMetric({
+  const _InsuranceMetricCentered({
     required this.value,
     required this.label,
     required this.valueColor,
@@ -369,7 +391,6 @@ class _InsuranceMetric extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           value,
@@ -380,21 +401,23 @@ class _InsuranceMetric extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 2),
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
+        ),
       ],
     );
   }
 }
 
-// 新增：用于显示保障期限的指标组件
-class _TermMetric extends StatelessWidget {
+// 居中显示的保障期限指标
+class _TermMetricCentered extends StatelessWidget {
   final String term;
-  const _TermMetric({required this.term});
+  const _TermMetricCentered({required this.term});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
           term,
@@ -447,7 +470,7 @@ class _BadgePill extends StatelessWidget {
   }
 }
 
-// 徽章数据类（保持不变）
+// 徽章数据类
 class _Badge {
   final String text;
   final IconData icon;
@@ -455,7 +478,7 @@ class _Badge {
   const _Badge({required this.text, required this.icon, required this.color});
 }
 
-// 保险产品信息数据类（已移除 risk 字段）
+// 保险产品信息数据类
 class _InsuranceInfo {
   final String title;
   final String subtitle;
