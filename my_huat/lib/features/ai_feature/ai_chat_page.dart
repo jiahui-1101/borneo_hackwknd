@@ -29,7 +29,7 @@ class _AiChatPageState extends State<AiChatPage> {
 
   final List<Map<String, dynamic>> _messages = [
     {
-      'text': 'Hello Christ! I am your MHuat Financial Assistant. 💰\n\nAsk me about saving, investing, or insurance.',
+      'text': 'Hello Jia Hui! I am your MHuat Financial Assistant. 💰\n\nAsk me about saving, investing, or insurance.',
       'isUser': false,
     },
   ];
