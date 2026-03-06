@@ -22,9 +22,6 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
   @override
   bool get wantKeepAlive => true;
 
-  // Navy blue color
-  final Color navyBlue = const Color(0xFF0D3A6D);
-
   @override
   void initState() {
     super.initState();
@@ -38,6 +35,13 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
       });
       _controller.setLooping(false);
       _controller.setVolume(1.0);
+
+      _controller.addListener(() {
+        if (mounted) {
+          setState(() {});
+        }
+      });
+
     }).catchError((error) {
       print('Error initializing video: $error');
       setState(() {
@@ -140,16 +144,17 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
                 ],
               ),
 
-              const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-              // Quick Actions Section
-              const Text(
-                'Quick Actions',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
+            // Quick Actions Section
+            const Text(
+              'Quick Actions',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
               ),
+              ),
+
               const SizedBox(height: 12),
 
               // Three Action Buttons - perfectly aligned
@@ -234,7 +239,7 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
                     alignment: Alignment.bottomCenter,
                     children: [
                       AspectRatio(
-                        aspectRatio: value.aspectRatio,
+                        aspectRatio: _controller.value.aspectRatio,
                         child: VideoPlayer(_controller),
                       ),
                       Container(
@@ -280,41 +285,30 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
               );
             } else if (snapshot.hasError) {
               return Container(
-                color: Colors.grey[300],
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline, color: Colors.red, size: 40),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Error loading video',
-                        style: TextStyle(color: Colors.grey[700]),
-                      ),
-                    ],
-                  ),
-                ],
+              color: Colors.grey[300],
+              child: Center(
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              const Icon(Icons.error_outline, color: Colors.red, size: 40),
+              const SizedBox(height: 8),
+              Text(
+              'Error loading video',
+              style: TextStyle(color: Colors.grey[700]),
               ),
-
-              const SizedBox(height: 24),
-
-              // Quick Actions Section
-              const Text(
-                'Quick Actions',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
+              ],
+              ),
+              ),
               );
-            } else {
+              } else {
               return Container(
-                color: Colors.grey[300],
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
+              color: Colors.grey[300],
+              child: const Center(
+              child: CircularProgressIndicator(),
+              ),
               );
-            }
-          },
+              }
+              },
         ),
       ),
     );
