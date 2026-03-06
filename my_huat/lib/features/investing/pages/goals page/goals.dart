@@ -1,7 +1,7 @@
 // features/investing/goals/goals_page.dart
 import 'package:flutter/material.dart';
 import 'package:my_huat/core/services/points_service.dart';
-import 'package:my_huat/core/services/sound_service.dart';// Add this import
+import 'package:my_huat/core/services/sound_service.dart';
 import 'package:my_huat/shared/widgets/arc_header.dart';
 import 'investment_basic.dart';
 import 'ownership.dart';
@@ -16,11 +16,11 @@ class MyGoalsPage extends StatefulWidget {
 
 class _MyGoalsPageState extends State<MyGoalsPage> {
   final PointsService _pointsService = PointsService();
-  final SoundService _soundService = SoundService(); // Add sound service
+  final SoundService _soundService = SoundService();
 
   @override
   void dispose() {
-    _soundService.dispose(); // Dispose sound service
+    _soundService.dispose();
     super.dispose();
   }
 
@@ -31,10 +31,8 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
         _pointsService.addPoints(pointsEarned);
       });
 
-      // Play sound effect
       await _soundService.playPointsEarnedSound();
 
-      // Show snackbar with animation
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -45,7 +43,7 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
                 Expanded(
                   child: Text(
                     '🎉 You earned $pointsEarned points!',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.normal),
                   ),
                 ),
               ],
@@ -65,7 +63,6 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7FB),
       body: Column(
         children: [
           const ArcHeader(title: "MHuat"),
@@ -113,7 +110,7 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
                         'Investment Learning',
                         style: TextStyle(
                           fontSize: 22,
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.bold,
                           color: Color(0xFF0D3A6D),
                         ),
                       ),
@@ -135,7 +132,7 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
 
                   const SizedBox(height: 20),
 
-                  // Investment Basics Card
+                  // Investment Basics Card - Semi Bold
                   _buildInvestNowStyleCard(
                     title: "Investment Basics",
                     iconData: Icons.trending_up,
@@ -156,7 +153,7 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
 
                   const SizedBox(height: 12),
 
-                  // Ownership Investments Card
+                  // Ownership Investments Card - Semi Bold
                   _buildInvestNowStyleCard(
                     title: "Ownership Investments",
                     iconData: Icons.business_center,
@@ -177,9 +174,9 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
 
                   const SizedBox(height: 12),
 
-                  // Lending & Low-risk Investments Card
+                  // Lending & Low-risk Investments Card - Semi Bold (Full Title)
                   _buildInvestNowStyleCard(
-                    title: "Lending & Low-risk",
+                    title: "Lending & Low-risk Investments",
                     iconData: Icons.savings,
                     iconBgColor: const Color(0xFFFFE0E0),
                     onTap: () async {
@@ -237,7 +234,7 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
                 "Rewards Available",
                 style: TextStyle(
                   fontSize: 20,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.bold,
                   color: Color(0xFF0D3A6D),
                 ),
               ),
@@ -262,7 +259,7 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
             "${_pointsService.points} Points",
             style: const TextStyle(
               fontSize: 40,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.normal,
               color: Color(0xFF0D3A6D),
             ),
           ),
@@ -280,7 +277,8 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
               "1 point = RM0.10 cashback",
               style: TextStyle(
                 color: Color(0xFF0D3A6D),
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.normal,
+                fontSize: 14,
               ),
             ),
           ),
@@ -337,10 +335,10 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    title, // Semi-bold
                     style: const TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w600, // Semi-bold
                       color: Color(0xFF0D3A6D),
                     ),
                   ),
@@ -371,7 +369,7 @@ class _MyGoalsPageState extends State<MyGoalsPage> {
                           "Start Learning",
                           style: TextStyle(
                             fontSize: 12.5,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.normal,
                             color: Color(0xFF0D3A6D),
                           ),
                         ),

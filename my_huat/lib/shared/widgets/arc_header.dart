@@ -50,7 +50,7 @@ class ArcHeader extends StatelessWidget {
 
                 fontFamily: 'CaveatFont',
 
-                fontSize: 30,
+                fontSize: 50,
 
                 fontWeight: FontWeight.w800,
 
@@ -74,21 +74,22 @@ class ArcHeader extends StatelessWidget {
 
             Transform.translate(
 
-              offset: const Offset(5, 2),
+              offset: const Offset(10, -5),
 
               child: Transform.scale(
 
-                scale: 4.0,
+                scale: 3.3,
 
                 alignment: Alignment.centerLeft,
 
                 child: Image.asset(
 
-                  'assets/homepagecat.png',
+                  'assets/homepagecat3.png',
 
                   height: 34,
 
                   fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, color: Colors.amber, size: 20),
 
                 ),
 

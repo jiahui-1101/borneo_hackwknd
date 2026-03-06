@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:my_huat/shared/widgets/arc_header.dart';
+import 'PurchaseNowPage.dart';
+import 'insurance-goalpage/MyGoalsPage.dart'; // Import the MyGoalsPage
 
 class InsurancePage extends StatefulWidget {
   const InsurancePage({super.key});
@@ -8,17 +11,39 @@ class InsurancePage extends StatefulWidget {
   State<InsurancePage> createState() => _InsurancePageState();
 }
 
-class _InsurancePageState extends State<InsurancePage> {
+class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveClientMixin {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
+  bool _isInitialized = false;
+
+  // Navy blue color
+  final Color navyBlue = const Color(0xFF0D3A6D);
+
+  @override
+  bool get wantKeepAlive => true;
+
+  // Navy blue color
+  final Color navyBlue = const Color(0xFF0D3A6D);
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset('assets/video/basic_insurance.mp4');
-    _initializeVideoPlayerFuture = _controller.initialize();
-    _controller.setLooping(false);
-    _controller.setVolume(1.0);
+    _controller = VideoPlayerController.asset(
+      'assets/video/basic_insurance.mp4',
+    );
+
+    _initializeVideoPlayerFuture = _controller.initialize().then((_) {
+      setState(() {
+        _isInitialized = true;
+      });
+      _controller.setLooping(false);
+      _controller.setVolume(1.0);
+    }).catchError((error) {
+      print('Error initializing video: $error');
+      setState(() {
+        _isInitialized = false;
+      });
+    });
   }
 
   @override
@@ -27,317 +52,412 @@ class _InsurancePageState extends State<InsurancePage> {
     super.dispose();
   }
 
+  // Method to pause video
+  void _pauseVideo() {
+    if (_controller.value.isPlaying) {
+      _controller.pause();
+    }
+  }
+
+  // Modified navigation method to pause video before navigating
+  void _navigateToPage(BuildContext context, Widget page) {
+    _pauseVideo(); // Pause video before navigating
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => page),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
-      backgroundColor: Colors.transparent, // Match sample
+      backgroundColor: const Color(0xFFFEF7FF), // Match insurance theme
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header with Shield Icon (kept original icon)
-                Row(
-                  children: [
-                    const Text(
-                      'Insurance',
+          padding: const EdgeInsets.fromLTRB(18, 16, 18, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header with subtitle - matching Savings page format
+              const Text(
+                'Insurance',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                "Protect what matters most",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[700],
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Tutorial Section
+              const Text(
+                'Tutorial',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Local Video Container
+              _buildVideoPlayer(),
+
+              const SizedBox(height: 16),
+
+              // Video Control Row - with navy blue play button
+              _buildVideoControls(),
+
+              const SizedBox(height: 8),
+
+              // Skip for Now Button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      _pauseVideo();
+                      _showSkipMessage(context);
+                    },
+                    child: const Text(
+                      'Skip for Now',
                       style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0D3A6D),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Icon(
-                      Icons.shield,
-                      color: Colors.blue,
-                      size: 28,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-
-                // Tutorial Section
-                const Text(
-                  'Tutorial',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
                   ),
-                ),
-                const SizedBox(height: 12),
+                ],
+              ),
 
-                // Local Video Container (unchanged)
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withValues(alpha: 0.3),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: FutureBuilder(
-                      future: _initializeVideoPlayerFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              AspectRatio(
-                                aspectRatio: _controller.value.aspectRatio,
-                                child: VideoPlayer(_controller),
-                              ),
-                              Container(
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black.withValues(alpha: 0.5),
-                                    ],
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(
-                                        _controller.value.isPlaying
-                                            ? Icons.pause
-                                            : Icons.play_arrow,
-                                        color: Colors.white,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _controller.value.isPlaying
-                                              ? _controller.pause()
-                                              : _controller.play();
-                                        });
-                                      },
-                                    ),
-                                    Text(
-                                      '${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        } else {
-                          return Container(
-                            color: Colors.grey[300],
-                            child: const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ),
+              const SizedBox(height: 24),
 
-                // Video Control Buttons – vertical padding set to 0 (match sample)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            _controller.value.isPlaying
-                                ? _controller.pause()
-                                : _controller.play();
-                          });
-                        },
-                        icon: Icon(
-                          _controller.value.isPlaying
-                              ? Icons.pause
-                              : Icons.play_arrow,
-                        ),
-                        label: Text(
-                          _controller.value.isPlaying ? 'Pause' : 'Play',
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          foregroundColor: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          _controller.seekTo(Duration.zero);
-                        },
-                        icon: const Icon(Icons.replay),
-                        label: const Text('Replay'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey,
-                          foregroundColor: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
+              // Quick Actions Section
+              const Text(
+                'Quick Actions',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
                 ),
+              ),
+              const SizedBox(height: 12),
 
-                // Skip for Now Button – moved up exactly like sample
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+              // Three Action Buttons - perfectly aligned
+              SizedBox(
+                height: 130,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    TextButton.icon(
-                      onPressed: () {
-                        _showSkipMessage(context);
-                      },
-                      icon: const Icon(Icons.skip_next),
-                      label: const Text('Skip for Now'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.blue,
+                    Expanded(
+                      child: _buildActionButton(
+                        icon: Icons.account_balance_wallet,
+                        label: 'AI Compare Coverage',
+                        circleColor: Colors.purple.shade100,
+                        iconColor: Colors.purple.shade800,
+                        onTap: () {
+                          _showComingSoon(context, 'AI Compare Coverage');
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildActionButton(
+                        icon: Icons.flag,
+                        label: 'My Goals',
+                        circleColor: Colors.orange.shade100,
+                        iconColor: Colors.orange.shade800,
+                        onTap: () {
+                          _navigateToPage(context, const MyGoalsPage());
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildActionButton(
+                        icon: Icons.health_and_safety,
+                        label: 'Purchase\nNow',
+                        circleColor: Colors.green.shade100,
+                        iconColor: Colors.green.shade800,
+                        onTap: () {
+                          _navigateToPage(context, const PurchaseNowPage());
+                        },
                       ),
                     ),
                   ],
                 ),
+              ),
 
-                // Reduced spacing before Quick Actions (5 instead of 30)
-                const SizedBox(height: 5),
-
-                // Quick Actions Section
-                const Text(
-                  'Quick Actions',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                // Reduced spacing (12 instead of 20)
-                const SizedBox(height: 12),
-
-                // Three Buttons – onTap logic unchanged (still show coming soon)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildActionButton(
-                      icon: Icons.account_balance_wallet,
-                      label: 'Set Up\nPortfolio',
-                      color: Colors.purple,
-                      onTap: () {
-                        _showComingSoon(context, 'Portfolio Setup');
-                      },
-                    ),
-                    _buildActionButton(
-                      icon: Icons.flag,
-                      label: 'My Goals',
-                      color: Colors.orange,
-                      onTap: () {
-                        _showComingSoon(context, 'My Goals');
-                      },
-                    ),
-                    _buildActionButton(
-                      icon: Icons.health_and_safety,
-                      label: 'Purchase\nNow',
-                      color: Colors.green,
-                      onTap: () {
-                        _showComingSoon(context, 'Purchase Now');
-                      },
-                    ),
-                  ],
-                ),
-
-                // Reduced bottom spacing (10 instead of 20)
-                const SizedBox(height: 10),
-              ],
-            ),
+              const SizedBox(height: 20),
+            ],
           ),
         ),
       ),
     );
   }
 
-  // Helper method to format duration (unchanged)
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  // Extract video player to separate widget
+  Widget _buildVideoPlayer() {
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: FutureBuilder(
+          future: _initializeVideoPlayerFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done && _isInitialized) {
+              // Use ValueListenableBuilder to listen to controller changes
+              return ValueListenableBuilder(
+                valueListenable: _controller,
+                builder: (context, VideoPlayerValue value, child) {
+                  return Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      AspectRatio(
+                        aspectRatio: value.aspectRatio,
+                        child: VideoPlayer(_controller),
+                      ),
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.5),
+                            ],
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                value.isPlaying ? Icons.pause : Icons.play_arrow,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                value.isPlaying
+                                    ? _controller.pause()
+                                    : _controller.play();
+                                // No setState needed here
+                              },
+                            ),
+                            Text(
+                              '${_formatDuration(value.position)} / ${_formatDuration(value.duration, isTotal: true)}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Container(
+                color: Colors.grey[300],
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, color: Colors.red, size: 40),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Error loading video',
+                        style: TextStyle(color: Colors.grey[700]),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 24),
+
+              // Quick Actions Section
+              const Text(
+                'Quick Actions',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              );
+            } else {
+              return Container(
+                color: Colors.grey[300],
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+          },
+        ),
+      ),
+    );
   }
 
-  // Custom widget for action buttons – updated text style to match sample
+  // Extract video controls to separate widget
+  Widget _buildVideoControls() {
+    return ValueListenableBuilder(
+      valueListenable: _controller,
+      builder: (context, VideoPlayerValue value, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  value.isPlaying
+                      ? _controller.pause()
+                      : _controller.play();
+                  // No setState needed here
+                },
+                icon: Icon(
+                  value.isPlaying ? Icons.pause : Icons.play_arrow,
+                  size: 18,
+                ),
+                label: Text(
+                  value.isPlaying ? 'Pause' : 'Play',
+                  style: const TextStyle(fontSize: 13),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: navyBlue,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  _controller.seekTo(Duration.zero);
+                  // No setState needed here
+                },
+                icon: const Icon(Icons.replay, size: 18),
+                label: const Text(
+                  'Replay',
+                  style: TextStyle(fontSize: 13),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Helper method to format duration
+  // Helper method to format duration - ALWAYS shows HH:MM:SS format
+  // Helper method to format duration - ALWAYS shows HH:MM:SS format with proper padding
+  // Helper method to format duration - ALWAYS shows HH:MM:SS for both
+  String _formatDuration(Duration duration, {bool isTotal = false}) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+
+    String hours = twoDigits(duration.inHours);
+    String minutes = twoDigits(duration.inMinutes.remainder(60));
+    String seconds = twoDigits(duration.inSeconds.remainder(60));
+
+    // Always return HH:MM:SS format for both position and total
+    return "$hours:$minutes:$seconds";
+  }
+
+  // Action button builder - matching savings page style
   Widget _buildActionButton({
     required IconData icon,
     required String label,
-    required Color color,
+    required Color circleColor,
+    required Color iconColor,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 100,
-        height: 130,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.1),
-              spreadRadius: 1,
-              blurRadius: 3,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              top: 25,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          height: 130,
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Icon container with fixed positioning
+              Container(
+                height: 56,
+                alignment: Alignment.center,
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundColor: circleColor,
                   child: Icon(
                     icon,
-                    color: color,
+                    color: iconColor,
                     size: 28,
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              top: 85,
-              left: 0,
-              right: 0,
-              child: Center(
+              const SizedBox(height: 8),
+              // Text with fixed height
+              Container(
+                height: 36,
+                alignment: Alignment.topCenter,
                 child: Text(
                   label,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 13, // increased from 12
+                  style: const TextStyle(
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: Colors.grey[800],
-                    height: 1.3,
+                    color: Colors.black,
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -349,9 +469,7 @@ class _InsurancePageState extends State<InsurancePage> {
         content: const Text('Skipped tutorial for now'),
         duration: const Duration(seconds: 1),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
@@ -362,9 +480,7 @@ class _InsurancePageState extends State<InsurancePage> {
         content: Text('$pageName coming soon!'),
         duration: const Duration(seconds: 1),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
