@@ -358,12 +358,13 @@ class _LendingInvestmentsPageState extends State<LendingInvestmentsPage> {
           // Arc Header with MHuat text
           const ArcHeader(title: "MHuat"),
 
-          // Title Section with Back Arrow
+          // Title Section with Back Arrow - Updated to allow multiline
           Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             color: const Color(0xFFFEF7FF),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Back arrow
                 IconButton(
@@ -380,13 +381,18 @@ class _LendingInvestmentsPageState extends State<LendingInvestmentsPage> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                // Title
-                const Text(
-                  "Lending & Low-risk",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0D3A6D), // Navy blue
+                // Title - Now can wrap to multiple lines
+                Expanded(
+                  child: const Text(
+                    "Lending & Low-risk Investments",
+                    style: TextStyle(
+                      fontSize: 22, // Slightly smaller to help with fitting
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0D3A6D), // Navy blue
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
                   ),
                 ),
               ],
@@ -574,41 +580,45 @@ class _LendingInvestmentsPageState extends State<LendingInvestmentsPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    setState(() {
-                                      if (_activeController!.value.isPlaying) {
-                                        _activeController!.pause();
-                                        _videoCheckTimer?.cancel();
-                                      } else {
-                                        _activeController!.play();
-                                        _startVideoCheck();
-                                      }
-                                    });
-                                  },
-                                  icon: Icon(
-                                    _activeController!.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                                  ),
-                                  label: Text(_activeController!.value.isPlaying ? 'Pause' : 'Play'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: navyBlue, // Navy blue
-                                    foregroundColor: Colors.white,
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      setState(() {
+                                        if (_activeController!.value.isPlaying) {
+                                          _activeController!.pause();
+                                          _videoCheckTimer?.cancel();
+                                        } else {
+                                          _activeController!.play();
+                                          _startVideoCheck();
+                                        }
+                                      });
+                                    },
+                                    icon: Icon(
+                                      _activeController!.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                                    ),
+                                    label: Text(_activeController!.value.isPlaying ? 'Pause' : 'Play'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: navyBlue, // Navy blue
+                                      foregroundColor: Colors.white,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    _activeController!.seekTo(Duration.zero);
-                                    setState(() {
-                                      _showCompleteButton = false;
-                                    });
-                                    _videoCheckTimer?.cancel();
-                                  },
-                                  icon: const Icon(Icons.replay),
-                                  label: const Text('Replay'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.grey,
-                                    foregroundColor: Colors.white,
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      _activeController!.seekTo(Duration.zero);
+                                      setState(() {
+                                        _showCompleteButton = false;
+                                      });
+                                      _videoCheckTimer?.cancel();
+                                    },
+                                    icon: const Icon(Icons.replay),
+                                    label: const Text('Replay'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.grey,
+                                      foregroundColor: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -679,9 +689,11 @@ class _LendingInvestmentsPageState extends State<LendingInvestmentsPage> {
                                       _selectedTopic ?? 'Lending & Low-risk Investments',
                                       style: const TextStyle(
                                         color: Colors.white,
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   Container(
