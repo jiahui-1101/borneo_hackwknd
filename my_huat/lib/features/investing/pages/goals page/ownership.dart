@@ -1,8 +1,8 @@
-// features/investing/goals/ownership_investments.dart
+// features/investing/goals/ownership.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:my_huat/shared/widgets/arc_header.dart'; // Add this import
+import 'package:my_huat/shared/widgets/arc_header.dart';
 
 class OwnershipInvestmentsPage extends StatefulWidget {
   const OwnershipInvestmentsPage({super.key});
@@ -328,7 +328,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
     return [
       // Stocks Questions (0-2)
       {
-        'topic': 'Stocks',
+        'topic': 'Question 1',
         'question': 'What is a stock?',
         'options': [
           'Loan given to bank',
@@ -339,7 +339,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
         'correctAnswer': 1,
       },
       {
-        'topic': 'Stocks',
+        'topic': 'Question 2',
         'question': 'When you buy stocks, you are usually:',
         'options': [
           'Borrowing money',
@@ -350,7 +350,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
         'correctAnswer': 1,
       },
       {
-        'topic': 'Stocks',
+        'topic': 'Question 3',
         'question': 'Stock price is mainly affected by:',
         'options': [
           'Company performance and market demand',
@@ -363,7 +363,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
       // REIT Questions (3-5)
       {
-        'topic': 'REIT',
+        'topic': 'Question 1',
         'question': 'REIT mainly invests in:',
         'options': [
           'Technology software',
@@ -374,7 +374,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
         'correctAnswer': 1,
       },
       {
-        'topic': 'REIT',
+        'topic': 'Question 2',
         'question': 'REIT usually gives income through:',
         'options': [
           'Rent from properties',
@@ -385,7 +385,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
         'correctAnswer': 0,
       },
       {
-        'topic': 'REIT',
+        'topic': 'Question 3',
         'question': 'REIT is suitable for investors who want:',
         'options': [
           'Fast high-risk trading only',
@@ -398,7 +398,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
       // ETF Questions (6-8)
       {
-        'topic': 'ETF',
+        'topic': 'Question 1',
         'question': 'ETF is a fund that:',
         'options': [
           'Invests in many assets together',
@@ -409,7 +409,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
         'correctAnswer': 0,
       },
       {
-        'topic': 'ETF',
+        'topic': 'Question 2',
         'question': 'ETF can be bought and sold:',
         'options': [
           'Only once per year',
@@ -420,7 +420,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
         'correctAnswer': 1,
       },
       {
-        'topic': 'ETF',
+        'topic': 'Question 3',
         'question': 'ETF helps investors by:',
         'options': [
           'Providing diversification',
@@ -433,7 +433,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
 
       // Unit Trust Questions (9-11)
       {
-        'topic': 'Unit Trust',
+        'topic': 'Question 1',
         'question': 'Unit trust is managed by:',
         'options': [
           'Professional fund manager',
@@ -444,7 +444,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
         'correctAnswer': 0,
       },
       {
-        'topic': 'Unit Trust',
+        'topic': 'Question 2',
         'question': 'Unit trust investment is suitable for beginners because:',
         'options': [
           'It is professionally managed',
@@ -455,7 +455,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
         'correctAnswer': 0,
       },
       {
-        'topic': 'Unit Trust',
+        'topic': 'Question 3',
         'question': 'Unit trust usually invests in:',
         'options': [
           'Mix of stocks, bonds, or other assets',
@@ -502,6 +502,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             color: const Color(0xFFFEF7FF),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Back arrow
                 IconButton(
@@ -518,13 +519,18 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                // Title
-                const Text(
-                  "Ownership",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0D3A6D), // Navy blue
+                // Title - Now can wrap to multiple lines
+                Expanded(
+                  child: const Text(
+                    "Ownership Investments",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0D3A6D), // Navy blue
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
                   ),
                 ),
               ],
@@ -541,7 +547,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (!_showQuestionPage && !_showEarnPointsDialog) ...[
-                        // Dropdown
+                        // Dropdown - FIXED OVERFLOW ISSUE
                         Row(
                           children: [
                             Expanded(
@@ -549,20 +555,30 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                 margin: const EdgeInsets.only(bottom: 20),
                                 child: DropdownButtonFormField<String>(
                                   value: _selectedTopic,
-                                  hint: const Text('Select a topic'),
+                                  hint: const Text(
+                                    'Select a topic',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                   isExpanded: true,
+                                  menuMaxHeight: 300, // Limit dropdown height
                                   items: _topics.map((topic) {
                                     return DropdownMenuItem(
                                       value: topic,
-                                      child: Text(
-                                        topic,
-                                        overflow: TextOverflow.ellipsis,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(right: 8.0),
+                                        child: Text(
+                                          topic,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                          softWrap: true,
+                                          style: const TextStyle(fontSize: 14),
+                                        ),
                                       ),
                                     );
                                   }).toList(),
                                   onChanged: _onTopicChanged,
                                   decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                       borderSide: BorderSide(color: Colors.grey.shade300),
@@ -578,6 +594,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                     filled: true,
                                     fillColor: Colors.white,
                                     prefixIcon: Icon(Icons.play_circle_fill, color: navyBlue), // Navy blue
+                                    prefixIconConstraints: const BoxConstraints(minWidth: 40),
                                   ),
                                 ),
                               ),
@@ -712,41 +729,60 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    setState(() {
-                                      if (_activeController!.value.isPlaying) {
-                                        _activeController!.pause();
-                                        _videoCheckTimer?.cancel();
-                                      } else {
-                                        _activeController!.play();
-                                        _startVideoCheck();
-                                      }
-                                    });
-                                  },
-                                  icon: Icon(
-                                    _activeController!.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                                  ),
-                                  label: Text(_activeController!.value.isPlaying ? 'Pause' : 'Play'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: navyBlue, // Navy blue
-                                    foregroundColor: Colors.white,
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      setState(() {
+                                        if (_activeController!.value.isPlaying) {
+                                          _activeController!.pause();
+                                          _videoCheckTimer?.cancel();
+                                        } else {
+                                          _activeController!.play();
+                                          _startVideoCheck();
+                                        }
+                                      });
+                                    },
+                                    icon: Icon(
+                                      _activeController!.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                                      size: 18,
+                                    ),
+                                    label: Text(
+                                      _activeController!.value.isPlaying ? 'Pause' : 'Play',
+                                      style: const TextStyle(fontSize: 13),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: navyBlue, // Navy blue
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    _activeController!.seekTo(Duration.zero);
-                                    setState(() {
-                                      _showCompleteButton = false;
-                                    });
-                                    _videoCheckTimer?.cancel();
-                                  },
-                                  icon: const Icon(Icons.replay),
-                                  label: const Text('Replay'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.grey,
-                                    foregroundColor: Colors.white,
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      _activeController!.seekTo(Duration.zero);
+                                      setState(() {
+                                        _showCompleteButton = false;
+                                      });
+                                      _videoCheckTimer?.cancel();
+                                    },
+                                    icon: const Icon(Icons.replay, size: 18),
+                                    label: const Text(
+                                      'Replay',
+                                      style: TextStyle(fontSize: 13),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.grey,
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -761,7 +797,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.green,
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+                                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                   ),
@@ -769,11 +805,11 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                 child: const Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(Icons.check_circle),
-                                    SizedBox(width: 10),
+                                    Icon(Icons.check_circle, size: 18),
+                                    SizedBox(width: 8),
                                     Text(
                                       'Complete',
-                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                     ),
                                   ],
                                 ),
@@ -810,20 +846,27 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                         _showCompleteButton = true;
                                       });
                                     },
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(
+                                      minWidth: 36,
+                                      minHeight: 36,
+                                    ),
                                   ),
-                                  const SizedBox(width: 8),
+                                  const SizedBox(width: 4),
                                   Expanded(
                                     child: Text(
                                       _selectedTopic ?? 'Ownership Investments',
                                       style: const TextStyle(
                                         color: Colors.white,
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                     decoration: BoxDecoration(
                                       color: Colors.white.withValues(alpha: 0.2),
                                       borderRadius: BorderRadius.circular(20),
@@ -833,6 +876,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
+                                        fontSize: 14,
                                       ),
                                     ),
                                   ),
@@ -909,7 +953,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                               ] else ...[
                                 Container(
                                   width: double.infinity,
-                                  padding: const EdgeInsets.all(20),
+                                  padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(20),
@@ -920,17 +964,17 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                       Row(
                                         children: [
                                           Container(
-                                            padding: const EdgeInsets.all(8),
+                                            padding: const EdgeInsets.all(6),
                                             decoration: BoxDecoration(
                                               color: navyBlue.withValues(alpha: 0.1), // Navy blue
                                               borderRadius: BorderRadius.circular(12),
                                             ),
                                             child: Text(
                                               _getTopicEmoji(),
-                                              style: const TextStyle(fontSize: 20),
+                                              style: const TextStyle(fontSize: 18),
                                             ),
                                           ),
-                                          const SizedBox(width: 10),
+                                          const SizedBox(width: 8),
                                           Expanded(
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -938,14 +982,14 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                                 Text(
                                                   _getCurrentQuestion()['topic'],
                                                   style: TextStyle(
-                                                    fontSize: 16,
+                                                    fontSize: 15,
                                                     fontWeight: FontWeight.w600,
                                                     color: navyBlue, // Navy blue
                                                   ),
                                                 ),
                                                 const SizedBox(height: 2),
                                                 Container(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                                   decoration: BoxDecoration(
                                                     color: Colors.blue.withValues(alpha: 0.1),
                                                     borderRadius: BorderRadius.circular(12),
@@ -953,12 +997,12 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                                   child: const Row(
                                                     mainAxisSize: MainAxisSize.min,
                                                     children: [
-                                                      Icon(Icons.auto_awesome, size: 12, color: Colors.blue),
-                                                      SizedBox(width: 4),
+                                                      Icon(Icons.auto_awesome, size: 10, color: Colors.blue),
+                                                      SizedBox(width: 2),
                                                       Text(
-                                                        'AI Generated',
+                                                        'AI',
                                                         style: TextStyle(
-                                                          fontSize: 10,
+                                                          fontSize: 9,
                                                           color: Colors.blue,
                                                           fontWeight: FontWeight.w500,
                                                         ),
@@ -971,19 +1015,19 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 20),
+                                      const SizedBox(height: 16),
 
                                       Text(
                                         _getCurrentQuestion()['question'],
                                         style: const TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                           color: Colors.black87,
                                         ),
                                       ),
-                                      const SizedBox(height: 20),
+                                      const SizedBox(height: 16),
                                       const Divider(),
-                                      const SizedBox(height: 15),
+                                      const SizedBox(height: 12),
 
                                       ...(_getCurrentQuestion()['options'] as List<String>).asMap().entries.map((entry) {
                                         int index = entry.key;
@@ -1012,7 +1056,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                         );
 
                                         return Padding(
-                                          padding: const EdgeInsets.only(bottom: 10),
+                                          padding: const EdgeInsets.only(bottom: 8),
                                           child: SizedBox(
                                             width: double.infinity,
                                             child: ElevatedButton(
@@ -1021,17 +1065,17 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                                 backgroundColor: backgroundColor ?? Colors.grey[50],
                                                 foregroundColor: Colors.black87,
                                                 elevation: 0,
-                                                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                                                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                                                 shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12),
+                                                  borderRadius: BorderRadius.circular(10),
                                                   side: borderSide,
                                                 ),
                                               ),
                                               child: Row(
                                                 children: [
                                                   Container(
-                                                    width: 28,
-                                                    height: 28,
+                                                    width: 24,
+                                                    height: 24,
                                                     decoration: BoxDecoration(
                                                       color: isCorrect
                                                           ? Colors.green
@@ -1050,21 +1094,22 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                                               ? Colors.white
                                                               : Colors.black54,
                                                           fontWeight: FontWeight.bold,
+                                                          fontSize: 12,
                                                         ),
                                                       ),
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 12),
+                                                  const SizedBox(width: 10),
                                                   Expanded(
                                                     child: Text(
                                                       option,
-                                                      style: const TextStyle(fontSize: 15),
+                                                      style: const TextStyle(fontSize: 14),
                                                     ),
                                                   ),
                                                   if (isCorrect)
-                                                    const Icon(Icons.check_circle, color: Colors.green),
+                                                    const Icon(Icons.check_circle, color: Colors.green, size: 18),
                                                   if (isWrong)
-                                                    const Icon(Icons.cancel, color: Colors.red),
+                                                    const Icon(Icons.cancel, color: Colors.red, size: 18),
                                                 ],
                                               ),
                                             ),
@@ -1072,7 +1117,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                         );
                                       }).toList(),
 
-                                      const SizedBox(height: 20),
+                                      const SizedBox(height: 16),
 
                                       if (!_showAnswerResult)
                                         SizedBox(
@@ -1082,7 +1127,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: navyBlue, // Navy blue
                                               foregroundColor: Colors.white,
-                                              padding: const EdgeInsets.symmetric(vertical: 16),
+                                              padding: const EdgeInsets.symmetric(vertical: 14),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(30),
                                               ),
@@ -1090,7 +1135,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                             child: const Text(
                                               'Check Answer',
                                               style: TextStyle(
-                                                fontSize: 16,
+                                                fontSize: 15,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -1105,7 +1150,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: navyBlue, // Navy blue
                                               foregroundColor: Colors.white,
-                                              padding: const EdgeInsets.symmetric(vertical: 16),
+                                              padding: const EdgeInsets.symmetric(vertical: 14),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(30),
                                               ),
@@ -1115,7 +1160,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                                   ? 'Next Question'
                                                   : 'See Results',
                                               style: const TextStyle(
-                                                fontSize: 16,
+                                                fontSize: 15,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -1139,7 +1184,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                     child: Center(
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 30),
-                        padding: const EdgeInsets.all(24),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(24),
@@ -1155,7 +1200,7 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 color: navyBlue.withValues(alpha: 0.1), // Navy blue
                                 shape: BoxShape.circle,
@@ -1163,30 +1208,30 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                               child: Icon(
                                 Icons.emoji_events,
                                 color: navyBlue, // Navy blue
-                                size: 50,
+                                size: 40,
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 16),
                             const Text(
                               'Earn Points!',
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 22,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black87,
                               ),
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 8),
                             Text(
-                              'Would you like to answer questions about ${_selectedTopic ?? "this topic"} to earn points?',
+                              'Answer questions about ${_selectedTopic ?? "this topic"} to earn points?',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 color: Colors.grey[600],
                               ),
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
                                 color: navyBlue.withValues(alpha: 0.1), // Navy blue
                                 borderRadius: BorderRadius.circular(20),
@@ -1194,19 +1239,20 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.stars, color: navyBlue, size: 16), // Navy blue
+                                  Icon(Icons.stars, color: navyBlue, size: 14), // Navy blue
                                   const SizedBox(width: 4),
                                   Text(
                                     'Earn up to 30 points',
                                     style: TextStyle(
                                       color: navyBlue, // Navy blue
                                       fontWeight: FontWeight.bold,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 20),
                             Row(
                               children: [
                                 Expanded(
@@ -1220,12 +1266,12 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.grey[300],
                                       foregroundColor: Colors.black87,
-                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                      padding: const EdgeInsets.symmetric(vertical: 12),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                     ),
-                                    child: const Text('No'),
+                                    child: const Text('No', style: TextStyle(fontSize: 14)),
                                   ),
                                 ),
                                 const SizedBox(width: 12),
@@ -1235,12 +1281,12 @@ class _OwnershipInvestmentsPageState extends State<OwnershipInvestmentsPage> {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: navyBlue, // Navy blue
                                       foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                      padding: const EdgeInsets.symmetric(vertical: 12),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                     ),
-                                    child: const Text('Yes'),
+                                    child: const Text('Yes', style: TextStyle(fontSize: 14)),
                                   ),
                                 ),
                               ],
