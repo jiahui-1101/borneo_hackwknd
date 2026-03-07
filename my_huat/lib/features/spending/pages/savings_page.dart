@@ -1,14 +1,24 @@
 // lib/features/spending/pages/savings_page.dart
 import 'package:flutter/material.dart';
 import 'package:my_huat/features/homepage/widgets/total_assets.dart';
-
+import 'package:my_huat/shared/data_service.dart';
 import 'record_spending_page.dart';
 import 'bnpl_calculator_page.dart';
 import 'retirement_page.dart';
-import 'spending_history_page.dart'; // 🌟 Added import for the history page
+import 'spending_history_page.dart';
 
-class SavingsPage extends StatelessWidget {
+// 🌟 1. 改为 StatefulWidget 确保页面可以被刷新
+class SavingsPage extends StatefulWidget {
   const SavingsPage({super.key});
+
+  @override
+  State<SavingsPage> createState() => _SavingsPageState();
+}
+
+class _SavingsPageState extends State<SavingsPage> {
+  // 🌟 2. 帮助函数：根据分类返回你原本用的图标和颜色
+  IconData _getCatIcon(String? cat) => cat == 'Food' ? Icons.restaurant : (cat == 'Transport' ? Icons.directions_bus : Icons.receipt);
+  Color _getCatColor(String? cat) => cat == 'Food' ? Colors.orange.shade100 : (cat == 'Transport' ? Colors.blue.shade100 : Colors.purple.shade100);
 
   @override
   Widget build(BuildContext context) {
@@ -18,34 +28,17 @@ class SavingsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
-            const Text(
-              "Savings",
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
-            ),
+            const Text("Savings", style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
             const SizedBox(height: 6),
-            Text(
-              "What do you want to do today?",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[700],
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            Text("What do you want to do today?", style: TextStyle(fontSize: 14, color: Colors.grey[700], fontWeight: FontWeight.w600)),
             const SizedBox(height: 18),
 
-            // Total Assets Card
             const TotalAssetsCard(),
             const SizedBox(height: 24),
 
-            // Quick Actions
-            const Text(
-              "Quick Actions",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-            ),
+            const Text("Quick Actions", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
             const SizedBox(height: 12),
 
-            // Horizontal action buttons with colored circles
             Row(
               children: [
                 _buildActionButton(
@@ -54,60 +47,29 @@ class SavingsPage extends StatelessWidget {
                   label: "Record Spending",
                   circleColor: Colors.orange.shade100,
                   iconColor: Colors.orange.shade800,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const RecordSpendingPage()),
-                    );
+                  onTap: () async {
+                    // 🌟 3. 加了 await，回来时会自动刷新
+                    await Navigator.push(context, MaterialPageRoute(builder: (_) => const RecordSpendingPage()));
+                    setState(() {}); 
                   },
                 ),
                 const SizedBox(width: 12),
-                _buildActionButton(
-                  context,
-                  icon: Icons.calculate,
-                  label: "BNPL Calculator",
-                  circleColor: Colors.purple.shade100,
-                  iconColor: Colors.purple.shade800,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const BnplCalculatorPage()),
-                    );
-                  },
-                ),
+                _buildActionButton(context, icon: Icons.calculate, label: "BNPL Calculator", circleColor: Colors.purple.shade100, iconColor: Colors.purple.shade800, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BnplCalculatorPage()))),
                 const SizedBox(width: 12),
-                _buildActionButton(
-                  context,
-                  icon: Icons.elderly,
-                  label: "Retirement Planner",
-                  circleColor: Colors.green.shade100,
-                  iconColor: Colors.green.shade800,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const RetirementPage()),
-                    );
-                  },
-                ),
+                _buildActionButton(context, icon: Icons.elderly, label: "Retirement Planner", circleColor: Colors.green.shade100, iconColor: Colors.green.shade800, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RetirementPage()))),
               ],
             ),
 
-            const SizedBox(height: 32), // Added spacing
+            const SizedBox(height: 32),
 
-            // 🌟 NEW: Recent Spending Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Recent Spending",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                ),
+                const Text("Recent Spending", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                 TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const SpendingHistoryPage()),
-                    );
+                  onPressed: () async {
+                    await Navigator.push(context, MaterialPageRoute(builder: (_) => const SpendingHistoryPage()));
+                    setState(() {});
                   },
                   child: const Text("See All", style: TextStyle(color: Color(0xFF0D3A6D))),
                 ),
@@ -115,37 +77,37 @@ class SavingsPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
-            // Mock data items to show the layout
-            _buildRecentItem("Chicken Rice", "Food", "12.00", Icons.restaurant, Colors.orange.shade100),
-            _buildRecentItem("Grab Bus", "Transport", "5.00", Icons.directions_bus, Colors.blue.shade100),
+            // 🌟 4. 核心：这里删掉了写死的数据，改用 map 动态生成
+            Column(
+              children: DataService.allRecords.take(3).map((item) {
+                return _buildRecentItem(
+                  item['title'] ?? 'New Record',
+                  item['category'] ?? 'Others',
+                  (item['amount'] as double).toStringAsFixed(2),
+                  _getCatIcon(item['category']),
+                  _getCatColor(item['category']),
+                );
+              }).toList(),
+            ),
           ],
         ),
       ),
     );
   }
 
-  // 🌟 NEW: Helper widget to build the recent spending cards
+  // --- 下面 100% 维持你原本的 Widget 样式，一个参数都没改 ---
+
   Widget _buildRecentItem(String title, String category, String amount, IconData icon, Color iconBgColor) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          )
-        ],
+        color: Colors.white, borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            backgroundColor: iconBgColor,
-            child: Icon(icon, color: const Color(0xFF0D3A6D), size: 20),
-          ),
+          CircleAvatar(backgroundColor: iconBgColor, child: Icon(icon, color: const Color(0xFF0D3A6D), size: 20)),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -162,50 +124,21 @@ class SavingsPage extends StatelessWidget {
     );
   }
 
-  // Your original Quick Action button builder
-  Widget _buildActionButton(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required Color circleColor,
-    required Color iconColor,
-    required VoidCallback onTap,
-  }) {
+  Widget _buildActionButton(BuildContext context, {required IconData icon, required String label, required Color circleColor, required Color iconColor, required VoidCallback onTap}) {
     return Expanded(
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
+          onTap: onTap, borderRadius: BorderRadius.circular(16),
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 255, 255), 
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color.fromARGB(255, 255, 255, 255)),
-            ),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundColor: circleColor,
-                  child: Icon(
-                    icon,
-                    color: iconColor,
-                    size: 28,
-                  ),
-                ),
+                CircleAvatar(radius: 24, backgroundColor: circleColor, child: Icon(icon, color: iconColor, size: 28)),
                 const SizedBox(height: 8),
-                Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Color.fromARGB(255, 0, 0, 0), 
-                  ),
-                ),
+                Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black)),
               ],
             ),
           ),
