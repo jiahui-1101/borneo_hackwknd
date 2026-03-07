@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_huat/shared/models/fund_type.dart'; // adjust path if needed
 import 'package:my_huat/features/homepage/widgets/cash_in_screen.dart'; // for navigation
-
+import 'package:my_huat/features/insurance/pages/PurchaseNowPage.dart';
+import 'package:my_huat/features/investing/pages/investnow.dart';
+import 'package:my_huat/features/spending/pages/savings_goal_page.dart';
 class TotalAssetsCard extends StatelessWidget {
   const TotalAssetsCard({super.key});
 
@@ -162,67 +164,71 @@ class TotalAssetsCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            ...FundType.values.map((fund) {
-              return Card(
-                elevation: 2,
-                margin: const EdgeInsets.only(bottom: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  leading: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE0EDFE),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      fund == FundType.insurance
-                          ? Icons.health_and_safety
-                          : fund == FundType.saving
-                          ? Icons.savings
-                          : Icons.trending_up,
-                      color: const Color(0xFF0462C2),
-                    ),
-                  ),
-                  title: Text(
-                    fund.displayName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF0D3A6D),
-                    ),
-                  ),
-                  subtitle: Text(
-                    'Current Balance: RM ${fund.currentBalance.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      color: Color(0xFF05509F),
-                      fontSize: 12,
-                    ),
-                  ),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Color(0xFF0462C2),
-                    size: 16,
-                  ),
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => CashInScreen(fundType: fund),
-                      ),
-                    );
-                  },
-                ),
-              );
-            }).toList(),
+            _buildFundOption(
+              context: ctx,
+              fund: FundType.insurance,
+              icon: Icons.health_and_safety,
+              page: const PurchaseNowPage(),
+            ),
+            _buildFundOption(
+              context: ctx,
+              fund: FundType.saving,
+              icon: Icons.savings,
+              page: const SavingsGoalPage(),
+            ),
+            _buildFundOption(
+              context: ctx,
+              fund: FundType.investment,
+              icon: Icons.trending_up,
+              page: const InvestNowPage(),
+            ),
             const SizedBox(height: 8),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildFundOption({
+    required BuildContext context,
+    required FundType fund,
+    required IconData icon,
+    required Widget page,
+  }) {
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFE0EDFE),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, color: const Color(0xFF0462C2)),
+        ),
+        title: Text(
+          fund.displayName,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF0D3A6D),
+          ),
+        ),
+        subtitle: Text(
+          'Current Balance: RM ${fund.currentBalance.toStringAsFixed(2)}',
+          style: const TextStyle(color: Color(0xFF05509F), fontSize: 12),
+        ),
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          color: Color(0xFF0462C2),
+          size: 16,
+        ),
+        onTap: () {
+          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+        },
       ),
     );
   }
