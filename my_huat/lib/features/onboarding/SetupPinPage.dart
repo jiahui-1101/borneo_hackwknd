@@ -154,7 +154,7 @@ class _CurrencySetupPageState extends State<CurrencySetupPage> {
                   const SizedBox(height: 30),
                   const Text("Set your Currency", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF0D3A6D))),
                   const SizedBox(height: 8),
-                  Text("What currency does your Warung use?", style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                  Text("What currency you wish to use?", style: TextStyle(fontSize: 16, color: Colors.grey[600])),
                   const SizedBox(height: 40),
 
                   const Text("Default Currency", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF0D3A6D))),
