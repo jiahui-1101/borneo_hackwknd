@@ -16,7 +16,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-
   File? _profileImage;
 
   void _openImagePicker() {
@@ -33,8 +32,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   Navigator.pop(context);
 
                   final picker = ImagePicker();
-                  final XFile? photo =
-                  await picker.pickImage(source: ImageSource.camera);
+                  final XFile? photo = await picker.pickImage(
+                    source: ImageSource.camera,
+                  );
 
                   if (photo != null) {
                     setState(() {
@@ -50,8 +50,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   Navigator.pop(context);
 
                   final picker = ImagePicker();
-                  final XFile? photo =
-                  await picker.pickImage(source: ImageSource.gallery);
+                  final XFile? photo = await picker.pickImage(
+                    source: ImageSource.gallery,
+                  );
 
                   if (photo != null) {
                     setState(() {
@@ -93,7 +94,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     backgroundImage: _profileImage != null
                         ? FileImage(_profileImage!)
                         : const AssetImage('assets/images/profile_avatar.png')
-                    as ImageProvider,
+                              as ImageProvider,
                   ),
                   Positioned(
                     right: 0,
@@ -110,10 +111,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
               const Text(
                 "Jia Hui",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),
 
               const SizedBox(height: 4),
@@ -124,10 +122,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: [
                   Text(
                     "Account No. | 25417056",
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey.shade600,
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
                   ),
                   const SizedBox(width: 8),
                   GestureDetector(
@@ -163,7 +158,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               const SizedBox(height: 8),
-
 
               // Account Details - White box
               _buildMenuItem(
@@ -231,7 +225,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const PortfolioResultsPage(),
+                      builder: (_) => PortfolioResultsPage(
+                        selectedType:
+                            'invest', // or 'insurance' based on user's choice
+                        recommendedProfile:
+                            'Aggressive', // replace with actual recommended profile
+                      ),
                     ),
                   );
                 },
@@ -290,17 +289,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const HelpPage(),
-                    ),
+                    MaterialPageRoute(builder: (context) => const HelpPage()),
                   );
                 },
               ),
 
-              const Divider(
-                thickness: 1,
-                height: 30,
-              ),
+              const Divider(thickness: 1, height: 30),
 
               // Log out - White box
               _buildMenuItem(
@@ -344,17 +338,8 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       child: ListTile(
         leading: Icon(icon, color: color),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: 16,
-            color: color,
-          ),
-        ),
-        trailing: Icon(
-          Icons.chevron_right,
-          color: Colors.grey.shade400,
-        ),
+        title: Text(title, style: TextStyle(fontSize: 16, color: color)),
+        trailing: Icon(Icons.chevron_right, color: Colors.grey.shade400),
         onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       ),
@@ -378,9 +363,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Navigator.pop(context); // Close dialog
                 // Add logout logic here
               },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.red,
-              ),
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
               child: const Text("Log Out"),
             ),
           ],
@@ -390,7 +373,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
-  class _CircleIconButton extends StatelessWidget {
+class _CircleIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
@@ -399,7 +382,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: const Color(0xFF2F6BFF),
+      color: const Color(0xFF2F6BFF),
       shape: const CircleBorder(),
       child: InkWell(
         customBorder: const CircleBorder(),
@@ -411,5 +394,4 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
-  }
-
+}
