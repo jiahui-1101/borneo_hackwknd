@@ -3,6 +3,7 @@ import 'package:video_player/video_player.dart';
 import 'package:my_huat/shared/widgets/arc_header.dart';
 import 'PurchaseNowPage.dart';
 import 'insurance-goalpage/MyGoalsPage.dart'; // Import the MyGoalsPage
+import 'ai_compare_coverage.dart';
 
 class InsurancePage extends StatefulWidget {
   const InsurancePage({super.key});
@@ -170,7 +171,7 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
                         circleColor: Colors.purple.shade100,
                         iconColor: Colors.purple.shade800,
                         onTap: () {
-                          _showComingSoon(context, 'AI Compare Coverage');
+                          _navigateToPage(context, const AiCompareCoveragePage());
                         },
                       ),
                     ),
