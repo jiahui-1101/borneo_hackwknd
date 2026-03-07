@@ -1,8 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart' hide Badge; // Hide Flutter's Badge to avoid conflict
+import 'package:my_huat/shared/models/fund_model.dart';
+import 'package:my_huat/shared/models/insurance_model.dart';
+import 'package:my_huat/features/investing/pages/fund_details_page.dart';
+import 'package:my_huat/features/insurance/pages/insurance_detail_page.dart';
 
 class PortfolioResultsPage extends StatefulWidget {
-  const PortfolioResultsPage({super.key});
+  final String selectedType; // 'invest' or 'insurance'
+  final String recommendedProfile; // e.g., 'Aggressive'
+
+  const PortfolioResultsPage({
+    super.key,
+    required this.selectedType,
+    required this.recommendedProfile,
+  });
 
   @override
   State<PortfolioResultsPage> createState() => _PortfolioResultsPageState();
@@ -10,50 +20,243 @@ class PortfolioResultsPage extends StatefulWidget {
 
 class _PortfolioResultsPageState extends State<PortfolioResultsPage> {
   final Color navyBlue = const Color(0xFF0B3A76);
-  String _selectedPeriod = '1M';
-  final List<String> _periods = ['1D', '1W', '1M', '3M', '6M', '1Y', 'All'];
 
-  // Portfolio data
-  final double _totalInvestment = 25000.00;
-  final double _currentValue = 28750.50;
-  final double _totalReturn = 3750.50;
-  final double _returnPercentage = 15.0;
+  // Helper to get icon and color based on profile name
+  IconData _getIconForProfile(String name) {
+    if (name.contains('Conservative')) return Icons.security;
+    if (name.contains('Moderate')) return Icons.balance;
+    return Icons.trending_up;
+  }
 
-  // Holdings data
-  final List<Map<String, dynamic>> _holdings = [
-    {
-      'name': 'Versa Gold',
-      'type': 'Gold ETF',
-      'allocation': 30,
-      'value': 8625.15,
-      'return': 12.5,
-      'color': Color(0xFFFFD700),
-    },
-    {
-      'name': 'Versa Growth',
-      'type': 'Equity Fund',
-      'allocation': 40,
-      'value': 11500.20,
-      'return': 18.2,
-      'color': Color(0xFF4CAF50),
-    },
-    {
-      'name': 'Versa Bond',
-      'type': 'Bond Fund',
-      'allocation': 20,
-      'value': 5750.10,
-      'return': 5.8,
-      'color': Color(0xFF2196F3),
-    },
-    {
-      'name': 'Versa Money Market',
-      'type': 'Money Market',
-      'allocation': 10,
-      'value': 2875.05,
-      'return': 3.2,
-      'color': Color(0xFF9C27B0),
-    },
+  Color _getColorForProfile(String name) {
+    if (name.contains('Very Conservative')) return Colors.blue;
+    if (name.contains('Moderately Conservative')) return Colors.lightBlue;
+    if (name.contains('Moderate')) return Colors.green;
+    if (name.contains('Moderately Aggressive')) return Colors.orange;
+    if (name.contains('Aggressive')) return Colors.deepOrange;
+    return Colors.red;
+  }
+
+  Risk _getRiskForProfile(String name) {
+    if (name.contains('Very Conservative') || name.contains('Moderately Conservative')) return Risk.low;
+    if (name.contains('Moderate')) return Risk.moderate;
+    return Risk.high;
+  }
+
+  // Create badge for fund (using Badge from fund_model.dart)
+  Badge _createFundBadge(String text, IconData icon, Color color) {
+    return Badge(text: text, icon: icon, color: color);
+  }
+
+  // Create badge for insurance (using InsuranceBadge from insurance_model.dart)
+  InsuranceBadge _createInsuranceBadge(String text, IconData icon, Color color) {
+    return InsuranceBadge(text: text, icon: icon, color: color);
+  }
+
+  // Risk profiles data using the real imported model classes
+  late final List<RiskProfile> _profiles = [
+    RiskProfile(
+      name: 'Very Conservative',
+      description: 'Focus on capital preservation, low risk, mainly money market and short-term bonds.',
+      oneMonthReturn: 0.1,
+      investProduct: FundInfo(
+        title: 'MHuat Money Market',
+        subtitle: 'Very Conservative Fund',
+        bullets: const ['Low volatility', 'High liquidity'],
+        ytd: 2.5,
+        oneYear: 2.5,
+        risk: _getRiskForProfile('Very Conservative'),
+        badges: [
+          _createFundBadge('Low Risk', Icons.eco, Colors.green),
+          _createFundBadge('Liquid', Icons.water_drop, Colors.blue),
+        ],
+        iconBg: _getColorForProfile('Very Conservative'),
+        icon: _getIconForProfile('Very Conservative'),
+      ),
+      insuranceProduct: InsuranceInfo(
+        title: 'SecureSave',
+        subtitle: 'Very Conservative Plan',
+        bullets: const ['Guaranteed returns', 'Capital guaranteed'],
+        premium: 1200,
+        coverage: 100000,
+        term: 'Whole Life',
+        badges: [
+          _createInsuranceBadge('Guaranteed', Icons.verified, Colors.green),
+          _createInsuranceBadge('Low Risk', Icons.shield, Colors.blue),
+        ],
+        iconBg: _getColorForProfile('Very Conservative'),
+        icon: _getIconForProfile('Very Conservative'),
+      ),
+    ),
+    RiskProfile(
+      name: 'Moderately Conservative',
+      description: 'Mix of bonds and some equities for modest growth with lower risk.',
+      oneMonthReturn: -0.1,
+      investProduct: FundInfo(
+        title: 'MHuat Malaysia Bond',
+        subtitle: 'Moderately Conservative Fund',
+        bullets: const ['Government & corporate bonds', 'Stable income'],
+        ytd: 3.8,
+        oneYear: 3.8,
+        risk: _getRiskForProfile('Moderately Conservative'),
+        badges: [
+          _createFundBadge('Bond', Icons.account_balance, Colors.blue),
+          _createFundBadge('Income', Icons.trending_down, Colors.green),
+        ],
+        iconBg: _getColorForProfile('Moderately Conservative'),
+        icon: _getIconForProfile('Moderately Conservative'),
+      ),
+      insuranceProduct: InsuranceInfo(
+        title: 'BondGuard',
+        subtitle: 'Moderately Conservative Plan',
+        bullets: const ['Participating plan', 'Annual dividends'],
+        premium: 1500,
+        coverage: 150000,
+        term: '20 years',
+        badges: [
+          _createInsuranceBadge('Dividend', Icons.money, Colors.green),
+          _createInsuranceBadge('Stable', Icons.hourglass_empty, Colors.blue),
+        ],
+        iconBg: _getColorForProfile('Moderately Conservative'),
+        icon: _getIconForProfile('Moderately Conservative'),
+      ),
+    ),
+    RiskProfile(
+      name: 'Moderate',
+      description: 'Balanced mix of equities and fixed income for steady growth.',
+      oneMonthReturn: 0.3,
+      investProduct: FundInfo(
+        title: 'MHuat Moderate',
+        subtitle: 'Balanced Fund',
+        bullets: const ['60% equities / 40% bonds', 'Diversified'],
+        ytd: 6.2,
+        oneYear: 6.2,
+        risk: _getRiskForProfile('Moderate'),
+        badges: [
+          _createFundBadge('Balanced', Icons.balance, Colors.orange),
+          _createFundBadge('Diversified', Icons.pie_chart, Colors.green),
+        ],
+        iconBg: _getColorForProfile('Moderate'),
+        icon: _getIconForProfile('Moderate'),
+      ),
+      insuranceProduct: InsuranceInfo(
+        title: 'BalancedLife',
+        subtitle: 'Moderate Plan',
+        bullets: const ['Investment-linked', 'Flexible premiums'],
+        premium: 2000,
+        coverage: 200000,
+        term: 'To age 65',
+        badges: [
+          _createInsuranceBadge('Flexible', Icons.tune, Colors.orange),
+          _createInsuranceBadge('Growth', Icons.trending_up, Colors.green),
+        ],
+        iconBg: _getColorForProfile('Moderate'),
+        icon: _getIconForProfile('Moderate'),
+      ),
+    ),
+    RiskProfile(
+      name: 'Moderately Aggressive',
+      description: 'Higher equity exposure for capital appreciation, some volatility.',
+      oneMonthReturn: -0.5,
+      investProduct: FundInfo(
+        title: 'MHuat Growth',
+        subtitle: 'Moderately Aggressive Fund',
+        bullets: const ['80% equities', 'Global diversification'],
+        ytd: 9.5,
+        oneYear: 9.5,
+        risk: _getRiskForProfile('Moderately Aggressive'),
+        badges: [
+          _createFundBadge('Growth', Icons.trending_up, Colors.deepOrange),
+          _createFundBadge('Global', Icons.public, Colors.blue),
+        ],
+        iconBg: _getColorForProfile('Moderately Aggressive'),
+        icon: _getIconForProfile('Moderately Aggressive'),
+      ),
+      insuranceProduct: InsuranceInfo(
+        title: 'GrowthPlus',
+        subtitle: 'Moderately Aggressive Plan',
+        bullets: const ['Higher potential returns', 'Unit-linked'],
+        premium: 2500,
+        coverage: 250000,
+        term: '30 years',
+        badges: [
+          _createInsuranceBadge('High Growth', Icons.rocket, Colors.deepOrange),
+          _createInsuranceBadge('Linked', Icons.link, Colors.blue),
+        ],
+        iconBg: _getColorForProfile('Moderately Aggressive'),
+        icon: _getIconForProfile('Moderately Aggressive'),
+      ),
+    ),
+    RiskProfile(
+      name: 'Aggressive',
+      description: 'High equity allocation, targets maximum long-term growth, accepts high volatility.',
+      oneMonthReturn: -0.8,
+      investProduct: FundInfo(
+        title: 'MHuat US-Tech',
+        subtitle: 'Aggressive Fund',
+        bullets: const ['US technology stocks', 'High growth potential'],
+        ytd: 15.2,
+        oneYear: 15.2,
+        risk: _getRiskForProfile('Aggressive'),
+        badges: [
+          _createFundBadge('Tech', Icons.computer, Colors.indigo),
+          _createFundBadge('High Risk', Icons.warning, Colors.red),
+        ],
+        iconBg: _getColorForProfile('Aggressive'),
+        icon: _getIconForProfile('Aggressive'),
+      ),
+      insuranceProduct: InsuranceInfo(
+        title: 'Ventura',
+        subtitle: 'Aggressive Plan',
+        bullets: const ['Aggressive investment strategy', 'Market-linked'],
+        premium: 3000,
+        coverage: 300000,
+        term: 'To age 70',
+        badges: [
+          _createInsuranceBadge('Aggressive', Icons.flash_on, Colors.red),
+          _createInsuranceBadge('Market-linked', Icons.trending_up, Colors.orange),
+        ],
+        iconBg: _getColorForProfile('Aggressive'),
+        icon: _getIconForProfile('Aggressive'),
+      ),
+    ),
+    RiskProfile(
+      name: 'Very Aggressive',
+      description: 'Maximum equity exposure, may include emerging markets or sector funds, highest risk/return.',
+      oneMonthReturn: -1.2,
+      investProduct: FundInfo(
+        title: 'MHuat China Equity Tracker',
+        subtitle: 'Very Aggressive Fund',
+        bullets: const ['China A-shares', 'High volatility'],
+        ytd: 18.7,
+        oneYear: 18.7,
+        risk: _getRiskForProfile('Very Aggressive'),
+        badges: [
+          _createFundBadge('Emerging', Icons.terrain, Colors.purple),
+          _createFundBadge('Volatile', Icons.waves, Colors.red),
+        ],
+        iconBg: _getColorForProfile('Very Aggressive'),
+        icon: _getIconForProfile('Very Aggressive'),
+      ),
+      insuranceProduct: InsuranceInfo(
+        title: 'Dynamo',
+        subtitle: 'Very Aggressive Plan',
+        bullets: const ['100% equities', 'Aggressive growth'],
+        premium: 3500,
+        coverage: 350000,
+        term: 'To age 75',
+        badges: [
+          _createInsuranceBadge('Max Growth', Icons.star, Colors.red),
+          _createInsuranceBadge('High Risk', Icons.warning, Colors.orange),
+        ],
+        iconBg: _getColorForProfile('Very Aggressive'),
+        icon: _getIconForProfile('Very Aggressive'),
+      ),
+    ),
   ];
+
+  RiskProfile get _recommendedProfile =>
+      _profiles.firstWhere((p) => p.name == widget.recommendedProfile);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +270,7 @@ class _PortfolioResultsPageState extends State<PortfolioResultsPage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Portfolio Results',
+          'Your Portfolio',
           style: TextStyle(
             color: navyBlue,
             fontSize: 20,
@@ -75,339 +278,68 @@ class _PortfolioResultsPageState extends State<PortfolioResultsPage> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh, color: navyBlue),
-            onPressed: () {
-              // Refresh portfolio data
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Portfolio updated'),
-                  duration: Duration(seconds: 1),
-                ),
-              );
-            },
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Portfolio Summary Card
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [navyBlue.withValues(alpha: 0.8), navyBlue],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(20),
+            Text(
+              'For You',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: navyBlue,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            const SizedBox(height: 8),
+            _buildProfileCard(_recommendedProfile, isRecommended: true),
+            const SizedBox(height: 24),
+            Text(
+              'Other Profiles',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade800,
+              ),
+            ),
+            const SizedBox(height: 12),
+            ..._profiles
+                .where((p) => p.name != widget.recommendedProfile)
+                .map((profile) => _buildProfileCard(profile))
+                .toList(),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Total Portfolio Value',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
                   Text(
-                    'RM ${_currentValue.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
+                    'Returns* 1 Month',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade700,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.trending_up,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '+${_returnPercentage.toStringAsFixed(1)}%',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '+RM ${_totalReturn.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildSummaryItem('Total Invested', 'RM ${_totalInvestment.toStringAsFixed(2)}'),
-                      _buildSummaryItem('Total Return', 'RM ${_totalReturn.toStringAsFixed(2)}'),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Performance Chart
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withValues(alpha: 0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Performance',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Row(
-                        children: _periods.map((period) {
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 4),
-                            child: ChoiceChip(
-                              label: Text(period),
-                              selected: _selectedPeriod == period,
-                              onSelected: (selected) {
-                                setState(() {
-                                  _selectedPeriod = period;
-                                });
-                              },
-                              selectedColor: navyBlue.withValues(alpha: 0.2),
-                              labelStyle: TextStyle(
-                                color: _selectedPeriod == period ? navyBlue : Colors.grey.shade700,
-                                fontSize: 11,
-                                fontWeight: _selectedPeriod == period ? FontWeight.bold : FontWeight.normal,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 150,
-                    child: LineChart(
-                      LineChartData(
-                        gridData: FlGridData(show: false),
-                        titlesData: FlTitlesData(
-                          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              getTitlesWidget: (value, meta) {
-                                const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-                                if (value.toInt() < days.length) {
-                                  return Text(
-                                    days[value.toInt()],
-                                    style: const TextStyle(fontSize: 10),
-                                  );
-                                }
-                                return const Text('');
-                              },
-                            ),
-                          ),
-                        ),
-                        borderData: FlBorderData(show: false),
-                        lineBarsData: [
-                          LineChartBarData(
-                            spots: List.generate(7, (index) {
-                              return FlSpot(
-                                index.toDouble(),
-                                24000 + (index * 500) + (index % 2 == 0 ? 200 : -200),
-                              );
-                            }),
-                            isCurved: true,
-                            color: navyBlue,
-                            barWidth: 3,
-                            belowBarData: BarAreaData(
-                              show: true,
-                              color: navyBlue.withValues(alpha: 0.1),
-                            ),
-                            dotData: FlDotData(show: false),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Allocation Pie Chart
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withValues(alpha: 0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Asset Allocation',
+                  Text(
+                    '-0.2%',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      color: Colors.red,
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      SizedBox(
-                        height: 120,
-                        width: 120,
-                        child: PieChart(
-                          PieChartData(
-                            sectionsSpace: 0,
-                            centerSpaceRadius: 30,
-                            sections: _holdings.map((holding) {
-                              return PieChartSectionData(
-                                value: holding['allocation'],
-                                color: holding['color'],
-                                title: '${holding['allocation']}%',
-                                radius: 50,
-                                titleStyle: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: Column(
-                          children: _holdings.map((holding) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 12,
-                                    height: 12,
-                                    decoration: BoxDecoration(
-                                      color: holding['color'],
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      holding['name'],
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    '${holding['allocation']}%',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ],
                   ),
                 ],
               ),
             ),
-
-            const SizedBox(height: 20),
-
-            // Holdings List
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withValues(alpha: 0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Your Holdings',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ..._holdings.map((holding) => _buildHoldingTile(holding)),
-                ],
-              ),
+            const SizedBox(height: 8),
+            const Text(
+              '*Sample returns for illustration only.',
+              style: TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ],
         ),
@@ -415,107 +347,136 @@ class _PortfolioResultsPageState extends State<PortfolioResultsPage> {
     );
   }
 
-  Widget _buildSummaryItem(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white70,
-            fontSize: 12,
-          ),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildHoldingTile(Map<String, dynamic> holding) {
+  Widget _buildProfileCard(RiskProfile profile, {bool isRecommended = false}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+        border: isRecommended
+            ? Border.all(color: navyBlue, width: 2)
+            : Border.all(color: Colors.grey.shade200),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: holding['color'].withValues(alpha: 0.2),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.show_chart,
-              color: holding['color'],
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  holding['name'],
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-                Text(
-                  holding['type'],
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'RM ${holding['value'].toStringAsFixed(2)}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
+      child: InkWell(
+        onTap: () {
+          if (widget.selectedType == 'invest') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => FundDetailPage(fund: profile.investProduct),
               ),
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) =>
+                    InsuranceDetailPage(insurance: profile.insuranceProduct),
+              ),
+            );
+          }
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
-                    Icons.trending_up,
-                    color: Colors.green,
-                    size: 14,
-                  ),
-                  const SizedBox(width: 2),
                   Text(
-                    '+${holding['return']}%',
-                    style: const TextStyle(
-                      color: Colors.green,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                    profile.name,
+                    style: TextStyle(
+                      fontSize: isRecommended ? 18 : 16,
+                      fontWeight:
+                          isRecommended ? FontWeight.bold : FontWeight.w600,
+                      color: navyBlue,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: profile.oneMonthReturn >= 0
+                          ? Colors.green.withOpacity(0.1)
+                          : Colors.red.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      '${profile.oneMonthReturn >= 0 ? '+' : ''}${profile.oneMonthReturn.toStringAsFixed(1)}%',
+                      style: TextStyle(
+                        color: profile.oneMonthReturn >= 0
+                            ? Colors.green
+                            : Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ],
               ),
+              if (isRecommended) ...[
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: navyBlue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Text(
+                    'Recommended for you',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF0B3A76),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 8),
+              Text(
+                profile.description,
+                style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Tap to view recommended ${widget.selectedType == 'invest' ? 'fund' : 'plan'}',
+                style: TextStyle(fontSize: 12, color: navyBlue),
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
+}
+
+// Local wrapper class
+class RiskProfile {
+  final String name;
+  final String description;
+  final double oneMonthReturn;
+  final FundInfo investProduct;
+  final InsuranceInfo insuranceProduct;
+
+  RiskProfile({
+    required this.name,
+    required this.description,
+    required this.oneMonthReturn,
+    required this.investProduct,
+    required this.insuranceProduct,
+  });
 }

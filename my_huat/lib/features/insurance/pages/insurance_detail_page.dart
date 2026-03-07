@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../shared/models/insurance_model.dart';
+import 'package:my_huat/features/homepage/widgets/cash_in_screen.dart';
+import 'package:my_huat/shared/models/fund_type.dart'; // adjust path if needed
 
 class InsuranceDetailPage extends StatelessWidget {
   final InsuranceInfo insurance;
@@ -62,18 +64,19 @@ class InsuranceDetailPage extends StatelessWidget {
                   ),
                   Text(
                     "Annual Premium for $monthYear",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                   const SizedBox(height: 12),
                   if (insurance.subtitle.toLowerCase().contains("takaful") ||
                       insurance.title.toLowerCase().contains("takaful") ||
-                      insurance.bullets.any((b) => b.toLowerCase().contains("shariah")))
+                      insurance.bullets.any(
+                        (b) => b.toLowerCase().contains("shariah"),
+                      ))
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFF0B3A76).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(30),
@@ -81,8 +84,11 @@ class InsuranceDetailPage extends StatelessWidget {
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.check_circle,
-                              size: 18, color: Color(0xFF0B3A76)),
+                          Icon(
+                            Icons.check_circle,
+                            size: 18,
+                            color: Color(0xFF0B3A76),
+                          ),
                           SizedBox(width: 6),
                           Text(
                             "Shariah Compliant",
@@ -119,7 +125,10 @@ class InsuranceDetailPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _infoItem("Coverage Amount", _formatCurrency(insurance.coverage)),
+                      _infoItem(
+                        "Coverage Amount",
+                        _formatCurrency(insurance.coverage),
+                      ),
                       _infoItem("Premium Term", insurance.term),
                     ],
                   ),
@@ -196,8 +205,12 @@ class InsuranceDetailPage extends StatelessWidget {
               height: 54,
               child: ElevatedButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Purchase ${insurance.title}")),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          const CashInScreen(fundType: FundType.insurance),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -241,11 +254,14 @@ class InsuranceDetailPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(value,
-            style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF0B3A76))),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF0B3A76),
+          ),
+        ),
         const SizedBox(height: 4),
         Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
       ],
@@ -259,9 +275,10 @@ class InsuranceDetailPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: const TextStyle(fontSize: 15)),
-          Text(value,
-              style: const TextStyle(
-                  fontSize: 15, fontWeight: FontWeight.w600)),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          ),
         ],
       ),
     );
@@ -270,14 +287,17 @@ class InsuranceDetailPage extends StatelessWidget {
   Widget _docTile(BuildContext context, String title) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: const Icon(Icons.insert_drive_file,
-          color: Color(0xFF0B3A76), size: 22),
+      leading: const Icon(
+        Icons.insert_drive_file,
+        color: Color(0xFF0B3A76),
+        size: 22,
+      ),
       title: Text(title, style: const TextStyle(fontSize: 15)),
       trailing: const Icon(Icons.chevron_right, color: Colors.grey),
       onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Opening $title")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Opening $title")));
       },
     );
   }
@@ -313,8 +333,18 @@ class InsuranceDetailPage extends StatelessWidget {
 
   String _getMonth(int month) {
     const months = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
     return months[month - 1];
   }

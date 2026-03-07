@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../shared/models/fund_model.dart';
+import 'package:my_huat/features/homepage/widgets/cash_in_screen.dart';
+import 'package:my_huat/shared/models/fund_type.dart';
 
 class FundDetailPage extends StatelessWidget {
   final FundInfo fund;
@@ -202,8 +204,12 @@ class FundDetailPage extends StatelessWidget {
               height: 54,
               child: ElevatedButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Invest in ${fund.title}")),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          const CashInScreen(fundType: FundType.investment),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
