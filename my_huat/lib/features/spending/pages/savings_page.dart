@@ -7,7 +7,6 @@ import 'bnpl_calculator_page.dart';
 import 'retirement_page.dart';
 import 'spending_history_page.dart';
 
-// 🌟 1. 改为 StatefulWidget 确保页面可以被刷新
 class SavingsPage extends StatefulWidget {
   const SavingsPage({super.key});
 
@@ -16,12 +15,21 @@ class SavingsPage extends StatefulWidget {
 }
 
 class _SavingsPageState extends State<SavingsPage> {
-  // 🌟 2. 帮助函数：根据分类返回你原本用的图标和颜色
+  
   IconData _getCatIcon(String? cat) => cat == 'Food' ? Icons.restaurant : (cat == 'Transport' ? Icons.directions_bus : Icons.receipt);
   Color _getCatColor(String? cat) => cat == 'Food' ? Colors.orange.shade100 : (cat == 'Transport' ? Colors.blue.shade100 : Colors.purple.shade100);
 
   @override
   Widget build(BuildContext context) {
+    // 🌟 SMART FALLBACK: Use real data if available, otherwise show mock data for the demo
+    final List<Map<String, dynamic>> displayRecords = DataService.allRecords.isNotEmpty
+        ? DataService.allRecords.take(3).toList()
+        : [
+            {'title': 'Hackathon RedBull', 'category': 'Food', 'amount': 6.50},
+            {'title': 'Grab to UTM', 'category': 'Transport', 'amount': 15.00},
+            {'title': 'Figma Subscription', 'category': 'Shopping', 'amount': 55.00},
+          ];
+
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(18, 16, 18, 24),
@@ -48,7 +56,6 @@ class _SavingsPageState extends State<SavingsPage> {
                   circleColor: Colors.orange.shade100,
                   iconColor: Colors.orange.shade800,
                   onTap: () async {
-                    // 🌟 3. 加了 await，回来时会自动刷新
                     await Navigator.push(context, MaterialPageRoute(builder: (_) => const RecordSpendingPage()));
                     setState(() {}); 
                   },
@@ -77,9 +84,9 @@ class _SavingsPageState extends State<SavingsPage> {
             ),
             const SizedBox(height: 8),
 
-            // 🌟 4. 核心：这里删掉了写死的数据，改用 map 动态生成
+            // 🌟 Use the dynamic displayRecords list here
             Column(
-              children: DataService.allRecords.take(3).map((item) {
+              children: displayRecords.map((item) {
                 return _buildRecentItem(
                   item['title'] ?? 'New Record',
                   item['category'] ?? 'Others',
@@ -94,8 +101,6 @@ class _SavingsPageState extends State<SavingsPage> {
       ),
     );
   }
-
-  // --- 下面 100% 维持你原本的 Widget 样式，一个参数都没改 ---
 
   Widget _buildRecentItem(String title, String category, String amount, IconData icon, Color iconBgColor) {
     return Container(
