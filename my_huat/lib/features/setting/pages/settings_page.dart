@@ -93,7 +93,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     backgroundColor: Colors.grey.shade200,
                     backgroundImage: _profileImage != null
                         ? FileImage(_profileImage!)
-                        : const AssetImage('assets/images/profile_avatar.png')
+                        : const AssetImage('assets/image/profile_avatar.png')
                               as ImageProvider,
                   ),
                   Positioned(

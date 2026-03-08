@@ -77,6 +77,7 @@ flutter:
     - assets/video/
     - assets/sound/
     - assets/image/news/
+    - assets/image/
     - assets/video/basic_insurance.mp4
     
   #   - images/a_dot_burr.jpeg
