@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:my_huat/shared/widgets/arc_header.dart';
+import 'package:my_huat/shared/models/fund_type.dart'; // for insurance balance
+import 'package:my_huat/features/insurance/pages/coverage_simulator.dart'; // card & dialog (optional, but we'll keep the card too)
 import 'PurchaseNowPage.dart';
-import 'insurance-goalpage/MyGoalsPage.dart'; // Import the MyGoalsPage
+import 'insurance-goalpage/MyGoalsPage.dart';
 import 'ai_compare_coverage.dart';
 
 class InsurancePage extends StatefulWidget {
@@ -12,7 +14,8 @@ class InsurancePage extends StatefulWidget {
   State<InsurancePage> createState() => _InsurancePageState();
 }
 
-class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveClientMixin {
+class _InsurancePageState extends State<InsurancePage>
+    with AutomaticKeepAliveClientMixin {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
   bool _isInitialized = false;
@@ -30,25 +33,27 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
       'assets/video/basic_insurance.mp4',
     );
 
-    _initializeVideoPlayerFuture = _controller.initialize().then((_) {
-      setState(() {
-        _isInitialized = true;
-      });
-      _controller.setLooping(false);
-      _controller.setVolume(1.0);
+    _initializeVideoPlayerFuture = _controller
+        .initialize()
+        .then((_) {
+          setState(() {
+            _isInitialized = true;
+          });
+          _controller.setLooping(false);
+          _controller.setVolume(1.0);
 
-      _controller.addListener(() {
-        if (mounted) {
-          setState(() {});
-        }
-      });
-
-    }).catchError((error) {
-      print('Error initializing video: $error');
-      setState(() {
-        _isInitialized = false;
-      });
-    });
+          _controller.addListener(() {
+            if (mounted) {
+              setState(() {});
+            }
+          });
+        })
+        .catchError((error) {
+          print('Error initializing video: $error');
+          setState(() {
+            _isInitialized = false;
+          });
+        });
   }
 
   @override
@@ -67,10 +72,7 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
   // Modified navigation method to pause video before navigating
   void _navigateToPage(BuildContext context, Widget page) {
     _pauseVideo(); // Pause video before navigating
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => page),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => page));
   }
 
   @override
@@ -88,10 +90,7 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
               // Header with subtitle - matching Savings page format
               const Text(
                 'Insurance',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 6),
               Text(
@@ -107,10 +106,7 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
               // Tutorial Section
               const Text(
                 'Tutorial',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 12),
 
@@ -145,69 +141,95 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
                 ],
               ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // Quick Actions Section
-            const Text(
-              'Quick Actions',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-              ),
+              // Quick Actions Section
+              const Text(
+                'Quick Actions',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
 
               const SizedBox(height: 12),
 
-              // Three Action Buttons - perfectly aligned
+              // Horizontally scrollable action buttons (now 4 items)
               SizedBox(
                 height: 130,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
                   children: [
-                    Expanded(
-                      child: _buildActionButton(
-                        icon: Icons.account_balance_wallet,
-                        label: 'AI Compare Coverage',
-                        circleColor: Colors.purple.shade100,
-                        iconColor: Colors.purple.shade800,
-                        onTap: () {
-                          _navigateToPage(context, const AiCompareCoveragePage());
-                        },
-                      ),
+                    _buildActionButton(
+                      icon: Icons.account_balance_wallet,
+                      label: 'AI Compare Coverage',
+                      circleColor: Colors.purple.shade100,
+                      iconColor: Colors.purple.shade800,
+                      onTap: () {
+                        _navigateToPage(context, const AiCompareCoveragePage());
+                      },
                     ),
                     const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildActionButton(
-                        icon: Icons.flag,
-                        label: 'My Goals',
-                        circleColor: Colors.orange.shade100,
-                        iconColor: Colors.orange.shade800,
-                        onTap: () {
-                          _navigateToPage(context, const MyGoalsPage());
-                        },
-                      ),
+                    _buildActionButton(
+                      icon: Icons.flag,
+                      label: 'My Goals',
+                      circleColor: Colors.orange.shade100,
+                      iconColor: Colors.orange.shade800,
+                      onTap: () {
+                        _navigateToPage(context, const MyGoalsPage());
+                      },
                     ),
                     const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildActionButton(
-                        icon: Icons.health_and_safety,
-                        label: 'Purchase\nNow',
-                        circleColor: Colors.green.shade100,
-                        iconColor: Colors.green.shade800,
-                        onTap: () {
-                          _navigateToPage(context, const PurchaseNowPage());
-                        },
-                      ),
+                    _buildActionButton(
+                      icon: Icons.health_and_safety,
+                      label: 'Purchase\nNow',
+                      circleColor: Colors.green.shade100,
+                      iconColor: Colors.green.shade800,
+                      onTap: () {
+                        _navigateToPage(context, const PurchaseNowPage());
+                      },
+                    ),
+                    const SizedBox(width: 12),
+                    // NEW COVERAGE SIMULATOR BUTTON
+                    _buildActionButton(
+                      icon: Icons.warning_amber_rounded,
+                      label: 'Coverage\nSimulator',
+                      circleColor: Colors.blue.shade100,
+                      iconColor: Colors.blue.shade800,
+                      onTap: _onCheckCoverage,
                     ),
                   ],
                 ),
               ),
 
               const SizedBox(height: 20),
+
+              // (Optional: You can keep the card below if you want, or remove it)
+              // CoverageSimulatorCard(onCheckCoverage: _onCheckCoverage),
+              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  // Called when user taps "Coverage Simulator"
+  void _onCheckCoverage() {
+    _pauseVideo();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CoverageSimulatorPage(
+          insuranceAmount: FundType.insurance.currentBalance,
+        ),
+      ),
+    );
+  }
+
+  // Called when user taps "Purchase More" inside the dialog
+  void _onPurchaseMore() {
+    _pauseVideo(); // ensure video is paused (though it already is)
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const PurchaseNowPage()),
     );
   }
 
@@ -231,7 +253,8 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
         child: FutureBuilder(
           future: _initializeVideoPlayerFuture,
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done && _isInitialized) {
+            if (snapshot.connectionState == ConnectionState.done &&
+                _isInitialized) {
               // Use ValueListenableBuilder to listen to controller changes
               return ValueListenableBuilder(
                 valueListenable: _controller,
@@ -260,7 +283,9 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
                           children: [
                             IconButton(
                               icon: Icon(
-                                value.isPlaying ? Icons.pause : Icons.play_arrow,
+                                value.isPlaying
+                                    ? Icons.pause
+                                    : Icons.play_arrow,
                                 color: Colors.white,
                               ),
                               onPressed: () {
@@ -286,30 +311,32 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
               );
             } else if (snapshot.hasError) {
               return Container(
-              color: Colors.grey[300],
-              child: Center(
-              child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-              const Icon(Icons.error_outline, color: Colors.red, size: 40),
-              const SizedBox(height: 8),
-              Text(
-              'Error loading video',
-              style: TextStyle(color: Colors.grey[700]),
-              ),
-              ],
-              ),
-              ),
+                color: Colors.grey[300],
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.error_outline,
+                        color: Colors.red,
+                        size: 40,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Error loading video',
+                        style: TextStyle(color: Colors.grey[700]),
+                      ),
+                    ],
+                  ),
+                ),
               );
-              } else {
+            } else {
               return Container(
-              color: Colors.grey[300],
-              child: const Center(
-              child: CircularProgressIndicator(),
-              ),
+                color: Colors.grey[300],
+                child: const Center(child: CircularProgressIndicator()),
               );
-              }
-              },
+            }
+          },
         ),
       ),
     );
@@ -326,9 +353,7 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
             Expanded(
               child: ElevatedButton.icon(
                 onPressed: () {
-                  value.isPlaying
-                      ? _controller.pause()
-                      : _controller.play();
+                  value.isPlaying ? _controller.pause() : _controller.play();
                   // No setState needed here
                 },
                 icon: Icon(
@@ -357,10 +382,7 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
                   // No setState needed here
                 },
                 icon: const Icon(Icons.replay, size: 18),
-                label: const Text(
-                  'Replay',
-                  style: TextStyle(fontSize: 13),
-                ),
+                label: const Text('Replay', style: TextStyle(fontSize: 13)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey,
                   foregroundColor: Colors.white,
@@ -377,9 +399,6 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
     );
   }
 
-  // Helper method to format duration
-  // Helper method to format duration - ALWAYS shows HH:MM:SS format
-  // Helper method to format duration - ALWAYS shows HH:MM:SS format with proper padding
   // Helper method to format duration - ALWAYS shows HH:MM:SS for both
   String _formatDuration(Duration duration, {bool isTotal = false}) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -392,7 +411,7 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
     return "$hours:$minutes:$seconds";
   }
 
-  // Action button builder - matching savings page style
+  // Action button builder - now used in horizontal list, so we give fixed width
   Widget _buildActionButton({
     required IconData icon,
     required String label,
@@ -400,58 +419,56 @@ class _InsurancePageState extends State<InsurancePage> with AutomaticKeepAliveCl
     required Color iconColor,
     required VoidCallback onTap,
   }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          height: 130,
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Icon container with fixed positioning
-              Container(
-                height: 56,
-                alignment: Alignment.center,
-                child: CircleAvatar(
-                  radius: 24,
-                  backgroundColor: circleColor,
-                  child: Icon(
-                    icon,
-                    color: iconColor,
-                    size: 28,
+    return SizedBox(
+      width: 100, // fixed width for consistency
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Icon container with fixed positioning
+                Container(
+                  height: 56,
+                  alignment: Alignment.center,
+                  child: CircleAvatar(
+                    radius: 24,
+                    backgroundColor: circleColor,
+                    child: Icon(icon, color: iconColor, size: 28),
                   ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              // Text with fixed height
-              Container(
-                height: 36,
-                alignment: Alignment.topCenter,
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
+                const SizedBox(height: 8),
+                // Text with fixed height
+                Container(
+                  height: 36,
+                  alignment: Alignment.topCenter,
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
