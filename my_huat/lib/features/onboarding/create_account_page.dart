@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../homepage/home_page.dart'; // 🌟 导入主页
+// 🌟 导入包含 Pin 码、国籍、通知设置的全新文件
+import 'SetupPinPage.dart';
 
 class CreateAccountPage extends StatelessWidget {
   const CreateAccountPage({super.key});
@@ -13,7 +14,7 @@ class CreateAccountPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 🌟 独立蓝色弧形 (Join Us)
+            // 独立蓝色弧形 (Join Us)
             ClipPath(
               clipper: _OnboardingArcClipper(),
               child: Container(
@@ -25,7 +26,7 @@ class CreateAccountPage extends StatelessWidget {
                 child: const Text(
                   'Join Us',
                   style: TextStyle(
-                    fontFamily: 'CaveatFont', //
+                    fontFamily: 'CaveatFont', 
                     fontSize: 42,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -46,18 +47,26 @@ class CreateAccountPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 25),
 
-                  // 🌟 按照你的要求精准修改的 Label
                   _buildTextField(label: 'user name', icon: Icons.person_outline),
                   const SizedBox(height: 16),
+                  
+                  _buildTextField(label: 'email address', icon: Icons.email_outlined),
+                  const SizedBox(height: 16),
+                  
+                  // 🌟 Phone Code Dropdown
+                  _buildPhoneCodeDropdown(),
+                  const SizedBox(height: 16),
+                  
+                  _buildTextField(label: 'phone number', icon: Icons.phone_android_outlined),
+                  const SizedBox(height: 16),
+
                   _buildTextField(label: 'please enter password', icon: Icons.lock_outline, isObscure: true),
                   const SizedBox(height: 16),
                   _buildTextField(label: 'please enter password again', icon: Icons.lock_clock_outlined, isObscure: true),
-                  const SizedBox(height: 16),
-                  _buildTextField(label: 'IC Number', icon: Icons.badge_outlined),
                   
                   const SizedBox(height: 35),
 
-                  // 🌟 注册按钮：点击跳转
+                  // 🌟 核心修改：点击后去往 Setup Pin 页面
                   SizedBox(
                     width: double.infinity,
                     height: 55,
@@ -67,10 +76,10 @@ class CreateAccountPage extends StatelessWidget {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                       ),
                       onPressed: () {
-                        Navigator.pushAndRemoveUntil(
+                        // 🌟 这里改成推送到下一页 (Progressive Onboarding)
+                        Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const HomePage()),
-                          (route) => false,
+                          MaterialPageRoute(builder: (context) =>  SetupPinPage()),
                         );
                       },
                       child: const Text('Create Account', style: TextStyle(color: Colors.white, fontSize: 18)),
@@ -105,9 +114,53 @@ class CreateAccountPage extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildPhoneCodeDropdown() {
+    final List<Map<String, String>> aseanCodes = [
+      {'code': '+60', 'country': 'Malaysia (+60)'},
+      {'code': '+65', 'country': 'Singapore (+65)'},
+      {'code': '+62', 'country': 'Indonesia (+62)'},
+      {'code': '+66', 'country': 'Thailand (+66)'},
+      {'code': '+63', 'country': 'Philippines (+63)'},
+      {'code': '+84', 'country': 'Vietnam (+84)'},
+      {'code': '+95', 'country': 'Myanmar (+95)'},
+      {'code': '+855', 'country': 'Cambodia (+855)'},
+      {'code': '+856', 'country': 'Laos (+856)'},
+      {'code': '+673', 'country': 'Brunei (+673)'},
+    ];
+
+    String selectedCode = '+60';
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return DropdownButtonFormField<String>(
+          value: selectedCode,
+          icon: const Icon(Icons.arrow_drop_down, color: Color(0xFF0D3A6D)),
+          decoration: InputDecoration(
+            labelText: 'phone code',
+            prefixIcon: const Icon(Icons.public, color: Color(0xFF0D3A6D)),
+            filled: true,
+            fillColor: Colors.grey[50],
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide(color: Colors.grey[200]!)),
+          ),
+          items: aseanCodes.map((item) {
+            return DropdownMenuItem<String>(
+              value: item['code'],
+              child: Text(item['country']!, style: const TextStyle(fontSize: 15)),
+            );
+          }).toList(),
+          onChanged: (value) {
+            if (value != null) {
+              setState(() => selectedCode = value);
+            }
+          },
+        );
+      }
+    );
+  }
 }
 
-// 同样的独立 Clipper
 class _OnboardingArcClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
