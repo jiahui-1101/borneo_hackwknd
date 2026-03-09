@@ -49,9 +49,80 @@ class SetupPinPage extends StatelessWidget {
                     height: 55,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0D3A6D), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const CountrySetupPage())),
+                      // 🌟 这里修好了！点击 Next 现在会去往 EnableFaceIdPage 🌟
+                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const EnableFaceIdPage())),
                       child: const Text('Next', style: TextStyle(color: Colors.white, fontSize: 18)),
                     ),
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ==========================================
+// 1.5 开启 Face ID 页面 (Enable Face ID Page)
+// ==========================================
+class EnableFaceIdPage extends StatelessWidget {
+  const EnableFaceIdPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildHeader(context, 'Biometrics'),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40),
+                  // 🌟 带浅蓝色背景的圆角图标，看起来很清爽
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(color: Colors.blue.shade50, shape: BoxShape.circle),
+                    child: const Icon(Icons.face_unlock_outlined, size: 70, color: Color(0xFF0D3A6D)),
+                  ),
+                  const SizedBox(height: 32),
+                  const Text("Enable Face ID?", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF0D3A6D))),
+                  const SizedBox(height: 12),
+                  Text(
+                    "Log in faster and more securely to Warung Wise using just your face.", 
+                    textAlign: TextAlign.center, 
+                    style: TextStyle(fontSize: 16, color: Colors.grey[600], height: 1.5)
+                  ),
+                  const SizedBox(height: 60),
+                  
+                  // 🌟 Enable 按钮
+                  SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0D3A6D), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                      onPressed: () {
+                        // 🌟 点击开启，前往下一步 (Country)
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const CountrySetupPage()));
+                      },
+                      child: const Text('Enable Face ID', style: TextStyle(color: Colors.white, fontSize: 18)),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  
+                  // 🌟 Skip 按钮
+                  TextButton(
+                    onPressed: () {
+                      // 🌟 点击跳过，也是前往下一步 (Country)
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const CountrySetupPage()));
+                    },
+                    child: const Text("Skip for now", style: TextStyle(color: Colors.grey, fontSize: 16)),
                   ),
                   const SizedBox(height: 40),
                 ],

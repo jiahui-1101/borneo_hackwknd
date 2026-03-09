@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../homepage/home_page.dart'; // 🌟 导入主页以实现跳转
+import '../homepage/home_page.dart'; 
 import 'create_account_page.dart';
+import 'mock_face_id_page.dart'; // 🌟 1. Imported your new Face ID page!
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -60,7 +61,7 @@ class LoginPage extends StatelessWidget {
                   
                   const SizedBox(height: 40),
 
-                  // 🌟 登录按钮：点击后跳转到 HomePage
+                  // 🌟 登录按钮：点击后透明跳转到 MockFaceIdPage
                   SizedBox(
                     width: double.infinity,
                     height: 55,
@@ -70,11 +71,16 @@ class LoginPage extends StatelessWidget {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                       ),
                       onPressed: () {
-                        // 🌟 跳转并清空页面栈
-                        Navigator.pushAndRemoveUntil(
+                        // 🌟 修复了这里丢失的闭合括号
+                        Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const HomePage()),
-                          (route) => false,
+                          PageRouteBuilder(
+                            opaque: false, // 核心魔法：透明背景
+                            pageBuilder: (context, animation, secondaryAnimation) => const MockFaceIdPage(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              return FadeTransition(opacity: animation, child: child);
+                            },
+                          ),
                         );
                       },
                       child: const Text('Login', style: TextStyle(color: Colors.white, fontSize: 18)),
