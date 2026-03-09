@@ -6,6 +6,7 @@ import 'record_spending_page.dart';
 import 'bnpl_calculator_page.dart';
 import 'retirement_page.dart';
 import 'spending_history_page.dart';
+import 'mmf_page.dart';
 
 class SavingsPage extends StatefulWidget {
   const SavingsPage({super.key});
@@ -68,51 +69,68 @@ class _SavingsPageState extends State<SavingsPage> {
             ),
             const SizedBox(height: 12),
 
-            Row(
-              children: [
-                _buildActionButton(
-                  context,
-                  icon: Icons.receipt_long_rounded,
-                  label: "Record Spending",
-                  circleColor: Colors.orange.shade100,
-                  iconColor: Colors.orange.shade800,
-                  onTap: () async {
-                    await Navigator.push(
+            // 🌟 核心修改：改为横向滑动，第四个选项会只露出一部分，提示用户滑动
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              clipBehavior: Clip.none, // 防止阴影被裁剪
+              child: Row(
+                children: [
+                  _buildActionButton(
+                    context,
+                    icon: Icons.receipt_long_rounded,
+                    label: "Record\nSpending",
+                    circleColor: Colors.orange.shade100,
+                    iconColor: Colors.orange.shade800,
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const RecordSpendingPage(),
+                        ),
+                      );
+                      setState(() {});
+                    },
+                  ),
+                  const SizedBox(width: 12), // 间距统一设为12
+                  _buildActionButton(
+                    context,
+                    icon: Icons.calculate,
+                    label: "BNPL\nCalculator",
+                    circleColor: Colors.purple.shade100,
+                    iconColor: Colors.purple.shade800,
+                    onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const RecordSpendingPage(),
+                        builder: (_) => const BnplCalculatorPage(),
                       ),
-                    );
-                    setState(() {});
-                  },
-                ),
-                const SizedBox(width: 12),
-                _buildActionButton(
-                  context,
-                  icon: Icons.calculate,
-                  label: "BNPL Calculator",
-                  circleColor: Colors.purple.shade100,
-                  iconColor: Colors.purple.shade800,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const BnplCalculatorPage(),
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                _buildActionButton(
-                  context,
-                  icon: Icons.elderly,
-                  label: "Retirement Planner",
-                  circleColor: Colors.green.shade100,
-                  iconColor: Colors.green.shade800,
-                  onTap: () => Navigator.push(
+                  const SizedBox(width: 12),
+                  _buildActionButton(
                     context,
-                    MaterialPageRoute(builder: (_) => const RetirementPage()),
+                    icon: Icons.elderly,
+                    label: "Retirement\nPlanner",
+                    circleColor: Colors.green.shade100,
+                    iconColor: Colors.green.shade800,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const RetirementPage()),
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 12),
+                  _buildActionButton(
+                    context,
+                    icon: Icons.account_balance,
+                    label: "MHuat+\n(MMF)",
+                    circleColor: Colors.blue.shade100,
+                    iconColor: const Color(0xFF0D3A6D),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const MmfPage()),
+                    ),
+                  ),
+                ],
+              ),
             ),
 
             const SizedBox(height: 32),
@@ -220,6 +238,7 @@ class _SavingsPageState extends State<SavingsPage> {
     );
   }
 
+  // 🌟 完全复刻 InvestPage 的 UI 风格，增加了 fixed width 让它适合横向滑动
   Widget _buildActionButton(
     BuildContext context, {
     required IconData icon,
@@ -228,41 +247,59 @@ class _SavingsPageState extends State<SavingsPage> {
     required Color iconColor,
     required VoidCallback onTap,
   }) {
-    return Expanded(
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            height: 120, // fixed height for all buttons
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          width: 110, // 固定宽度，确保一排刚好能露出一半的第四个选项
+          height: 130, // 和 Invest 页面统一的高度
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // 固定的 Icon 容器，确保图标和文字不会乱晃
+              Container(
+                height: 56,
+                alignment: Alignment.center,
+                child: CircleAvatar(
                   radius: 24,
                   backgroundColor: circleColor,
-                  child: Icon(icon, color: iconColor, size: 28),
+                  child: Icon(
+                    icon,
+                    color: iconColor,
+                    size: 28,
+                  ),
                 ),
-                const SizedBox(height: 8),
-                Text(
+              ),
+              const SizedBox(height: 8),
+              // 固定的文字容器
+              Container(
+                height: 36,
+                alignment: Alignment.topCenter,
+                child: Text(
                   label,
                   textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:my_huat/shared/models/fund_type.dart'; // adjust path if needed
-import 'package:my_huat/features/homepage/widgets/cash_in_screen.dart'; // for navigation
+// for navigation
 import 'package:my_huat/features/insurance/pages/PurchaseNowPage.dart';
 import 'package:my_huat/features/investing/pages/investnow.dart';
 import 'package:my_huat/features/spending/pages/savings_goal_page.dart';
+import 'transaction_hub_screen.dart';
 class TotalAssetsCard extends StatelessWidget {
   const TotalAssetsCard({super.key});
 
@@ -104,7 +105,7 @@ class TotalAssetsCard extends StatelessWidget {
               ),
               onPressed: () => _showFundSelection(context),
               child: const Text(
-                "CASH IN",
+                "MANAGE",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
@@ -113,8 +114,7 @@ class TotalAssetsCard extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildFundTile({
+Widget _buildFundTile({
     required IconData icon,
     required String label,
     required double amount,
@@ -225,9 +225,19 @@ class TotalAssetsCard extends StatelessWidget {
           color: Color(0xFF0462C2),
           size: 16,
         ),
+
+        // 在 TotalAssetsCard 里的 _buildFundOption 方法中修改：
         onTap: () {
-          Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+          Navigator.pop(context); // 关闭底部的 BottomSheet
+
+          // 修改这里：不再直接跳到 PurchaseNowPage，而是跳到中转站
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) =>
+                  TransactionHubScreen(fundType: fund), // 传递选中的 Fund 类型
+            ),
+          );
         },
       ),
     );
