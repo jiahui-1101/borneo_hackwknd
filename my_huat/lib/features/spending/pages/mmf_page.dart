@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_huat/shared/widgets/arc_header.dart'; // 确保路径正确
+import 'package:my_huat/features/homepage/widgets/transaction_hub_screen.dart';
+import 'package:my_huat/shared/models/fund_type.dart';
 
 class MmfPage extends StatelessWidget {
   const MmfPage({super.key});
@@ -72,7 +74,10 @@ class MmfPage extends StatelessWidget {
                           children: [
                             Text(
                               "Total Balance",
-                              style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                              style: TextStyle(
+                                color: Colors.grey.shade600,
+                                fontSize: 14,
+                              ),
                             ),
                             const SizedBox(height: 8),
                             Text(
@@ -86,23 +91,35 @@ class MmfPage extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               "Maximum limit RM20,000.00",
-                              style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+                              style: TextStyle(
+                                color: Colors.grey.shade500,
+                                fontSize: 12,
+                              ),
                             ),
-                            
+
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16.0),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 16.0,
+                              ),
                               child: Divider(color: Colors.grey.shade200),
                             ),
-                            
+
                             // 总收益 & 每日收益率
                             Row(
                               children: [
                                 // 左侧：总收益
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text("Total Return", style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+                                      Text(
+                                        "Total Return",
+                                        style: TextStyle(
+                                          color: Colors.grey.shade600,
+                                          fontSize: 13,
+                                        ),
+                                      ),
                                       const SizedBox(height: 4),
                                       const Text(
                                         "+RM 49.34",
@@ -115,19 +132,34 @@ class MmfPage extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                Container(height: 40, width: 1, color: Colors.grey.shade200), // 分割线
+                                Container(
+                                  height: 40,
+                                  width: 1,
+                                  color: Colors.grey.shade200,
+                                ), // 分割线
                                 // 右侧：每日净收益率
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 16),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           children: [
-                                            Text("Daily Return Rate", style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+                                            Text(
+                                              "Daily Return Rate",
+                                              style: TextStyle(
+                                                color: Colors.grey.shade600,
+                                                fontSize: 13,
+                                              ),
+                                            ),
                                             const SizedBox(width: 4),
-                                            Icon(Icons.info_outline, size: 14, color: Colors.grey.shade400),
+                                            Icon(
+                                              Icons.info_outline,
+                                              size: 14,
+                                              color: Colors.grey.shade400,
+                                            ),
                                           ],
                                         ),
                                         const SizedBox(height: 4),
@@ -158,7 +190,10 @@ class MmfPage extends StatelessWidget {
                       child: Text(
                         "MHuat+ underlying fund is Principal e-Cash, a Shariah-compliant money market fund.",
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+                        style: TextStyle(
+                          color: Colors.grey.shade500,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
 
@@ -181,17 +216,27 @@ class MmfPage extends StatelessWidget {
                               children: [
                                 const Text(
                                   "Earn stable daily returns",
-                                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 14,
+                                  ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
                                     "Low risk",
-                                    style: TextStyle(color: navyBlue, fontSize: 10, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                      color: navyBlue,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -199,11 +244,18 @@ class MmfPage extends StatelessWidget {
                             const SizedBox(height: 8),
                             const Text(
                               "2.85%",
-                              style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             const Text(
                               "average return rate p.a.",
-                              style: TextStyle(color: Colors.white70, fontSize: 12),
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 12,
+                              ),
                             ),
                             const SizedBox(height: 16),
                             Row(
@@ -212,7 +264,10 @@ class MmfPage extends StatelessWidget {
                                 const Expanded(
                                   child: Text(
                                     "Invested safely in short-term bank deposits.",
-                                    style: TextStyle(color: Colors.white54, fontSize: 11),
+                                    style: TextStyle(
+                                      color: Colors.white54,
+                                      fontSize: 11,
+                                    ),
                                   ),
                                 ),
                                 ElevatedButton(
@@ -223,7 +278,9 @@ class MmfPage extends StatelessWidget {
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
-                                      side: const BorderSide(color: Colors.white),
+                                      side: const BorderSide(
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                   child: const Text("Details"),
@@ -262,14 +319,28 @@ class MmfPage extends StatelessWidget {
                                 ),
                                 Text(
                                   "View All",
-                                  style: TextStyle(color: lightBlue, fontSize: 14, fontWeight: FontWeight.w600),
+                                  style: TextStyle(
+                                    color: lightBlue,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 20),
-                            _buildTransactionItem("Daily Return", "+RM 0.12", "9 Mar, 00:41", true),
+                            _buildTransactionItem(
+                              "Daily Return",
+                              "+RM 0.12",
+                              "9 Mar, 00:41",
+                              true,
+                            ),
                             Divider(height: 24, color: Colors.grey.shade200),
-                            _buildTransactionItem("Cash In", "+RM 100.00", "5 Mar, 14:20", true),
+                            _buildTransactionItem(
+                              "Cash In",
+                              "+RM 100.00",
+                              "5 Mar, 14:20",
+                              true,
+                            ),
                             // <-- 这里的 Payment 记录被移除了
                           ],
                         ),
@@ -282,6 +353,8 @@ class MmfPage extends StatelessWidget {
           ),
 
           // 底部浮动按钮区
+          // 底部浮动按钮区
+          // 底部浮动按钮区
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -291,7 +364,7 @@ class MmfPage extends StatelessWidget {
                   color: Colors.black.withOpacity(0.05),
                   blurRadius: 10,
                   offset: const Offset(0, -5),
-                )
+                ),
               ],
             ),
             child: SafeArea(
@@ -299,14 +372,35 @@ class MmfPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: SizedBox(
-                      height: 60, // 统一按钮高度
+                      height: 60,
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => TransactionHubScreen(
+                                // 🌟 修复这里：直接使用你的 enum 选项，比如 FundType.mmf
+                                fundType:
+                                    FundType.saving, // <-- 如果你的枚举名字不叫 mmf，请改成对应的名字
+                                initialIndex: 1, // 1 代表直接打开 Cash Out
+                              ),
+                            ),
+                          );
+                        },
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(color: lightBlue, width: 2),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), // 统一圆角
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                         ),
-                        child: Text("Cash Out", style: TextStyle(color: lightBlue, fontSize: 16, fontWeight: FontWeight.bold)),
+                        child: Text(
+                          "Cash Out",
+                          style: TextStyle(
+                            color: lightBlue,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -315,13 +409,34 @@ class MmfPage extends StatelessWidget {
                     child: SizedBox(
                       height: 60,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => TransactionHubScreen(
+                                // 🌟 修复这里：直接使用你的 enum 选项，比如 FundType.mmf
+                                fundType:
+                                    FundType.saving, // <-- 如果你的枚举名字不叫 mmf，请改成对应的名字
+                                initialIndex: 0, // 0 代表直接打开 Cash In
+                              ),
+                            ),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: lightBlue,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                           elevation: 2,
                         ),
-                        child: const Text("Cash In", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                        child: const Text(
+                          "Cash In",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -335,16 +450,31 @@ class MmfPage extends StatelessWidget {
   }
 
   // 交易记录 Widget
-  Widget _buildTransactionItem(String title, String amount, String date, bool isPositive) {
+  Widget _buildTransactionItem(
+    String title,
+    String amount,
+    String date,
+    bool isPositive,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.grey.shade800)),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade800,
+              ),
+            ),
             const SizedBox(height: 4),
-            Text(date, style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
+            Text(
+              date,
+              style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+            ),
           ],
         ),
         Text(

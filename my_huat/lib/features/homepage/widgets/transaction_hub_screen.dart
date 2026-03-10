@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:my_huat/shared/models/fund_type.dart';
 import 'package:my_huat/shared/widgets/arc_header.dart';
-import 'package:my_huat/features/homepage/widgets/cash_in_screen.dart'; // 假设你的 CashIn 路径
+import 'package:my_huat/features/homepage/widgets/cash_in_screen.dart'; // 确保路径正确
 
 class TransactionHubScreen extends StatefulWidget {
   final FundType fundType;
-  const TransactionHubScreen({super.key, required this.fundType});
+  final int initialIndex; // 🌟 新增参数：用来判断默认打开 Cash In 还是 Cash Out
+
+  const TransactionHubScreen({
+    super.key, 
+    required this.fundType,
+    this.initialIndex = 0, // 默认 0 (Cash In)
+  });
 
   @override
   State<TransactionHubScreen> createState() => _TransactionHubScreenState();
@@ -17,7 +23,8 @@ class _TransactionHubScreenState extends State<TransactionHubScreen> with Single
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    // 🌟 传入 widget.initialIndex 让它决定初始 Tab
+    _tabController = TabController(length: 2, vsync: this, initialIndex: widget.initialIndex);
   }
 
   @override
@@ -87,7 +94,6 @@ class _TransactionHubScreenState extends State<TransactionHubScreen> with Single
   }
 
   Widget _buildMethodList({required bool isCashIn}) {
-    // 根据 Cash In 或 Cash Out 定义不同的数据
     final List<Map<String, dynamic>> methods = isCashIn
         ? [
             {'name': 'CIMB Clicks', 'icon': Icons.account_balance, 'desc': 'Direct bank login'},
@@ -99,7 +105,8 @@ class _TransactionHubScreenState extends State<TransactionHubScreen> with Single
             {'name': 'Bank Transfer (IBG)', 'icon': Icons.send_to_mobile, 'desc': '1-2 business days'},
             {'name': 'GrabPay', 'icon': Icons.account_balance_wallet_outlined, 'desc': 'Fast & Secure'},
           ];
-return ListView.builder(
+          
+    return ListView.builder(
       padding: const EdgeInsets.all(20),
       itemCount: methods.length,
       itemBuilder: (context, index) {
@@ -126,7 +133,6 @@ return ListView.builder(
             trailing: const Icon(Icons.chevron_right, color: Color(0xFF0462C2)),
             onTap: () {
               if (isCashIn) {
-                // 点击 Cash In 选项后，跳转到你之前的 CashInScreen
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -134,7 +140,7 @@ return ListView.builder(
                   ),
                 );
               } else {
-                // 这里可以处理 Cash Out 的逻辑
+                // TODO: 添加 Cash Out 的跳转逻辑
               }
             },
           ),
