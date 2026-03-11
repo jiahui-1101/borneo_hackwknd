@@ -1,10 +1,12 @@
 # MHuat 💰📊
 
 <p align="center">
-  <img src="assets/image/logo.png" width="150">
+  <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white"/>
 </p>
 
-**MHuat** is an AI-powered financial literacy platform that helps users **learn, plan, and manage their finances smarter.**
+**MHuat** is an **AI-powered financial literacy platform** that helps users **learn, plan, and manage their finances smarter** through intelligent insights, spending analysis, and financial education.
+
+The platform integrates **savings management, investment learning, and insurance awareness** into one simple mobile application.
 
 ---
 
@@ -15,9 +17,9 @@
 * [Objectives](#objectives)
 * [Core Features](#core-features)
 * [Technical Stack](#technical-stack)
+* [System Architecture](#system-architecture)
 * [Installation](#installation)
 * [Project Structure](#project-structure)
-* [System Architecture](#system-architecture)
 * [Demo Video](#demo-video)
 * [Documentation](#documentation)
 * [Future Improvements](#future-improvements)
@@ -29,36 +31,39 @@
 
 **Track:** AI for Financial Literacy
 
-### Problem Statement
+Digital financial services across ASEAN are expanding rapidly, including:
 
-Digital financial services across ASEAN are growing rapidly, including **e-wallets, Buy Now Pay Later (BNPL), and digital investments**.
+* e-wallets
+* Buy Now Pay Later (BNPL)
+* digital investments
+* online insurance services
 
-However, many users lack sufficient **financial literacy** to make informed financial decisions.
+However, many users still lack **financial literacy** to make responsible financial decisions.
 
-Common challenges include:
+### Key Challenges
 
-* Low **financial literacy levels**
-* Rising **youth debt from BNPL**
-* Poor understanding of **insurance and financial risks**
-* Weak **budgeting and savings habits**
+* Low financial literacy levels
+* Increasing BNPL debt among young users
+* Poor understanding of insurance and financial risks
+* Weak budgeting and savings habits
 
-Without proper financial education, individuals risk **over-indebtedness, financial instability, and poor financial planning**.
+Without proper financial education, individuals face risks such as **over-indebtedness, financial instability, and poor long-term planning**.
 
 ---
 
 # Introduction 📢
 
-**MHuat** is an **AI-powered financial literacy assistant** designed to simplify financial knowledge and help users build healthier financial habits.
+**MHuat** is an **AI-powered financial literacy assistant** designed to simplify financial knowledge and support better financial decision-making.
 
 The platform focuses on:
 
-* Simplifying financial education
-* Encouraging smarter spending
-* Promoting responsible financial decisions
+* simplifying financial education
+* improving spending awareness
+* supporting responsible financial behaviour
 
-Through **AI assistance, spending insights, and educational modules**, MHuat empowers users to take control of their finances.
+By combining **AI insights, spending analysis, and educational resources**, MHuat empowers users to take control of their finances.
 
-This solution supports **Sustainable Development Goal (SDG) 8 – Decent Work and Economic Growth** by improving financial knowledge and economic resilience.
+This solution supports **SDG 8 – Decent Work and Economic Growth** by promoting financial literacy and economic resilience.
 
 ---
 
@@ -66,54 +71,54 @@ This solution supports **Sustainable Development Goal (SDG) 8 – Decent Work an
 
 The project aims to:
 
-1. Improve **financial literacy awareness**
-2. Help users **understand financial risks**
-3. Encourage **better budgeting behaviour**
-4. Promote **responsible financial decisions**
-5. Provide **AI-powered financial guidance**
+1. Improve financial literacy awareness
+2. Help users understand financial risks
+3. Encourage better budgeting behaviour
+4. Promote responsible financial decisions
+5. Provide AI-powered financial guidance
 
 ---
 
 # Core Features ⭐
 
-## 1️⃣ AI Financial Assistant 🤖
+## 🤖 AI Financial Assistant
 
 An intelligent chatbot that helps users understand financial concepts.
 
-Features:
+Capabilities:
 
 * Answer financial questions
-* Explain financial concepts simply
-* Provide financial recommendations
+* Explain financial concepts in simple terms
+* Provide financial suggestions and insights
 
-Example topics:
+Examples:
 
-* BNPL risks
+* BNPL risk explanation
 * Saving strategies
 * Investment basics
 
 ---
 
-## 2️⃣ Smart Spending Tracker 📊
+## 📊 Smart Spending Tracker
 
-Users can monitor their spending habits.
+Allows users to monitor and analyze their spending habits.
 
 Features:
 
-* Track expenses by category
-* View spending patterns
-* Identify unnecessary expenses
+* Categorized expense tracking
+* Spending pattern visualization
+* Budget monitoring
 
 Benefits:
 
-* Better financial awareness
-* Improved budgeting
+* Better spending awareness
+* Improved financial planning
 
 ---
 
-## 3️⃣ Financial Learning Modules 📚
+## 📚 Financial Learning Modules
 
-Educational modules designed to improve financial literacy.
+Interactive learning modules designed to improve financial knowledge.
 
 Topics include:
 
@@ -125,29 +130,29 @@ Topics include:
 
 ---
 
-## 4️⃣ Financial Risk Awareness ⚠️
+## ⚠️ Financial Risk Awareness
 
-Helps users identify risky financial behaviours.
+Helps users identify risky financial behaviour such as:
 
-Examples:
+* excessive BNPL usage
+* overspending
+* lack of savings
 
-* Overusing BNPL
-* High spending patterns
-* Lack of emergency savings
+The system provides suggestions to improve financial habits.
 
 ---
 
-## 5️⃣ Financial Health Score 💡
+## 💡 Financial Health Score
 
-A simple score that reflects financial behaviour.
+A simple financial score that evaluates user financial behaviour.
 
-Evaluation includes:
+The score considers:
 
 * spending habits
 * saving behaviour
 * financial awareness
 
-Users receive suggestions to **improve their financial health**.
+Users receive personalized recommendations to **improve their financial health**.
 
 ---
 
@@ -155,45 +160,149 @@ Users receive suggestions to **improve their financial health**.
 
 ### Frontend
 
-* Flutter
+* Flutter (Dart)
+* Material UI Components
+* fl_chart for financial visualization
 
 ### Backend
 
 * Firebase
+* Cloud Functions
 
 ### Database
 
-* Firestore
+* Cloud Firestore
+
+### Authentication
+
+* Firebase Authentication
+* Biometric login (FaceID / Fingerprint)
 
 ### AI Integration
 
-* AI API (Financial assistant)
+* AI API for financial chatbot and insights
 
 ### Tools
 
-* Figma (UI/UX Prototype)
-* GitHub (Version Control)
+* Figma (UI/UX design)
+* GitHub (version control)
+
+---
+
+# System Architecture 🏗
+
+```mermaid
+flowchart LR
+
+%% USER
+U["👤 User"]
+
+%% FRONTEND
+subgraph FE["Frontend"]
+    A["📱 Flutter App"]
+    B["UI Modules<br/>Dashboard • Savings • Investment • Insurance"]
+end
+
+%% LOCAL
+subgraph LOCAL["Client Services"]
+    C["🧠 Hive Cache"]
+    D["🔐 FaceID / Biometric"]
+    E["📷 Camera / File Picker"]
+    F["📊 Charts (fl_chart)"]
+end
+
+%% BACKEND
+subgraph BACKEND["Backend"]
+    G["🔥 Firebase"]
+    H["🔑 Firebase Auth"]
+    I["🗄 Cloud Firestore"]
+    J["📦 Firebase Storage"]
+    K["🔔 Firebase FCM"]
+    L["⚙ Cloud Functions"]
+end
+
+%% AI
+subgraph AI["AI Layer"]
+    M["🧠 Vertex AI"]
+    N["✨ Gemini"]
+    O["🔎 Embeddings / Retrieval"]
+    P["🤖 AI Recommendation Engine"]
+end
+
+%% DOCUMENT AI
+subgraph DOC["Document Processing"]
+    Q["📄 ML Kit OCR"]
+    R["📑 Google Document AI"]
+end
+
+%% EXTERNAL
+subgraph EXT["External APIs"]
+    S["📈 Market Data API"]
+    T["📰 News API"]
+    U2["🛡 Insurance API"]
+    V["💳 Payment Gateway"]
+    W["🪪 eKYC API"]
+end
+
+%% FLOW
+U --> A
+A --> B
+
+A --> C
+A --> D
+A --> E
+A --> F
+
+A --> G
+G --> H
+G --> I
+G --> J
+G --> K
+G --> L
+
+A --> M
+L --> M
+M --> N
+M --> O
+M --> P
+
+E --> Q
+E --> R
+Q --> L
+R --> L
+
+L --> S
+L --> T
+L --> U2
+L --> V
+L --> W
+
+K --> A
+I --> A
+J --> A
+P --> A
+```
+
+This architecture enables **secure authentication, scalable backend services, and AI-powered financial assistance**.
 
 ---
 
 # Installation 🔗
 
-## Developer Setup
-
-### 1️⃣ Clone the repository
+### 1 Clone the repository
 
 ```bash
 git clone https://github.com/your-team/my_huat.git
 cd my_huat
 ```
 
-### 2️⃣ Install dependencies
+### 2 Install dependencies
 
 ```bash
 flutter pub get
 ```
 
-### 3️⃣ Run the application
+### 3 Run the application
 
 ```bash
 flutter run
@@ -208,7 +317,6 @@ my_huat
 │
 ├── assets
 │   ├── image
-│   │   └── news
 │   ├── sound
 │   └── video
 │
@@ -228,32 +336,10 @@ my_huat
 │   │   ├── models
 │   │   └── widgets
 │   │
-│   ├── firebase_options.dart
 │   └── main.dart
 │
 ├── README.md
 └── pubspec.yaml
-```
-
----
-
-# System Architecture 🏗
-
-```
-User
-  │
-  ▼
-Flutter Mobile App
-  │
-  ▼
-Firebase Backend
-  │
-  ├── Firestore Database
-  ├── Authentication
-  └── Cloud Services
-  │
-  ▼
-AI Financial Assistant API
 ```
 
 ---
@@ -281,13 +367,13 @@ Project documentation and resources:
 
 # Future Improvements 🚀
 
-Possible future enhancements:
+Possible future enhancements include:
 
 * Integration with **banking APIs**
 * Advanced **AI financial planning**
 * **Gamified financial learning**
-* Community **financial discussion forums**
-* **Multi-language ASEAN support**
+* Community financial discussion forums
+* Multi-language ASEAN support
 
 ---
 
@@ -295,7 +381,7 @@ Possible future enhancements:
 
 Team **ByteMe**
 
-* 👩 Wong Jia Hui
-* 👩 Christ Ting
-* 👩 Ung Yii Jia
-* 👩 Chia Thung Thung
+* Wong Jia Hui
+* Christ Ting
+* Ung Yii Jia
+* Chia Thung Thung
