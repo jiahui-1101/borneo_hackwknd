@@ -344,12 +344,8 @@ my_huat
 
 ---
 
-# Demo Video 🎥
-
-Watch the demo here:
-
 🔗 **YouTube Demo**
-(Insert your demo link)
+[(Link)](https://youtu.be/FLgXEFgKcfQ)
 
 ---
 
@@ -358,10 +354,10 @@ Watch the demo here:
 Project documentation and resources:
 
 📑 **Full Report**
-[https://drive.google.com/your-report-link](https://drive.google.com/your-report-link)
+[(Report Link)](https://drive.google.com/file/d/1-7mHIbx1Do5QZSSTcL0zluTjfhZzv3q3/view?usp=sharing)
 
 📊 **Presentation Slides**
-[https://drive.google.com/your-slides-link](https://drive.google.com/your-slides-link)
+[(Slide Link)](https://www.canva.com/design/DAHDseN6zS4/BQZQEEEraQqB1s8klHtcHQ/edit?utm_content=DAHDseN6zS4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ---
 
