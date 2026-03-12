@@ -2,6 +2,8 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black"/>
+  <img src="https://img.shields.io/badge/Gemini%20AI-4285F4?style=for-the-badge&logo=google&logoColor=white"/>
 </p>
 
 **MHuat** is an **AI-powered financial literacy platform** that helps users **learn, plan, and manage their finances smarter** through intelligent insights, spending analysis, and financial education.
@@ -292,7 +294,7 @@ This architecture enables **secure authentication, scalable backend services, an
 ### 1 Clone the repository
 
 ```bash
-git clone https://github.com/your-team/my_huat.git
+git clone https://github.com/jiahui-1101/borneo_hackwknd.git
 cd my_huat
 ```
 
@@ -382,6 +384,6 @@ Possible future enhancements include:
 Team **ByteMe**
 
 * Wong Jia Hui
-* Christ Ting
+* Christ Ting Shin Ling
 * Ung Yii Jia
 * Chia Thung Thung
