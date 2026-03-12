@@ -65,7 +65,7 @@ The platform focuses on:
 
 By combining **AI insights, spending analysis, and educational resources**, MHuat empowers users to take control of their finances.
 
-This solution supports **SDG 8 – Decent Work and Economic Growth** by promoting financial literacy and economic resilience.
+This solution supports **SDG 4 – Quality Education** by improving financial literacy and providing accessible financial learning tools for ASEAN communities.
 
 ---
 
@@ -85,76 +85,81 @@ The project aims to:
 
 ## 🤖 AI Financial Assistant
 
-An intelligent chatbot that helps users understand financial concepts.
+An intelligent AI chatbot that provides personalized financial guidance.
 
 Capabilities:
 
-* Answer financial questions
+* Answer financial questions instantly
 * Explain financial concepts in simple terms
-* Provide financial suggestions and insights
+* Provide spending, investment, and insurance insights
 
 Examples:
 
-* BNPL risk explanation
-* Saving strategies
-* Investment basics
+* BNPL purchase advice
+* Budgeting recommendations
+* Basic investment guidance
 
 ---
 
-## 📊 Smart Spending Tracker
+## 📊 Smart Spending & BNPL Analysis
 
-Allows users to monitor and analyze their spending habits.
+Helps users track spending and understand installment purchases.
 
 Features:
 
-* Categorized expense tracking
-* Spending pattern visualization
-* Budget monitoring
+* Manual spending entry or **AI receipt scanning**
+* Automatic transaction recognition and storage
+* **BNPL calculator** to analyze installment costs
+* AI suggestions on whether purchases are financially reasonable
 
 Benefits:
 
 * Better spending awareness
-* Improved financial planning
+* Understanding the real cost of BNPL purchases
 
 ---
 
-## 📚 Financial Learning Modules
+## 💰 Retirement Planning & Financial Goals
 
-Interactive learning modules designed to improve financial knowledge.
+Supports long-term financial planning through goal-based analysis.
 
-Topics include:
+Features:
 
-* Budgeting
-* Debt management
-* Insurance awareness
-* Emergency funds
-* Basic investing
+* Retirement savings tracker
+* Financial goal input and progress monitoring
+* AI analysis on whether current savings are sufficient
 
----
-
-## ⚠️ Financial Risk Awareness
-
-Helps users identify risky financial behaviour such as:
-
-* excessive BNPL usage
-* overspending
-* lack of savings
-
-The system provides suggestions to improve financial habits.
+The system provides recommendations to help users adjust their financial habits to achieve their long-term goals.
 
 ---
 
-## 💡 Financial Health Score
+## 📈 Investment Learning & Portfolio Setup
 
-A simple financial score that evaluates user financial behaviour.
+Helps users learn about investments and explore suitable opportunities.
 
-The score considers:
+Features:
 
-* spending habits
-* saving behaviour
-* financial awareness
+* Investment tutorial modules
+* **MyGoal reward system** for completing learning tasks
+* Portfolio setup based on user risk profile
+* Access to multiple investment products with performance insights
 
-Users receive personalized recommendations to **improve their financial health**.
+This encourages users to learn before making investment decisions.
+
+---
+
+## 🛡 Insurance Analysis & Coverage Simulation
+
+Helps users understand and compare insurance options.
+
+Features:
+
+* AI-powered **insurance coverage comparison**
+* Upload or link insurance policies for automatic analysis
+* Exploration of multiple insurance product categories
+* Future coverage simulation to estimate financial protection
+
+This helps users choose suitable insurance and understand long-term protection.
 
 ---
 
@@ -182,7 +187,14 @@ Users receive personalized recommendations to **improve their financial health**
 
 ### AI Integration
 
-* AI API for financial chatbot and insights
+- Google Vertex AI
+- Gemini AI for chatbot and financial insights
+- ML Kit OCR for receipt recognition
+- Document AI for insurance document analysis
+
+### Storage
+
+- Firebase Storage (documents, receipts, tutorial media)
 
 ### Tools
 
@@ -351,7 +363,7 @@ my_huat
 Watch the demo here:
 
 🔗 **YouTube Demo**
-[(Link)](https://youtu.be/FLgXEFgKcfQ)
+[(Link)](https://youtu.be/gl0-zK9--DM)
 
 ---
 
@@ -374,7 +386,9 @@ Possible future enhancements include:
 * Integration with **banking APIs**
 * Advanced **AI financial planning**
 * **Gamified financial learning**
-* Community financial discussion forums
+* Integration with open banking APIs
+* AI-powered financial planning advisor
+* Personalized risk profiling engine
 * Multi-language ASEAN support
 
 ---
