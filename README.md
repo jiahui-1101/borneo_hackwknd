@@ -397,11 +397,9 @@ Possible future enhancements include:
 
 Team **ByteMe**
 
-| Team member | Role | Contributions evidenced in the repository | Visible non-merge commits* |
-|---|---|---|---:|
-| **Wong Jia Hui** | **Team Leader · Flutter Feature Developer** | Developed insurance purchase and coverage simulation, investment and cash-in/asset flows, portfolio results, settings personalisation, AI comparison/chat integration, UI refinements and final submission documentation. | **41 / 112** |
-| **Ung Yii Jia** | **Financial Learning & Experience Developer** | Built investment and insurance learning/goal pages, protection-plan content, shared theme, point and sound services, asset integration and cross-screen UI fixes. | **42 / 112** |
-| **Chia Thung Thung** | **Planning & Risk Feature Developer** | Contributed investment portfolio setup, risk assessment, retirement planning/results and insurance feature screens. | **16 / 112** |
-| **Christ Ting Shin Ling** | **Onboarding & Spending Feature Developer** | Implemented progressive onboarding, PIN/Face ID mock flows, spending and savings records, history filters, AI receipt scanning with persistence, AI chat UI and shared multimedia assets. | **13 / 112** |
-
-<sub>*Counts are non-merge commits visible in the public Git history. Ung Yii Jia's commits appear under both `ACER` and `Ung Yii Jia` and are combined here.</sub>
+| Team member | Role | Contributions evidenced in the repository |
+|---|---|---|
+| **Wong Jia Hui** | **Team Leader · Flutter Feature Developer** | Developed insurance purchase and coverage simulation, investment and cash-in/asset flows, portfolio results, settings personalisation, AI comparison/chat integration, UI refinements and final submission documentation. |
+| **Ung Yii Jia** | **Financial Learning & Experience Developer** | Built investment and insurance learning/goal pages, protection-plan content, shared theme, point and sound services, asset integration and cross-screen UI fixes. |
+| **Chia Thung Thung** | **Planning & Risk Feature Developer** | Contributed investment portfolio setup, risk assessment, retirement planning/results and insurance feature screens. |
+| **Christ Ting Shin Ling** | **Onboarding & Spending Feature Developer** | Implemented progressive onboarding, PIN/Face ID mock flows, spending and savings records, history filters, AI receipt scanning with persistence, AI chat UI and shared multimedia assets. |
